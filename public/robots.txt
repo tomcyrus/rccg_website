@@ -1,0 +1,6 @@
+# Robots.txt for RCCG Kingdom First Assembly
+User-agent: *
+Allow: /
+
+# Canonical Sitemap
+Sitemap: https://rccgkingdomfirst.org/sitemap.xml

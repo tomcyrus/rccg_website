@@ -13,30 +13,25 @@ import { GetConnectedPage } from './pages/GetConnectedPage';
 import { PlanVisitModal } from './components/PlanVisitModal';
 import { PrayerRequestModal } from './components/PrayerRequestModal';
 import { GallerySection } from './components/GallerySection';
+import { updatePageSeo } from './utils/seo';
 
 export default function App() {
-  const [currentTab, setCurrentTab] = useState<PageTab>('home');
+  const [currentTab, setCurrentTab] = useState<PageTab>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = params.get('tab') as PageTab;
+      if (tabParam && ['home', 'about', 'gallery', 'connect'].includes(tabParam)) {
+        return tabParam;
+      }
+    }
+    return 'home';
+  });
   const [planVisitModalOpen, setPlanVisitModalOpen] = useState(false);
   const [prayerModalOpen, setPrayerModalOpen] = useState(false);
 
-  // Sync document page title according to SEO guidelines from the document
+  // Sync document page title, meta description, canonical link, open graph, and breadcrumbs
   useEffect(() => {
-    switch (currentTab) {
-      case 'home':
-        document.title = 'RCCG Kingdom First Assembly | Church in Roselle, NJ';
-        break;
-      case 'about':
-        document.title = 'About RCCG Kingdom First Assembly | Roselle NJ';
-        break;
-      case 'gallery':
-        document.title = 'Church Life & Gallery | RCCG Kingdom First Assembly';
-        break;
-      case 'connect':
-        document.title = 'Visit RCCG Kingdom First Assembly | Roselle NJ';
-        break;
-      default:
-        document.title = 'RCCG Kingdom First Assembly | Church in Roselle, NJ';
-    }
+    updatePageSeo(currentTab);
   }, [currentTab]);
 
   return (

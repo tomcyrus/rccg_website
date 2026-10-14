@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Circular Dark Emerald Background with Gold Border -->
+  <circle cx="32" cy="32" r="30" fill="#154B38" stroke="#FFD2A4" stroke-width="2.5"/>
+  <!-- Inner Ring Accent -->
+  <circle cx="32" cy="32" r="26" fill="none" stroke="#FFD2A4" stroke-width="0.75" stroke-dasharray="3 2" opacity="0.6"/>
+  <!-- Radiating Glory Rays -->
+  <path d="M32 10L32 14M32 50L32 54M10 32L14 32M50 32L54 32M16 16L19 19M45 45L48 48M48 16L45 19M16 48L19 45" stroke="#FFD2A4" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <!-- Golden Cross Emblem -->
+  <path d="M32 16V46M22 26H42" stroke="#FFD2A4" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Center Heart / Flame of Love Accent -->
+  <circle cx="32" cy="26" r="2.5" fill="#FAF8F5"/>
+</svg>

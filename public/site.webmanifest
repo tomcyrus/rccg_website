@@ -1,0 +1,17 @@
+{
+  "name": "RCCG Kingdom First Assembly",
+  "short_name": "Kingdom First Assembly",
+  "description": "RCCG Kingdom First Assembly is a Christ-centered, Kingdom-minded church family in Roselle, New Jersey. Seeking His Kingdom First. Sharing His Love With All.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF8F5",
+  "theme_color": "#154B38",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
