@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- Ensure window.fetch has both getter and setter for browser extensions and interceptors -->
+    <script>
+      (function() {
+        try {
+          var originalFetch = window.fetch;
+          var activeFetch = originalFetch;
+          Object.defineProperty(window, 'fetch', {
+            get: function() {
+              return activeFetch;
+            },
+            set: function(newFetch) {
+              activeFetch = newFetch;
+            },
+            configurable: true,
+            enumerable: true
+          });
+        } catch (e) {}
+      })();
+    </script>
+    <title>RCCG Kingdom First Assembly | Church in Roselle, NJ</title>
+    <meta name="description" content="RCCG Kingdom First Assembly is a Christ-centered, Kingdom-minded church family in Roselle, New Jersey. Seeking His Kingdom First. Sharing His Love With All." />
+    <meta name="keywords" content="RCCG, Kingdom First Assembly, Roselle NJ Church, The Redeemed Christian Church of God, Sunday Worship, Bible Study Roselle" />
+    <meta property="og:title" content="RCCG Kingdom First Assembly | Church in Roselle, NJ" />
+    <meta property="og:description" content="A Christ-centered, Kingdom-minded church family in Roselle, New Jersey. Seeking His Kingdom First. Sharing His Love With All." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Google Fonts: Roboto Condensed, Cormorant Garamond & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Roboto+Condensed:ital,wght@0,400;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet" />
+
+    <!-- Structured Data (JSON-LD) for Local Church SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Church",
+      "name": "RCCG Kingdom First Assembly",
+      "alternateName": "Kingdom First Assembly",
+      "parentOrganization": {
+        "@type": "Organization",
+        "name": "The Redeemed Christian Church of God (RCCG)"
+      },
+      "slogan": "Seeking His Kingdom First. Sharing His Love With All.",
+      "description": "A Christ-centered, Kingdom-minded church family in Roselle, New Jersey.",
+      "telephone": "+1-862-520-7004",
+      "email": "rccgkfa@gmail.com",
+      "sameAs": [
+        "https://www.youtube.com/@RCCGKFA"
+      ],
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "121 E 2nd Ave (Temporary Worship Location)",
+        "addressLocality": "Roselle",
+        "addressRegion": "NJ",
+        "postalCode": "07203",
+        "addressCountry": "US"
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "Sunday",
+          "opens": "09:00",
+          "closes": "11:00",
+          "description": "Sunday Worship Service"
+        },
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": "Wednesday",
+          "opens": "19:00",
+          "closes": "20:30",
+          "description": "Midweek Bible Study"
+        }
+      ]
+    }
+    </script>
+  </head>
+  <body class="bg-[#FAF8F5] text-[#1E2922] font-sans antialiased selection:bg-[#154B38] selection:text-[#FAF8F5]">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
