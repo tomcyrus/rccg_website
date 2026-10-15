@@ -5,12 +5,19 @@
   --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-condensed: "Roboto Condensed", -apple-system, BlinkMacSystemFont, sans-serif;
   
-  --color-fs-dark: #161722;
-  --color-fs-black: #0d0d0d;
-  --color-fs-gold: #ffd2a4;
-  --color-fs-gold-dark: #dc9853;
-  --color-fs-cream: #fff6eb;
-  --color-fs-stone: #f5f2f0;
+  --color-church-navy: #0A192F;
+  --color-church-navy-light: #172A45;
+  --color-church-royal: #1E3A8A;
+  --color-church-blue: #0284C7;
+  --color-church-emerald: #065F46;
+  --color-church-green: #047857;
+  --color-church-gold: #D4AF37;
+  --color-church-gold-light: #FDF6E2;
+  --color-church-gold-dark: #B45309;
+  --color-church-amber: #F59E0B;
+  --color-church-cream: #FAF8F5;
+  --color-church-stone: #F3EFEA;
+  --color-church-red: #B91C1C;
 }
 
 @layer base {
@@ -22,9 +29,13 @@
   
   body {
     font-family: var(--font-sans);
-    background-color: #f5f2f0;
-    color: #0d0d0d;
+    background-color: #FAF8F5;
+    color: #1E293B;
     -webkit-tap-highlight-color: transparent;
+  }
+  
+  .font-serif {
+    font-family: var(--font-serif);
   }
   
   .font-condensed {
@@ -32,3 +43,28 @@
   }
 }
 
+/* Sacred Glow & Shimmer utilities */
+.gold-gradient-text {
+  background: linear-gradient(135deg, #D4AF37 0%, #F59E0B 50%, #B45309 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.emerald-gradient-text {
+  background: linear-gradient(135deg, #047857 0%, #059669 50%, #0D9488 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.heavenly-glow {
+  box-shadow: 0 10px 30px -10px rgba(212, 175, 55, 0.25);
+}
+
+.card-hover-lift {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card-hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 30px -10px rgba(10, 25, 47, 0.08), 0 10px 15px -5px rgba(212, 175, 55, 0.08);
+}

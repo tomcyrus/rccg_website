@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { X, Send, HeartHandshake, CheckCircle2 } from 'lucide-react';
+import { X, Send, HeartHandshake, CheckCircle2, Sparkles, ShieldCheck } from 'lucide-react';
+import { addLivePrayerRequest } from '../utils/adminStore';
 
 interface PrayerRequestModalProps {
   isOpen: boolean;
@@ -18,6 +19,13 @@ export const PrayerRequestModal: React.FC<PrayerRequestModalProps> = ({ isOpen, 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    addLivePrayerRequest({
+      name: name.trim() || 'Anonymous Believer',
+      email: email.trim(),
+      category,
+      requestText: requestText.trim(),
+      isConfidential,
+    });
     setIsSubmitted(true);
   };
 
@@ -30,146 +38,148 @@ export const PrayerRequestModal: React.FC<PrayerRequestModalProps> = ({ isOpen, 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/75 backdrop-blur-xs transition-opacity animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-xs transition-opacity animate-in fade-in duration-200">
       <div 
-        className="relative w-full max-w-lg bg-[#FAF8F5] border border-stone-200 shadow-2xl overflow-hidden max-h-[92vh] flex flex-col"
+        className="relative w-full max-w-lg bg-[#FAF8F5] border border-amber-500/20 rounded-3xl shadow-2xl overflow-hidden max-h-[92vh] flex flex-col"
         role="dialog"
         aria-modal="true"
         aria-labelledby="prayer-modal-title"
       >
         {/* Header */}
-        <div className="bg-[#161722] text-white px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between border-b border-white/10 shrink-0">
+        <div className="bg-gradient-to-r from-[#071324] via-[#0A192F] to-[#071324] text-white px-6 py-5 flex items-center justify-between border-b border-white/10 shrink-0">
           <div>
-            <p className="text-[10px] sm:text-[11px] font-condensed font-bold uppercase tracking-[0.2em] text-[#FFD2A4] mb-0.5 sm:mb-1">
-              STANDING TOGETHER IN FAITH
-            </p>
-            <h2 id="prayer-modal-title" className="text-xl sm:text-2xl font-condensed font-bold uppercase text-white tracking-wide">
-              SUBMIT A PRAYER REQUEST
+            <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-amber-300 mb-1">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Standing Together in Faith</span>
+            </div>
+            <h2 id="prayer-modal-title" className="text-xl sm:text-2xl font-serif font-bold text-white tracking-tight">
+              Submit a Prayer Request
             </h2>
           </div>
           <button
             onClick={onClose}
             aria-label="Close dialog"
-            className="min-w-[44px] min-h-[44px] p-2 text-stone-300 hover:text-white hover:bg-white/10 rounded transition-colors flex items-center justify-center cursor-pointer"
+            className="p-2 text-slate-300 hover:text-white hover:bg-white/10 rounded-full transition-colors flex items-center justify-center cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-4 sm:p-6 md:p-8 overflow-y-auto">
+        <div className="p-6 sm:p-8 overflow-y-auto">
           {isSubmitted ? (
             <div className="text-center py-8 space-y-4">
-              <div className="w-14 h-14 bg-emerald-50 text-emerald-800 rounded-full flex items-center justify-center mx-auto border border-emerald-200">
-                <CheckCircle2 className="w-8 h-8" />
+              <div className="w-16 h-16 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center mx-auto border border-emerald-300">
+                <CheckCircle2 className="w-9 h-9" />
               </div>
-              <h3 className="text-2xl font-serif font-semibold text-[#0E3326]">
+              <h3 className="text-2xl font-serif font-bold text-[#0A192F]">
                 We Stand With You in Prayer
               </h3>
-              <p className="text-sm text-stone-600 max-w-md mx-auto leading-relaxed">
-                Thank you, {name ? name : 'friend'}. Our pastoral intercessors and ministry team will bring your request before God's altar with reverence and faith.
+              <p className="text-sm text-stone-600 leading-relaxed max-w-sm mx-auto">
+                Thank you, <strong className="text-stone-900">{name || 'Beloved in Christ'}</strong>. Your prayer request has been delivered to our pastoral intercessory team.
               </p>
-              <div className="text-xs text-stone-500 italic pt-2">
-                "Again, truly I tell you that if two of you on earth agree about anything they ask for, it will be done for them by my Father in heaven." — Matthew 18:19
+              <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200/80 text-xs italic font-serif text-amber-900">
+                "Again I say to you, that if two of you agree on earth concerning anything that they ask, it will be done for them by My Father in heaven." — Matthew 18:19
               </div>
-              <div className="pt-6">
+              <div className="pt-4">
                 <button
                   onClick={handleReset}
-                  className="px-6 py-2.5 bg-[#0E3326] text-white text-xs uppercase tracking-widest font-semibold hover:bg-[#154B38] transition-colors"
+                  className="px-6 py-2.5 rounded-full bg-emerald-800 text-white font-semibold text-xs hover:bg-emerald-900 transition-colors cursor-pointer"
                 >
-                  Return to Website
+                  Close &amp; Return
                 </button>
               </div>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4 text-xs sm:text-sm">
               <p className="text-xs text-stone-600 leading-relaxed">
-                "We would love to stand with you in prayer and trust God together." Share your burden or thanksgiving with us below.
+                Whatever burden you are carrying, God hears and answers prayer. Our intercessors pray over every request weekly during Wednesday Faith Clinic and Sunday services.
               </p>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-1">
-                  Your Name (or Anonymous)
+                <label className="block text-xs font-semibold text-stone-700 mb-1">
+                  Your Name <span className="text-stone-400 font-normal">(optional or anonymous)</span>
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g., Sarah M. (or leave blank for anonymous)"
+                  placeholder="e.g., Sister Mary / Brother David"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full text-sm px-3.5 py-2.5 bg-white border border-stone-300 focus:outline-none focus:border-[#0E3326]"
+                  className="w-full text-xs sm:text-sm px-4 py-2.5 rounded-xl bg-white border border-stone-200 focus:outline-none focus:border-emerald-700"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-1">
-                  Email Address <span className="text-stone-400 font-normal lowercase">(optional, if you'd like a pastoral reply)</span>
+                <label className="block text-xs font-semibold text-stone-700 mb-1">
+                  Email Address <span className="text-stone-400 font-normal">(optional, for pastoral follow-up)</span>
                 </label>
                 <input
                   type="email"
-                  placeholder="yourname@example.com"
+                  placeholder="yourname@gmail.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full text-sm px-3.5 py-2.5 bg-white border border-stone-300 focus:outline-none focus:border-[#0E3326]"
+                  className="w-full text-xs sm:text-sm px-4 py-2.5 rounded-xl bg-white border border-stone-200 focus:outline-none focus:border-emerald-700"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-1">
+                <label className="block text-xs font-semibold text-stone-700 mb-1">
                   Prayer Focus Area
                 </label>
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="w-full text-sm px-3.5 py-2.5 bg-white border border-stone-300 focus:outline-none focus:border-[#0E3326]"
+                  className="w-full text-xs sm:text-sm px-4 py-2.5 rounded-xl bg-white border border-stone-200 focus:outline-none focus:border-emerald-700 cursor-pointer"
                 >
-                  <option value="Healing & Health">Healing & Health</option>
-                  <option value="Family & Marriage">Family & Marriage</option>
-                  <option value="Guidance & Purpose">Guidance & Purpose</option>
-                  <option value="Financial Breakthrough">Financial Breakthrough</option>
-                  <option value="Spiritual Growth & Peace">Spiritual Growth & Peace</option>
-                  <option value="Praise Report & Thanksgiving">Praise Report & Thanksgiving</option>
-                  <option value="Other Prayer Need">Other Prayer Need</option>
+                  <option value="Healing & Health">Divine Healing &amp; Health</option>
+                  <option value="Family & Marriage">Family, Marriage &amp; Children</option>
+                  <option value="Spiritual Growth & Deliverance">Spiritual Growth &amp; Deliverance</option>
+                  <option value="Financial Breakthrough & Jobs">Career, Business &amp; Divine Provision</option>
+                  <option value="Salvation of Loved Ones">Salvation of Loved Ones</option>
+                  <option value="Thanksgiving & Testimony">Thanksgiving &amp; Praise Report</option>
+                  <option value="Other Prayer Needs">Other Needs</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-stone-700 mb-1">
-                  How can we pray for you? <span className="text-red-700">*</span>
+                <label className="block text-xs font-semibold text-stone-700 mb-1">
+                  Your Prayer Request <span className="text-red-700">*</span>
                 </label>
                 <textarea
                   required
                   rows={4}
-                  placeholder="Please describe your prayer request here..."
+                  placeholder="Please share what you are trusting God for..."
                   value={requestText}
                   onChange={(e) => setRequestText(e.target.value)}
-                  className="w-full text-sm p-3.5 bg-white border border-stone-300 focus:outline-none focus:border-[#0E3326]"
+                  className="w-full text-xs sm:text-sm p-4 rounded-xl bg-white border border-stone-200 focus:outline-none focus:border-emerald-700"
                 />
               </div>
 
               <div className="flex items-center gap-2 pt-1 text-xs text-stone-600">
                 <input
                   type="checkbox"
-                  id="confidential-check"
+                  id="confidential"
                   checked={isConfidential}
                   onChange={(e) => setIsConfidential(e.target.checked)}
-                  className="rounded border-stone-300 text-[#0E3326] focus:ring-[#0E3326]"
+                  className="rounded border-stone-300 text-emerald-800 focus:ring-emerald-700"
                 />
-                <label htmlFor="confidential-check" className="cursor-pointer">
-                  Keep strictly confidential with church leadership & prayer ministry
+                <label htmlFor="confidential" className="cursor-pointer">
+                  Keep this confidential with the pastoral team only
                 </label>
               </div>
 
-              <div className="pt-4 border-t border-stone-200 flex items-center justify-between">
-                <span className="text-[11px] text-stone-500 flex items-center gap-1">
-                  <HeartHandshake className="w-3.5 h-3.5 text-[#C5A059]" />
-                  Direct to rccgkfa@gmail.com
-                </span>
+              <div className="pt-3 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-1.5 text-[11px] text-stone-500">
+                  <ShieldCheck className="w-4 h-4 text-emerald-700 shrink-0" />
+                  <span>Held in sacred confidence</span>
+                </div>
+
                 <button
                   type="submit"
-                  className="px-6 py-2.5 bg-[#FFD2A4] hover:bg-[#E5BE94] text-[#0D0D0D] font-condensed font-bold uppercase tracking-widest text-xs flex items-center gap-2 transition-colors cursor-pointer"
+                  className="px-6 py-2.5 rounded-full bg-emerald-800 hover:bg-emerald-900 text-white font-semibold text-xs tracking-wide flex items-center gap-2 transition-all cursor-pointer shadow-md"
                 >
-                  <Send className="w-3.5 h-3.5 text-[#0D0D0D]" />
-                  SUBMIT REQUEST
+                  <Send className="w-3.5 h-3.5" />
+                  <span>Submit Prayer</span>
                 </button>
               </div>
             </form>

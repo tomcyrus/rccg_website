@@ -1,6 +1,8 @@
 import React from 'react';
 import { PageTab } from '../types';
-import { BookOpen, Compass, Target, Heart, Cross, Sparkles, Shield, ArrowRight } from 'lucide-react';
+import { BookOpen, Compass, Target, Heart, Cross, Sparkles, Shield, ArrowRight, CheckCircle2 } from 'lucide-react';
+import scriptureImg from '../assets/images/bible_study_scripture_1791981783961.jpg';
+import sanctuaryImg from '../assets/images/hero_church_sanctuary_1791981782802.jpg';
 
 interface AboutPageProps {
   onSelectTab: (tab: PageTab) => void;
@@ -11,116 +13,119 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onSelectTab, onOpenPlanVis
   const coreValues = [
     {
       num: '01',
-      title: 'CHRIST ABOVE ALL',
-      scripture: '1 CORINTHIANS 2:2',
-      text: 'We proclaim Jesus Christ crucified and risen, recognizing Him as the foundation of our faith and the hope of our salvation.',
-      badge: 'CHRIST CENTERED',
+      title: 'Christ Above All',
+      scripture: '1 Corinthians 2:2',
+      text: 'We proclaim Jesus Christ crucified and risen, recognizing Him as the author and finisher of our faith and the only hope of salvation.',
+      badge: 'FOUNDATION',
     },
     {
       num: '02',
-      title: 'KINGDOM FIRST',
-      scripture: 'MATTHEW 6:33',
-      text: 'We intentionally seek God\'s Kingdom and righteousness first, allowing His Word to shape our priorities, decisions, and way of life.',
-      badge: 'DIVINE PRIORITY',
+      title: 'Kingdom First Priority',
+      scripture: 'Matthew 6:33',
+      text: 'We intentionally seek God\'s Kingdom and righteousness first, allowing His sovereign Word to govern our priorities, families, and everyday decisions.',
+      badge: 'DIVINE MANDATE',
     },
     {
       num: '03',
-      title: 'GROWING IN CHRISTLIKE LOVE',
-      scripture: 'JOHN 13:34–35',
-      text: 'We believe love is at the heart of Christian living. We are committed to loving God, one another, and the people He places around us.',
-      badge: 'UNCONDITIONAL GRACE',
+      title: 'Growing in Christlike Love',
+      scripture: 'John 13:34–35',
+      text: 'We believe love is the supreme mark of genuine discipleship. We are committed to demonstrating the gracious, forgiving love of Christ to everyone.',
+      badge: 'COMPASSION',
     },
     {
       num: '04',
-      title: 'ROOTED IN GOD\'S WORD AND PRAYER',
-      scripture: 'ACTS 2:42',
-      text: 'We are committed to growing through Scripture, prayer, fellowship, and dependence on the Holy Spirit.',
-      badge: 'SPIRITUAL DISCIPLINE',
+      title: 'Rooted in God\'s Word & Prayer',
+      scripture: 'Acts 2:42',
+      text: 'We are continually nourished through steadfast Scripture study, fervent prayer, heartfelt fellowship, and reliance upon the Holy Spirit.',
+      badge: 'SPIRITUAL POWER',
     },
     {
       num: '05',
-      title: 'SHINING HIS LIGHT',
-      scripture: 'MATTHEW 5:14–16',
-      text: 'We desire to share the Gospel, serve our neighbors, and demonstrate the love and hope of Christ throughout our community.',
-      badge: 'OUTREACH & SERVICE',
+      title: 'Shining as Light in Our City',
+      scripture: 'Matthew 5:14–16',
+      text: 'We are sent to share the Gospel, serve the needy, and demonstrate the tangible hope and transforming power of Christ throughout Roselle, NJ.',
+      badge: 'OUTREACH',
     },
   ];
 
   return (
-    <div className="bg-[#F5F2F0]">
-      {/* Finsweet Template 10 Dark Header */}
-      <section className="bg-[#0D0D0D] text-white py-16 md:py-24 border-b border-white/10">
-        <div className="max-w-4xl mx-auto px-4 sm:px-8 text-center space-y-4">
-          <div className="text-xs font-condensed font-bold uppercase tracking-[0.2em] text-[#FFD2A4]">
-            THE REDEEMED CHRISTIAN CHURCH OF GOD
+    <div className="bg-[#FAF8F5]">
+      {/* Hero Header */}
+      <section className="bg-gradient-to-r from-[#071324] via-[#0A192F] to-[#071324] text-white py-16 sm:py-24 border-b border-amber-500/20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.1),transparent_70%)]" />
+        <div className="max-w-4xl mx-auto px-4 sm:px-8 text-center space-y-4 relative z-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-400/30 text-amber-300 text-xs font-semibold tracking-wider uppercase">
+            <Cross className="w-3.5 h-3.5 text-amber-400" />
+            <span>The Redeemed Christian Church of God</span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-condensed font-bold uppercase tracking-tight text-white">
-            ABOUT KINGDOM FIRST ASSEMBLY
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif font-bold text-white tracking-tight">
+            About Kingdom First Assembly
           </h1>
 
-          <p className="text-base sm:text-lg font-serif italic text-stone-300 max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl font-serif italic text-amber-100/90 max-w-2xl mx-auto">
             "Seeking His Kingdom First. Sharing His Love With All."
           </p>
 
-          <p className="text-xs text-[#FFD2A4] font-condensed uppercase tracking-wider">
-            ROSELLE, NEW JERSEY · EST. SEPTEMBER 27, 2026
+          <p className="text-xs text-amber-300 font-semibold tracking-widest uppercase">
+            Roselle, New Jersey · Union County · Est. 2026
           </p>
         </div>
       </section>
 
-      {/* Section 1: Our Story — A New Beginning, An Eternal Purpose */}
-      <section className="py-16 md:py-24 border-b border-stone-200 bg-white">
+      {/* Our Genesis & Anchor */}
+      <section className="py-16 sm:py-24 bg-white border-b border-stone-200/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             {/* Left: Narrative */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="text-xs font-condensed font-bold uppercase tracking-[0.2em] text-[#DC9853]">
-                OUR GENESIS &amp; ANCHOR
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-900 text-xs font-semibold tracking-wider uppercase">
+                <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
+                <span>Our Genesis &amp; Conviction</span>
               </div>
 
-              <h2 className="text-3xl sm:text-4xl font-condensed font-bold uppercase text-[#0D0D0D] leading-tight">
-                OUR STORY — A NEW BEGINNING, AN ETERNAL PURPOSE
+              <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#0A192F] tracking-tight leading-tight">
+                A New Beginning, An Eternal Heavenly Purpose
               </h2>
 
-              <div className="text-stone-700 text-sm sm:text-base leading-relaxed font-sans space-y-4">
+              <div className="text-stone-600 text-base sm:text-lg leading-relaxed font-sans space-y-4">
                 <p>
-                  <strong className="text-[#0D0D0D] font-semibold">Kingdom First Assembly</strong> is a parish of The Redeemed Christian Church of God (RCCG), located in Roselle, New Jersey.
+                  <strong className="text-[#0A192F] font-semibold">RCCG Kingdom First Assembly</strong> is a parish of The Redeemed Christian Church of God, planted in the heart of Roselle, New Jersey.
                 </p>
 
                 <p>
-                  Our journey began on <strong className="text-[#0D0D0D] font-semibold">September 27, 2026</strong>, with a conviction that God is raising a church family committed to seeking His Kingdom first and becoming a source of light, love, and hope to the community.
+                  Our journey was birthed out of a clear apostolic conviction: that in a busy, distracted generation, God is raising a vibrant community of believers devoted to seeking His Kingdom first and becoming a shining beacon of truth, love, and healing.
                 </p>
 
-                {/* Pull Quote */}
-                <div className="bg-[#FFF6EB] border-l-4 border-[#FFD2A4] p-5 my-6">
-                  <p className="text-lg font-serif italic text-[#0D0D0D]">
-                    "I will build my church, and the gates of Hades will not overcome it."
+                {/* Scripture Callout */}
+                <div className="bg-amber-50/70 border-l-4 border-amber-400 p-5 rounded-r-2xl my-6">
+                  <p className="text-lg font-serif italic text-[#0A192F]">
+                    "And I tell you that you are Peter, and on this rock I will build my church, and the gates of Hades will not overcome it."
                   </p>
-                  <span className="text-xs font-condensed font-bold uppercase tracking-wider text-[#DC9853] block mt-1.5">
-                    — MATTHEW 16:18
+                  <span className="text-xs font-semibold uppercase tracking-wider text-amber-800 block mt-2">
+                    — Matthew 16:18
                   </span>
                 </div>
 
                 <p>
-                  Though our beginning is humble, our faith is anchored in the promise of Jesus Christ. We believe God is building something beautiful through ordinary people who are willing to make themselves available for His extraordinary purpose.
+                  We are passionate about authentic discipleship, family restoration, and raising children in the nurture and admonition of the Lord. Every service is a sacred encounter with the living God.
                 </p>
               </div>
             </div>
 
-            {/* Right: Scripture Visual Card with Finsweet gold border */}
+            {/* Right: Visual */}
             <div className="lg:col-span-5">
               <div className="relative group">
-                <div className="aspect-[4/3] bg-stone-100 overflow-hidden shadow-xl border-2 border-[#FFD2A4]">
+                <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl border-2 border-amber-300/60 relative">
                   <img
-                    src="/src/assets/images/bible_study_scripture_1791981783961.jpg"
-                    alt="The Holy Bible with gilded gold page edges open on wooden altar table"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    referrerPolicy="no-referrer"
+                    src={scriptureImg}
+                    alt="The Holy Bible open to scripture with sacred golden illumination"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
-                </div>
-                <div className="mt-3 text-xs font-serif italic text-stone-500 text-center">
-                  Anchored upon God's enduring Word and divine promises.
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent" />
+                  <div className="absolute bottom-4 left-4 right-4 text-white text-xs font-serif italic">
+                    "The grass withers, the flower fades, but the word of our God will stand forever." — Isaiah 40:8
+                  </div>
                 </div>
               </div>
             </div>
@@ -129,68 +134,67 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onSelectTab, onOpenPlanVis
       </section>
 
       {/* Vision & Mission Cards */}
-      <section className="py-16 md:py-24 bg-[#F5F2F0] border-b border-stone-200">
+      <section className="py-16 sm:py-24 bg-[#FAF8F5] border-b border-stone-200/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Vision Card */}
-            <div className="group bg-[#FFF6EB] border border-stone-300 p-8 sm:p-10 flex flex-col justify-between hover:border-stone-400 transition-all relative">
+            <div className="bg-white rounded-3xl p-8 sm:p-10 border border-stone-200/90 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between space-y-6 relative overflow-hidden group">
               <div className="space-y-4">
-                <div className="w-12 h-12 bg-[#161722] text-[#FFD2A4] flex items-center justify-center">
-                  <Compass className="w-6 h-6" />
+                <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-700 border border-amber-200 flex items-center justify-center">
+                  <Compass className="w-7 h-7" />
                 </div>
-                <div className="text-[11px] font-condensed font-bold uppercase tracking-widest text-stone-500">
-                  FUTURE HORIZON
+                <div className="text-xs font-bold uppercase tracking-wider text-amber-700">
+                  OUR HORIZON
                 </div>
-                <h3 className="text-3xl font-condensed font-bold uppercase tracking-wide text-[#0D0D0D]">
-                  OUR VISION
+                <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#0A192F]">
+                  Our Vision
                 </h3>
-                <p className="text-base sm:text-lg text-stone-800 font-serif leading-relaxed italic">
-                  "To be a Christ-centered, Kingdom-minded church, raising believers who know their identity in Christ and shine His light throughout Roselle, neighboring communities, and beyond."
+                <p className="text-base sm:text-lg text-stone-700 font-serif leading-relaxed italic">
+                  "To be a Christ-centered, Kingdom-minded church family, raising believers who know their identity in Christ and shine His light throughout Roselle, Union County, and the nations."
                 </p>
               </div>
-              <div className="pt-6 mt-6 border-t border-stone-200 text-xs font-condensed font-bold uppercase tracking-wider text-stone-500">
-                RCCG KINGDOM FIRST ASSEMBLY VISION
+              <div className="pt-6 border-t border-stone-100 text-xs font-semibold uppercase tracking-wider text-stone-500">
+                Kingdom First Assembly · Vision
               </div>
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#FFD2A4] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
             </div>
 
             {/* Mission Card */}
-            <div className="group bg-[#FFF6EB] border border-stone-300 p-8 sm:p-10 flex flex-col justify-between hover:border-stone-400 transition-all relative">
+            <div className="bg-white rounded-3xl p-8 sm:p-10 border border-stone-200/90 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between space-y-6 relative overflow-hidden group">
               <div className="space-y-4">
-                <div className="w-12 h-12 bg-[#A6262B] text-white flex items-center justify-center">
-                  <Target className="w-6 h-6" />
+                <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center justify-center">
+                  <Target className="w-7 h-7" />
                 </div>
-                <div className="text-[11px] font-condensed font-bold uppercase tracking-widest text-stone-500">
-                  DAILY CALLING
+                <div className="text-xs font-bold uppercase tracking-wider text-emerald-800">
+                  OUR CALLING
                 </div>
-                <h3 className="text-3xl font-condensed font-bold uppercase tracking-wide text-[#0D0D0D]">
-                  OUR MISSION
+                <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#0A192F]">
+                  Our Mission
                 </h3>
-                <p className="text-base sm:text-lg text-stone-800 font-serif leading-relaxed italic">
+                <p className="text-base sm:text-lg text-stone-700 font-serif leading-relaxed italic">
                   "To preach Jesus Christ, teach the truth of God's Kingdom, nurture believers in faith and love, equip them for service, and reach our community with the transforming power of the Gospel."
                 </p>
               </div>
-              <div className="pt-6 mt-6 border-t border-stone-200 text-xs font-condensed font-bold uppercase tracking-wider text-stone-500">
-                RCCG KINGDOM FIRST ASSEMBLY MISSION
+              <div className="pt-6 border-t border-stone-100 text-xs font-semibold uppercase tracking-wider text-stone-500">
+                Kingdom First Assembly · Mission
               </div>
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#FFD2A4] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Section 4: 5 Core Values */}
-      <section className="py-20 md:py-28 bg-white border-b border-stone-200">
+      {/* 5 Core Values */}
+      <section className="py-16 sm:py-24 bg-white border-b border-stone-200/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
-          <div className="max-w-3xl mx-auto text-center space-y-3 mb-16">
-            <div className="text-xs font-condensed font-bold uppercase tracking-[0.2em] text-[#DC9853]">
-              GUIDING CONVICTIONS
+          <div className="max-w-3xl mx-auto text-center space-y-3 mb-12 sm:mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 border border-amber-300 text-amber-900 text-xs font-semibold tracking-wider uppercase">
+              <Shield className="w-3.5 h-3.5 text-amber-700" />
+              <span>Guiding Convictions</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-condensed font-bold uppercase tracking-tight text-[#0D0D0D]">
-              OUR CORE VALUES
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#0A192F] tracking-tight">
+              Our 5 Core Values
             </h2>
-            <p className="text-sm text-stone-600 font-sans leading-relaxed">
-              Scriptural convictions that shape our culture, decisions, worship, and everyday actions.
+            <p className="text-stone-600 text-base max-w-xl mx-auto font-sans leading-relaxed">
+              Scriptural convictions that shape our spiritual culture, decisions, worship, and everyday actions.
             </p>
           </div>
 
@@ -198,93 +202,114 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onSelectTab, onOpenPlanVis
             {coreValues.map((val) => (
               <div
                 key={val.num}
-                className="group bg-[#FFF6EB] border border-stone-200 p-6 sm:p-8 flex flex-col sm:flex-row items-start gap-6 hover:border-stone-400 transition-all relative overflow-hidden"
+                className="bg-[#FAF8F5] rounded-2xl border border-stone-200/80 p-6 sm:p-7 hover:border-amber-400/60 shadow-xs hover:shadow-lg transition-all flex flex-col sm:flex-row items-start gap-5"
               >
-                <div className="font-condensed font-bold text-3xl sm:text-4xl text-[#DC9853] w-12 shrink-0">
+                <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-900 font-serif font-bold text-xl flex items-center justify-center shrink-0">
                   {val.num}
                 </div>
 
-                <div className="space-y-2 flex-1">
-                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-                    <h3 className="text-xl sm:text-2xl font-condensed font-bold uppercase text-[#0D0D0D]">
+                <div className="space-y-1.5 flex-1">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <h3 className="text-xl font-serif font-bold text-[#0A192F]">
                       {val.title}
                     </h3>
-                    <span className="text-xs font-condensed font-bold text-[#A6262B] uppercase tracking-wider">
+                    <span className="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
                       {val.scripture}
                     </span>
                   </div>
-
-                  <p className="text-xs sm:text-sm text-stone-700 leading-relaxed font-sans">
+                  <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
                     {val.text}
                   </p>
                 </div>
-
-                <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#FFD2A4] transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300" />
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Section 5: What We Believe */}
-      <section className="py-20 md:py-28 bg-[#F5F2F0] border-b border-stone-200">
+      {/* Statement of Faith */}
+      <section className="py-16 sm:py-24 bg-[#FAF8F5] border-b border-stone-200/80">
         <div className="max-w-4xl mx-auto px-4 sm:px-8 space-y-8">
           <div className="text-center space-y-3">
-            <div className="text-xs font-condensed font-bold uppercase tracking-[0.2em] text-[#DC9853]">
-              STATEMENT OF FAITH
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-900 text-xs font-semibold tracking-wider uppercase">
+              <BookOpen className="w-3.5 h-3.5 text-emerald-700" />
+              <span>Biblical Foundations</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-condensed font-bold uppercase tracking-tight text-[#0D0D0D]">
-              WHAT WE BELIEVE
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#0A192F] tracking-tight">
+              What We Believe
             </h2>
           </div>
 
-          <div className="bg-[#FFF6EB] border border-stone-300 p-8 sm:p-12 space-y-6 text-stone-700 leading-relaxed font-sans shadow-xs">
-            <p className="text-sm sm:text-base font-medium text-[#0D0D0D]">
-              As a parish of <strong>The Redeemed Christian Church of God (RCCG)</strong>, our faith is rooted in the authority of the Holy Scriptures and the saving grace of Jesus Christ.
+          <div className="bg-white rounded-3xl border border-stone-200/90 p-8 sm:p-12 space-y-6 text-stone-700 leading-relaxed font-sans shadow-sm">
+            <p className="text-base font-medium text-[#0A192F]">
+              As a parish of <strong>The Redeemed Christian Church of God (RCCG)</strong>, our faith is firmly established upon the uncompromised Word of God:
             </p>
 
-            <div className="border-t border-b border-stone-300 py-6 space-y-4 text-xs sm:text-sm">
-              <p>
-                <strong className="text-[#0D0D0D]">The Triune God:</strong> We believe in one God eternally existent in three persons: Father, Son, and Holy Spirit.
-              </p>
-              <p>
-                <strong className="text-[#0D0D0D]">Salvation in Jesus Christ:</strong> We believe salvation is the gift of God received through repentance and personal faith in Jesus Christ.
-              </p>
-              <p>
-                <strong className="text-[#0D0D0D]">The Holy Spirit:</strong> We believe in the active, sanctifying, and empowering presence of the Holy Spirit.
-              </p>
-              <p>
-                <strong className="text-[#0D0D0D]">Prayer, Holiness &amp; Discipleship:</strong> We uphold the vital necessity of prayer, personal holiness, discipleship, and Christian fellowship.
-              </p>
-              <p>
-                <strong className="text-[#0D0D0D]">The Great Commission:</strong> We are called to make Jesus Christ known, shining His radiant light across Roselle and beyond.
-              </p>
+            <div className="space-y-4 pt-2">
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
+                <p className="text-sm">
+                  <strong className="text-[#0A192F]">The Holy Scriptures:</strong> We believe the entire Bible is the verbally inspired, infallible Word of God and the supreme authority for faith and practice.
+                </p>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
+                <p className="text-sm">
+                  <strong className="text-[#0A192F]">The One True God:</strong> We believe in one eternal God manifested in three persons: the Father, the Son Jesus Christ, and the Holy Spirit.
+                </p>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
+                <p className="text-sm">
+                  <strong className="text-[#0A192F]">Salvation by Grace:</strong> Salvation is a free gift received through repentance and faith in the shed blood and finished work of Jesus Christ on the cross.
+                </p>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
+                <p className="text-sm">
+                  <strong className="text-[#0A192F]">The Holy Spirit &amp; Sanctification:</strong> We believe in the baptism, gifts, and fruit of the Holy Spirit, enabling believers to live holy and victorious lives.
+                </p>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
+                <p className="text-sm">
+                  <strong className="text-[#0A192F]">The Blessed Hope:</strong> We believe in the imminent bodily resurrection of believers, the second coming of Jesus Christ, and eternal life with God.
+                </p>
+              </div>
             </div>
 
-            <p className="text-xs sm:text-sm text-stone-800 font-semibold font-condensed uppercase tracking-wider">
-              We are part of the global RCCG family, united in our desire to make Jesus Christ known.
-            </p>
+            <div className="pt-4 border-t border-stone-100 flex items-center justify-between text-xs text-amber-800 font-semibold">
+              <span>United in the global RCCG mission across 190+ nations.</span>
+              <span>121 E 2nd Ave, Roselle, NJ</span>
+            </div>
           </div>
 
-          <div className="pt-6 text-center space-y-4">
-            <h3 className="text-xl sm:text-2xl font-condensed font-bold uppercase text-[#0D0D0D]">
-              COME EXPERIENCE HIS KINGDOM WITH US
+          {/* Invitation Card */}
+          <div className="pt-4 text-center space-y-4">
+            <h3 className="text-2xl font-serif font-bold text-[#0A192F]">
+              Come Experience His Kingdom With Us
             </h3>
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <button
                 onClick={onOpenPlanVisit}
-                className="w-full sm:w-auto px-6 py-3.5 bg-[#FFD2A4] hover:bg-[#E5BE94] text-[#0D0D0D] font-condensed font-bold uppercase tracking-widest text-xs transition-colors cursor-pointer min-h-[44px] flex items-center justify-center"
+                className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-emerald-800 hover:bg-emerald-900 text-white font-semibold text-sm shadow-md transition-all cursor-pointer flex items-center justify-center gap-2"
               >
-                PLAN YOUR SUNDAY VISIT
+                <span>Plan Your Sunday Visit</span>
+                <ArrowRight className="w-4 h-4" />
               </button>
+
               <button
                 onClick={() => {
                   onSelectTab('connect');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="w-full sm:w-auto px-6 py-3.5 bg-white border border-stone-300 hover:border-stone-800 text-stone-800 font-condensed font-bold uppercase tracking-widest text-xs transition-colors cursor-pointer min-h-[44px] flex items-center justify-center"
+                className="w-full sm:w-auto px-6 py-3.5 rounded-full bg-white border border-stone-300 hover:bg-stone-50 text-stone-800 font-medium text-sm transition-all"
               >
-                GET CONNECTED &amp; CONTACT US
+                Get Connected &amp; Ministries
               </button>
             </div>
           </div>

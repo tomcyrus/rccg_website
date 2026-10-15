@@ -13,6 +13,9 @@ import { GetConnectedPage } from './pages/GetConnectedPage';
 import { PlanVisitModal } from './components/PlanVisitModal';
 import { PrayerRequestModal } from './components/PrayerRequestModal';
 import { GallerySection } from './components/GallerySection';
+import { VideoGallerySection } from './components/VideoGallerySection';
+import { EbooksSection } from './components/EbooksSection';
+import { AdminPage } from './pages/AdminPage';
 import { updatePageSeo } from './utils/seo';
 
 export default function App() {
@@ -20,7 +23,7 @@ export default function App() {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const tabParam = params.get('tab') as PageTab;
-      if (tabParam && ['home', 'about', 'gallery', 'connect'].includes(tabParam)) {
+      if (tabParam && ['home', 'about', 'videos', 'ebooks', 'gallery', 'connect', 'admin'].includes(tabParam)) {
         return tabParam;
       }
     }
@@ -35,7 +38,7 @@ export default function App() {
   }, [currentTab]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF8F5] text-[#1E2922]">
+    <div className="min-h-screen flex flex-col bg-[#FAF8F5] text-[#0A192F]">
       {/* Top Navbar */}
       <Navbar
         currentTab={currentTab}
@@ -60,6 +63,18 @@ export default function App() {
           />
         )}
 
+        {currentTab === 'videos' && (
+          <div className="pt-2">
+            <VideoGallerySection />
+          </div>
+        )}
+
+        {currentTab === 'ebooks' && (
+          <div className="pt-2">
+            <EbooksSection onOpenPlanVisit={() => setPlanVisitModalOpen(true)} />
+          </div>
+        )}
+
         {currentTab === 'gallery' && (
           <div className="pt-2">
             <GallerySection />
@@ -70,6 +85,13 @@ export default function App() {
           <GetConnectedPage
             onOpenPlanVisit={() => setPlanVisitModalOpen(true)}
             onOpenPrayerModal={() => setPrayerModalOpen(true)}
+          />
+        )}
+
+        {currentTab === 'admin' && (
+          <AdminPage
+            onNavigateHome={() => setCurrentTab('home')}
+            onSelectTab={setCurrentTab}
           />
         )}
       </main>

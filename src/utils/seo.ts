@@ -23,6 +23,20 @@ export const SEO_PAGE_CONFIGS: Record<PageTab, PageSeoConfig> = {
     canonicalPath: '/?tab=about',
     breadcrumbName: 'About Us',
   },
+  videos: {
+    title: 'YouTube Video Gallery & Sermons | RCCG Kingdom First Assembly',
+    description: 'Watch anointed Sunday celebration sermons, Digging Deep Bible studies, and Holy Ghost services from RCCG Kingdom First Assembly via YouTube.',
+    keywords: 'RCCG YouTube Sermons, Video Gallery RCCG, Church Livestream Roselle NJ, Digging Deep Bible Study, Christian Worship Videos, Pastor Adeboye Sermons',
+    canonicalPath: '/?tab=videos',
+    breadcrumbName: 'Video Gallery',
+  },
+  ebooks: {
+    title: 'E-Books & Spiritual Library | RCCG Kingdom First Assembly',
+    description: 'Access curated Christian e-books, Open Heavens daily devotionals, prayer warfare guides, and discipleship study manuals from RCCG Kingdom First Assembly.',
+    keywords: 'RCCG Ebooks, Open Heavens Devotional, Christian Books PDF, Bible Study Manuals, Kingdom First Assembly Library, Pastor Adeboye Books',
+    canonicalPath: '/?tab=ebooks',
+    breadcrumbName: 'E-Books Collection',
+  },
   gallery: {
     title: 'Church Life & Photo Gallery | RCCG Kingdom First Assembly',
     description: 'Explore photo highlights of worship services, community food drives, prayer gatherings, and family fellowship at RCCG Kingdom First Assembly in Roselle, NJ.',
@@ -36,6 +50,13 @@ export const SEO_PAGE_CONFIGS: Record<PageTab, PageSeoConfig> = {
     keywords: 'Plan a Visit RCCG, Church Address Roselle NJ, 121 E 2nd Ave Roselle, Service Times Roselle, Prayer Request RCCG, Contact Church Roselle NJ',
     canonicalPath: '/?tab=connect',
     breadcrumbName: 'Plan a Visit & Contact',
+  },
+  admin: {
+    title: 'Church Administration Console | RCCG Kingdom First Assembly',
+    description: 'Ministerial operations console for managing church services, calendar events, YouTube video streams, e-books, prayers, and guest desks.',
+    keywords: 'RCCG Admin, Church Operations, Roselle NJ Ministry Management',
+    canonicalPath: '/?tab=admin',
+    breadcrumbName: 'Admin Console',
   },
 };
 

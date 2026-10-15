@@ -1,4 +1,4 @@
-export type PageTab = 'home' | 'about' | 'gallery' | 'connect';
+export type PageTab = 'home' | 'about' | 'videos' | 'gallery' | 'ebooks' | 'connect' | 'admin';
 
 export interface ServiceTime {
   day: string;
@@ -24,6 +24,8 @@ export interface InquiryFormData {
 
 export type EventCategory = 'all' | 'bible-study' | 'outreach' | 'worship' | 'special';
 
+export type EventStatus = 'scheduled' | 'live' | 'completed' | 'postponed';
+
 export interface ChurchEvent {
   id: string;
   title: string;
@@ -46,5 +48,112 @@ export interface ChurchEvent {
   coordinator?: string;
   audience?: string;
   rsvpRequired?: boolean;
+  status?: EventStatus;
+}
+
+export interface PrayerRequestRecord {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  category: string;
+  requestText: string;
+  isConfidential: boolean;
+  status: 'new' | 'interceding' | 'answered' | 'archived';
+  submittedAt: string;
+  pastoralNotes?: string;
+}
+
+export interface VisitorInquiryRecord {
+  id: string;
+  fullName: string;
+  email: string;
+  phone?: string;
+  inquiryType: string;
+  message: string;
+  status: 'new' | 'contacted' | 'welcomed' | 'followed-up';
+  submittedAt: string;
+  assignedTo?: string;
+  pastoralNotes?: string;
+}
+
+export interface AnnouncementBanner {
+  id: string;
+  isActive: boolean;
+  message: string;
+  type: 'notice' | 'urgent' | 'celebration' | 'broadcast';
+  actionLabel?: string;
+  actionUrl?: string;
+  targetTab?: PageTab;
+}
+
+export type EbookCategory = 
+  | 'all' 
+  | 'devotionals' 
+  | 'kingdom-living' 
+  | 'prayer-fasting' 
+  | 'discipleship' 
+  | 'faith-encouragement' 
+  | 'family-marriage' 
+  | 'spiritual-growth';
+
+export interface EbookItem {
+  id: string;
+  title: string;
+  subtitle?: string;
+  author: string;
+  authorRole?: string;
+  category: Exclude<EbookCategory, 'all'>;
+  categoryLabel: string;
+  accentColor: string; // Hex color for book spine/embellishment
+  coverTheme: 'navy-gold' | 'emerald-gold' | 'royal-amber' | 'burgundy-gold' | 'slate-gold';
+  badge?: string;
+  description: string;
+  fullSynopsis: string;
+  pages: number;
+  format: string;
+  readTimeEst: string;
+  publicationYear: number;
+  rating: number;
+  reviewCount: number;
+  keyTakeaways: string[];
+  tableOfContents: string[];
+  sampleChapter: {
+    chapterNumber: number;
+    title: string;
+    keyScripture: string;
+    paragraphs: string[];
+    reflectionQuestions: string[];
+    prayerOfDedication: string;
+  };
+  isFeatured?: boolean;
+}
+
+export type VideoCategory = 
+  | 'all' 
+  | 'sunday-service' 
+  | 'bible-study' 
+  | 'worship' 
+  | 'holy-ghost' 
+  | 'youth' 
+  | 'prayer-revival';
+
+export interface YouTubeVideoItem {
+  id: string;
+  youtubeId: string;
+  youtubeUrl: string;
+  title: string;
+  seriesTitle?: string;
+  speaker: string;
+  speakerRole?: string;
+  category: Exclude<VideoCategory, 'all'>;
+  categoryLabel: string;
+  date: string;
+  duration: string;
+  scriptureRef?: string;
+  description: string;
+  keyPoints?: string[];
+  isFeatured?: boolean;
+  isCustomAdded?: boolean;
 }
 

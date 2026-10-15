@@ -1,7 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PageTab } from '../types';
-import { Menu, X, MapPin, Phone, Tv, Calendar } from 'lucide-react';
-import { RccgLogo } from './RccgLogo';
+import { 
+  Menu, 
+  X, 
+  MapPin, 
+  Phone, 
+  Tv, 
+  Calendar, 
+  Heart, 
+  Sparkles, 
+  ChevronRight, 
+  BookOpen, 
+  ShieldCheck, 
+  ExternalLink,
+  Bell
+} from 'lucide-react';
+import { getStoredAnnouncement } from '../utils/adminStore';
 import rccgLogoImg from '../assets/images/rccg_official_logo_1791985600387.jpg';
 
 interface NavbarProps {
@@ -18,6 +32,17 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenPrayerModal,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [announcementDismissed, setAnnouncementDismissed] = useState(false);
+  const [announcement, setAnnouncement] = useState(() => getStoredAnnouncement());
+
+  // Listen to potential storage updates for announcement
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setAnnouncement(getStoredAnnouncement());
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   const handleNavClick = (tab: PageTab) => {
     onSelectTab(tab);
@@ -39,91 +64,179 @@ export const Navbar: React.FC<NavbarProps> = ({
     }
   };
 
+  const handleGivingClick = () => {
+    setMobileMenuOpen(false);
+    if (currentTab !== 'home') {
+      onSelectTab('home');
+      setTimeout(() => {
+        const el = document.getElementById('giving-section');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    } else {
+      const el = document.getElementById('giving-section');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <>
-      {/* Top Utility Announcement Ribbon - Fully responsive on all screens */}
-      <div className="bg-[#0D0D0D] text-[#D1DDD6] text-xs border-b border-white/10 py-2 px-3 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-x-6 gap-y-1.5 text-center sm:text-left">
-          {/* Location & Times text */}
-          <div className="flex items-center justify-center sm:justify-start gap-1.5 text-[11px] sm:text-xs flex-wrap">
-            <span className="w-1.5 h-1.5 bg-[#FFD2A4] rounded-full shrink-0" aria-hidden="true" />
-            <span className="text-[#FFD2A4] font-condensed font-bold uppercase tracking-wider text-[10px] sm:text-[11px]">
-              Temporary Worship Location:
+      {/* Live Announcement Banner (If active & not dismissed) */}
+      {announcement.isActive && !announcementDismissed && (
+        <div className={`text-xs font-medium py-2 px-3 sm:px-6 transition-all border-b ${
+          announcement.type === 'celebration'
+            ? 'bg-gradient-to-r from-emerald-950 via-emerald-900 to-emerald-950 text-emerald-100 border-emerald-500/30'
+            : announcement.type === 'urgent'
+            ? 'bg-gradient-to-r from-amber-950 via-amber-900 to-amber-950 text-amber-100 border-amber-500/30'
+            : announcement.type === 'broadcast'
+            ? 'bg-gradient-to-r from-red-950 via-red-900 to-red-950 text-red-100 border-red-500/30'
+            : 'bg-[#071324] text-slate-100 border-white/10'
+        }`}>
+          <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0" />
+              <span className="truncate text-xs sm:text-sm font-sans">{announcement.message}</span>
+            </div>
+
+            <div className="flex items-center gap-2.5 shrink-0">
+              {announcement.actionLabel && (
+                <button
+                  onClick={() => {
+                    if (announcement.targetTab) {
+                      handleNavClick(announcement.targetTab);
+                    } else if (announcement.actionUrl) {
+                      window.open(announcement.actionUrl, '_blank');
+                    }
+                  }}
+                  className="px-2.5 py-0.5 rounded-full bg-white/15 hover:bg-white/25 text-amber-300 font-bold text-[11px] tracking-wide transition-all cursor-pointer flex items-center gap-1"
+                >
+                  <span>{announcement.actionLabel}</span>
+                  <ChevronRight className="w-3 h-3" />
+                </button>
+              )}
+              <button
+                onClick={() => setAnnouncementDismissed(true)}
+                className="p-1 text-slate-400 hover:text-white transition-colors cursor-pointer"
+                title="Dismiss announcement"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Sacred Top Ribbon (Mobile & Desktop Optimized) */}
+      <div className="bg-[#0A192F] text-amber-100/90 text-xs border-b border-amber-500/20 py-2 px-3 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-x-4">
+          {/* Welcome & Service Schedule */}
+          <div className="flex items-center gap-2 text-center sm:text-left min-w-0">
+            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-emerald-900/70 border border-emerald-500/40 text-emerald-300 text-[10px] font-semibold tracking-wide shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="hidden xs:inline">WORSHIP</span>
             </span>
-            <span className="text-white/90">121 E 2nd Ave, Roselle, NJ 07203</span>
-            <span className="hidden md:inline text-white/30" aria-hidden="true">·</span>
-            <span className="hidden md:inline text-stone-300">Sunday 9:00 AM &amp; Wednesday 7:00 PM</span>
+            <span className="text-white/95 font-medium truncate text-[11px] sm:text-xs">
+              <span className="font-semibold text-amber-300">Sun 10:00 AM</span> &amp; Wed 7:00 PM
+            </span>
+            <span className="hidden md:inline text-amber-500/50">·</span>
+            <span className="hidden md:inline text-amber-200/80 text-[11px] truncate">121 E 2nd Ave, Roselle, NJ</span>
           </div>
 
-          {/* Quick Action Links */}
-          <div className="flex items-center justify-center gap-3 sm:gap-4 text-[11px] sm:text-xs shrink-0 font-medium font-sans">
+          {/* Quick Contact, Live Action & Admin Link */}
+          <div className="flex items-center gap-3 sm:gap-4 text-[11px] sm:text-xs shrink-0">
             <a
               href="https://www.google.com/maps/search/?api=1&query=121+E+2nd+Ave+Roselle+NJ+07203"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-white transition-colors flex items-center gap-1 py-0.5"
+              className="hover:text-amber-300 transition-colors flex items-center gap-1"
+              title="Directions to Sanctuary"
             >
-              <MapPin className="w-3 h-3 text-[#FFD2A4] shrink-0" />
-              <span>Get Directions</span>
+              <MapPin className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+              <span className="hidden sm:inline">Directions</span>
             </a>
-            <span className="text-white/20" aria-hidden="true">|</span>
+
+            <span className="text-white/20 hidden sm:inline">|</span>
+
             <a
               href="tel:8625207004"
-              className="hover:text-white transition-colors flex items-center gap-1 py-0.5"
+              className="hover:text-amber-300 transition-colors flex items-center gap-1"
+              title="Call Church Office"
             >
-              <Phone className="w-3 h-3 text-[#FFD2A4] shrink-0" />
-              <span>(862) 520-7004</span>
+              <Phone className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+              <span className="hidden md:inline">(862) 520-7004</span>
             </a>
-            <span className="text-white/20 hidden sm:inline" aria-hidden="true">|</span>
+
+            <span className="text-white/20">|</span>
+
             <a
               href="https://www.youtube.com/@RCCGKFA"
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-white transition-colors hidden sm:flex items-center gap-1 text-[#FFD2A4] py-0.5"
+              className="hover:text-amber-300 transition-colors flex items-center gap-1 text-amber-300 font-semibold"
+              title="Watch Live on YouTube"
             >
-              <Tv className="w-3 h-3 shrink-0" />
-              <span>YouTube</span>
+              <Tv className="w-3.5 h-3.5 text-red-400 shrink-0" />
+              <span>Live</span>
             </a>
+
+            <span className="text-white/20">|</span>
+
+            {/* Quick Admin Portal Link */}
+            <button
+              onClick={() => handleNavClick('admin')}
+              className={`hover:text-amber-300 transition-colors flex items-center gap-1 text-[11px] cursor-pointer ${
+                currentTab === 'admin' ? 'text-amber-300 font-bold' : 'text-slate-400'
+              }`}
+              title="Church Admin Console"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+              <span className="hidden xs:inline">Admin</span>
+            </button>
           </div>
         </div>
       </div>
 
-      {/* Finsweet Template 10 Main Navigation Header */}
-      <header className="sticky top-0 z-40 bg-[#161722] text-white border-b border-white/10 shadow-lg">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-4 sm:gap-8">
-          {/* Zone 1: Site Logo (Official RCCG logo with church name below) */}
+      {/* Main Church Header */}
+      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-stone-200/80 shadow-xs transition-all">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3 flex items-center justify-between gap-3">
+          {/* Logo & Church Name Branding */}
           <button
             onClick={() => handleNavClick('home')}
-            className="group cursor-pointer focus-visible:outline-hidden flex flex-col items-center justify-center text-center py-0.5 shrink-0 select-none"
-            aria-label="RCCG Kingdom First Assembly - Go to Home"
+            className="group cursor-pointer flex items-center gap-2.5 sm:gap-3 text-left shrink-0 select-none transition-transform hover:scale-[1.01]"
+            aria-label="RCCG Kingdom First Assembly - Return to Home"
           >
             {/* Official RCCG Logo */}
-            <div className="relative flex items-center justify-center">
+            <div className="relative p-0.5 rounded-full bg-gradient-to-tr from-amber-400 via-amber-200 to-amber-500 shadow-sm shrink-0">
               <img
                 src={rccgLogoImg}
                 alt="The Redeemed Christian Church of God Official Logo"
-                className="w-11 h-11 sm:w-13 sm:h-13 rounded-full object-cover shadow-md ring-2 ring-[#FFD2A4]/60 group-hover:ring-[#FFD2A4] group-hover:scale-105 transition-all duration-200"
+                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover"
               />
             </div>
-            {/* Church Name Below */}
-            <div className="flex flex-col items-center text-center mt-1">
-              <span className="font-condensed font-bold uppercase text-[11px] sm:text-xs md:text-sm tracking-wider text-white group-hover:text-[#FFD2A4] transition-colors leading-tight">
-                KINGDOM FIRST ASSEMBLY
-              </span>
-              <span className="text-[8px] sm:text-[9px] font-condensed uppercase tracking-widest text-[#FFD2A4] leading-none mt-0.5">
-                ROSELLE, NEW JERSEY
-              </span>
+
+            {/* Church Identity Typography */}
+            <div className="flex flex-col min-w-0">
+              <div className="text-[9px] sm:text-[10px] md:text-[11px] font-semibold uppercase tracking-[0.14em] sm:tracking-[0.18em] text-emerald-800 truncate max-w-[210px] xs:max-w-none">
+                The Redeemed Christian Church of God
+              </div>
+              <div className="text-base sm:text-lg md:text-xl font-serif font-bold text-[#0A192F] tracking-tight group-hover:text-emerald-900 transition-colors leading-tight truncate">
+                Kingdom First Assembly
+              </div>
+              <div className="text-[9px] sm:text-[10px] font-medium tracking-wider text-amber-700 uppercase flex items-center gap-1">
+                <span>Roselle, NJ</span>
+                <span>·</span>
+                <span className="italic normal-case text-stone-500">Matt 6:33</span>
+              </div>
             </div>
           </button>
 
-          {/* Zone 2: Finsweet Template 10 uppercase text navigation links */}
-          <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-xs font-condensed font-bold uppercase tracking-wider text-white/80">
+          {/* Desktop Navigation Links (Responsive layout for 1024px, 1280px, and wider) */}
+          <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5 text-xs xl:text-sm font-medium text-stone-700">
             <button
               onClick={() => handleNavClick('home')}
-              className={`transition-colors whitespace-nowrap shrink-0 cursor-pointer py-1 relative ${
+              className={`px-2.5 xl:px-3 py-1.5 rounded-full transition-all cursor-pointer ${
                 currentTab === 'home'
-                  ? 'text-[#FFD2A4] border-b-2 border-[#FFD2A4]'
-                  : 'hover:text-[#FFD2A4]'
+                  ? 'bg-emerald-800 text-white shadow-xs font-semibold'
+                  : 'hover:text-emerald-800 hover:bg-stone-100'
               }`}
             >
               Home
@@ -131,184 +244,271 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => handleNavClick('about')}
-              className={`transition-colors whitespace-nowrap shrink-0 cursor-pointer py-1 relative ${
+              className={`px-2.5 xl:px-3 py-1.5 rounded-full transition-all cursor-pointer ${
                 currentTab === 'about'
-                  ? 'text-[#FFD2A4] border-b-2 border-[#FFD2A4]'
-                  : 'hover:text-[#FFD2A4]'
+                  ? 'bg-emerald-800 text-white shadow-xs font-semibold'
+                  : 'hover:text-emerald-800 hover:bg-stone-100'
               }`}
             >
-              About Us
+              About
             </button>
 
             <button
-              onClick={() => handleNavClick('gallery')}
-              className={`transition-colors whitespace-nowrap shrink-0 cursor-pointer py-1 relative ${
-                currentTab === 'gallery'
-                  ? 'text-[#FFD2A4] border-b-2 border-[#FFD2A4]'
-                  : 'hover:text-[#FFD2A4]'
+              onClick={() => handleNavClick('videos')}
+              className={`px-2.5 xl:px-3 py-1.5 rounded-full transition-all cursor-pointer flex items-center gap-1.5 ${
+                currentTab === 'videos'
+                  ? 'bg-emerald-800 text-white shadow-xs font-semibold'
+                  : 'hover:text-emerald-800 hover:bg-stone-100'
               }`}
             >
-              Gallery
+              <Tv className="w-3.5 h-3.5 text-red-500 shrink-0" />
+              <span>Videos</span>
+            </button>
+
+            <button
+              onClick={() => handleNavClick('ebooks')}
+              className={`px-2.5 xl:px-3 py-1.5 rounded-full transition-all cursor-pointer flex items-center gap-1.5 ${
+                currentTab === 'ebooks'
+                  ? 'bg-emerald-800 text-white shadow-xs font-semibold'
+                  : 'hover:text-emerald-800 hover:bg-stone-100'
+              }`}
+            >
+              <BookOpen className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+              <span>E-Books</span>
             </button>
 
             <button
               onClick={handleCalendarClick}
-              className="text-white/80 hover:text-[#FFD2A4] transition-colors whitespace-nowrap shrink-0 cursor-pointer py-1 relative"
+              className="px-2.5 xl:px-3 py-1.5 rounded-full transition-all cursor-pointer hover:text-emerald-800 hover:bg-stone-100 flex items-center gap-1.5"
             >
-              Calendar
+              <Calendar className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+              <span>Calendar</span>
+            </button>
+
+            <button
+              onClick={() => handleNavClick('gallery')}
+              className={`px-2.5 xl:px-3 py-1.5 rounded-full transition-all cursor-pointer ${
+                currentTab === 'gallery'
+                  ? 'bg-emerald-800 text-white shadow-xs font-semibold'
+                  : 'hover:text-emerald-800 hover:bg-stone-100'
+              }`}
+            >
+              Photos
             </button>
 
             <button
               onClick={() => handleNavClick('connect')}
-              className={`transition-colors whitespace-nowrap shrink-0 cursor-pointer py-1 relative ${
+              className={`px-2.5 xl:px-3 py-1.5 rounded-full transition-all cursor-pointer ${
                 currentTab === 'connect'
-                  ? 'text-[#FFD2A4] border-b-2 border-[#FFD2A4]'
-                  : 'hover:text-[#FFD2A4]'
+                  ? 'bg-emerald-800 text-white shadow-xs font-semibold'
+                  : 'hover:text-emerald-800 hover:bg-stone-100'
               }`}
             >
-              Get Connected
+              Connect
             </button>
 
-
-            <a
-              href="https://www.youtube.com/@RCCGKFA"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-white/80 hover:text-[#FFD2A4] transition-colors whitespace-nowrap shrink-0 flex items-center gap-1.5 py-1"
-            >
-              <Tv className="w-3.5 h-3.5 text-[#FFD2A4]" />
-              <span>Watch Live</span>
-            </a>
-
             <button
-              onClick={onOpenPrayerModal}
-              className="text-white/70 hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer py-1 font-normal capitalize"
+              onClick={handleGivingClick}
+              className="px-2.5 xl:px-3 py-1.5 rounded-full transition-all cursor-pointer hover:text-emerald-800 hover:bg-stone-100 flex items-center gap-1 text-amber-700 font-semibold"
             >
-              Prayer Request
+              <Heart className="w-3.5 h-3.5 fill-amber-500/30 text-amber-600 shrink-0" />
+              <span>Give</span>
             </button>
           </nav>
 
-          {/* Zone 3: Finsweet Template 10 Golden Action Button & Mobile Menu Trigger */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {/* Action Buttons & Admin Shortcut */}
+          <div className="hidden sm:flex items-center gap-2 xl:gap-2.5 shrink-0">
+            <button
+              onClick={onOpenPrayerModal}
+              className="px-3 xl:px-3.5 py-2 text-xs font-semibold rounded-full border border-emerald-800/20 text-emerald-900 hover:bg-emerald-50 transition-all cursor-pointer flex items-center gap-1.5"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+              <span className="hidden xl:inline">Prayer Request</span>
+              <span className="xl:hidden">Prayer</span>
+            </button>
+
             <button
               onClick={onOpenPlanVisit}
-              className="hidden md:inline-flex items-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 text-xs font-condensed font-bold uppercase tracking-widest text-[#0D0D0D] bg-[#FFD2A4] hover:bg-[#E5BE94] transition-colors whitespace-nowrap shrink-0 cursor-pointer shadow-md active:translate-y-px"
+              className="px-3.5 xl:px-4 py-2 text-xs font-semibold rounded-full bg-gradient-to-r from-emerald-800 to-emerald-700 text-white shadow-xs hover:shadow-md hover:from-emerald-900 hover:to-emerald-800 transition-all cursor-pointer flex items-center gap-1"
             >
-              <Calendar className="w-3.5 h-3.5 text-[#0D0D0D]" />
-              <span>Plan Your Visit</span>
+              <span>Plan a Visit</span>
+              <ChevronRight className="w-3.5 h-3.5" />
             </button>
 
-            {/* Mobile Hamburger Button - Minimum 44x44 touch target */}
+            {/* Quick Admin Icon Button on Desktop */}
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden min-w-[44px] min-h-[44px] p-2 text-white hover:text-[#FFD2A4] hover:bg-white/10 rounded flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-[#FFD2A4]"
-              aria-label="Toggle navigation menu"
-              aria-expanded={mobileMenuOpen}
+              onClick={() => handleNavClick('admin')}
+              className={`p-2 rounded-full transition-colors cursor-pointer ${
+                currentTab === 'admin'
+                  ? 'bg-amber-400 text-slate-950 font-bold'
+                  : 'text-stone-400 hover:text-amber-700 hover:bg-stone-100'
+              }`}
+              title="Church Admin Operations Portal"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              <ShieldCheck className="w-4 h-4" />
             </button>
           </div>
+
+          {/* Mobile Menu Toggle Button */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden p-2 rounded-xl text-stone-700 hover:bg-stone-100 transition-colors cursor-pointer"
+            aria-label="Toggle navigation menu"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
 
-        {/* Mobile Dropdown Menu Drawer */}
+        {/* Mobile Navigation Drawer / Dropdown */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-[#0D0D0D] border-t border-white/10 px-4 sm:px-6 py-6 space-y-4 animate-in slide-in-from-top-2 duration-150">
-            {/* Mobile Header Brand Display */}
-            <div className="flex flex-col items-center text-center pb-4 border-b border-white/10">
-              <img
-                src={rccgLogoImg}
-                alt="RCCG Official Logo"
-                className="w-14 h-14 rounded-full object-cover shadow-md ring-2 ring-[#FFD2A4]/60 mb-2"
-              />
-              <span className="text-[10px] font-condensed font-bold uppercase tracking-widest text-[#FFD2A4]">
-                THE REDEEMED CHRISTIAN CHURCH OF GOD
-              </span>
-              <span className="font-condensed font-bold uppercase text-base tracking-wider text-white">
-                KINGDOM FIRST ASSEMBLY
-              </span>
-              <span className="text-[9px] font-condensed uppercase tracking-widest text-stone-400">
-                ROSELLE, NEW JERSEY
-              </span>
-            </div>
-
-            <div className="flex flex-col space-y-2 font-condensed font-bold uppercase tracking-wider text-base">
+          <div className="lg:hidden border-t border-stone-200 bg-white/98 backdrop-blur-md px-4 pt-3 pb-6 space-y-4 shadow-xl max-h-[85vh] overflow-y-auto">
+            {/* Section 1: Worship & Church Life */}
+            <div className="space-y-1">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-stone-400 px-3 pt-1">
+                Worship &amp; Church Life
+              </div>
               <button
                 onClick={() => handleNavClick('home')}
-                className={`text-left py-3 px-2 border-b border-white/10 transition-colors ${
-                  currentTab === 'home' ? 'text-[#FFD2A4] bg-white/5' : 'text-white/80 hover:text-white'
+                className={`w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                  currentTab === 'home'
+                    ? 'bg-emerald-50 text-emerald-900 font-bold'
+                    : 'text-stone-800 hover:bg-stone-50'
                 }`}
               >
                 Home
               </button>
+
               <button
                 onClick={() => handleNavClick('about')}
-                className={`text-left py-3 px-2 border-b border-white/10 transition-colors ${
-                  currentTab === 'about' ? 'text-[#FFD2A4] bg-white/5' : 'text-white/80 hover:text-white'
+                className={`w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                  currentTab === 'about'
+                    ? 'bg-emerald-50 text-emerald-900 font-bold'
+                    : 'text-stone-800 hover:bg-stone-50'
                 }`}
               >
-                About Us
-              </button>
-              <button
-                onClick={() => handleNavClick('gallery')}
-                className={`text-left py-3 px-2 border-b border-white/10 transition-colors ${
-                  currentTab === 'gallery' ? 'text-[#FFD2A4] bg-white/5' : 'text-white/80 hover:text-white'
-                }`}
-              >
-                Gallery
-              </button>
-              <button
-                onClick={handleCalendarClick}
-                className="text-left py-3 px-2 border-b border-white/10 text-white/80 hover:text-[#FFD2A4] transition-colors"
-              >
-                Church Calendar &amp; Dates
-              </button>
-              <button
-                onClick={() => handleNavClick('connect')}
-                className={`text-left py-3 px-2 border-b border-white/10 transition-colors ${
-                  currentTab === 'connect' ? 'text-[#FFD2A4] bg-white/5' : 'text-white/80 hover:text-white'
-                }`}
-              >
-                Get Connected &amp; Contact
+                About Us &amp; Our Story
               </button>
 
-              <a
-                href="https://www.youtube.com/@RCCGKFA"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-left py-3 px-2 border-b border-white/10 text-[#FFD2A4] flex items-center justify-between"
-              >
-                <span>Watch Live on YouTube</span>
-                <Tv className="w-4 h-4" />
-              </a>
               <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onOpenPrayerModal();
-                }}
-                className="text-left py-3 px-2 text-white/80 font-normal capitalize hover:text-white"
+                onClick={handleCalendarClick}
+                className="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium text-stone-800 hover:bg-stone-50 flex items-center justify-between"
               >
-                Submit Prayer Request
+                <span>Church Calendar</span>
+                <Calendar className="w-4 h-4 text-amber-600" />
               </button>
             </div>
 
-            <div className="pt-3 flex flex-col gap-2.5">
+            {/* Section 2: Word, Media & E-Books */}
+            <div className="space-y-1 pt-1 border-t border-stone-100">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-stone-400 px-3 pt-1">
+                Word, Media &amp; Publications
+              </div>
+              <button
+                onClick={() => handleNavClick('videos')}
+                className={`w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors flex items-center justify-between ${
+                  currentTab === 'videos'
+                    ? 'bg-emerald-50 text-emerald-900 font-bold'
+                    : 'text-stone-800 hover:bg-stone-50'
+                }`}
+              >
+                <span>Video Gallery (YouTube)</span>
+                <Tv className="w-4 h-4 text-red-500" />
+              </button>
+
+              <button
+                onClick={() => handleNavClick('ebooks')}
+                className={`w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors flex items-center justify-between ${
+                  currentTab === 'ebooks'
+                    ? 'bg-emerald-50 text-emerald-900 font-bold'
+                    : 'text-stone-800 hover:bg-stone-50'
+                }`}
+              >
+                <span>E-Books &amp; Devotionals</span>
+                <BookOpen className="w-4 h-4 text-amber-600" />
+              </button>
+
+              <button
+                onClick={() => handleNavClick('gallery')}
+                className={`w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                  currentTab === 'gallery'
+                    ? 'bg-emerald-50 text-emerald-900 font-bold'
+                    : 'text-stone-800 hover:bg-stone-50'
+                }`}
+              >
+                Photo Gallery
+              </button>
+            </div>
+
+            {/* Section 3: Fellowship & Giving */}
+            <div className="space-y-1 pt-1 border-t border-stone-100">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-stone-400 px-3 pt-1">
+                Fellowship &amp; Stewardship
+              </div>
+              <button
+                onClick={() => handleNavClick('connect')}
+                className={`w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                  currentTab === 'connect'
+                    ? 'bg-emerald-50 text-emerald-900 font-bold'
+                    : 'text-stone-800 hover:bg-stone-50'
+                }`}
+              >
+                Connect &amp; Ministries
+              </button>
+
+              <button
+                onClick={handleGivingClick}
+                className="w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-semibold text-amber-800 hover:bg-amber-50 flex items-center justify-between"
+              >
+                <span>Online Giving &amp; Tithes</span>
+                <Heart className="w-4 h-4 fill-amber-500 text-amber-600" />
+              </button>
+            </div>
+
+            {/* Section 4: Administration */}
+            <div className="space-y-1 pt-1 border-t border-stone-100">
+              <div className="text-[10px] font-bold uppercase tracking-widest text-stone-400 px-3 pt-1">
+                Church Management
+              </div>
+              <button
+                onClick={() => handleNavClick('admin')}
+                className={`w-full text-left px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-colors flex items-center justify-between ${
+                  currentTab === 'admin'
+                    ? 'bg-amber-100 text-slate-950 font-bold'
+                    : 'text-stone-700 hover:bg-stone-50'
+                }`}
+              >
+                <span>Church Admin Portal</span>
+                <ShieldCheck className="w-4 h-4 text-amber-600" />
+              </button>
+            </div>
+
+            {/* Mobile Call-to-Action Buttons */}
+            <div className="pt-3 border-t border-stone-200 flex flex-col gap-2">
               <button
                 onClick={() => {
                   setMobileMenuOpen(false);
                   onOpenPlanVisit();
                 }}
-                className="w-full min-h-[44px] py-3 bg-[#FFD2A4] text-[#0D0D0D] font-condensed font-bold uppercase tracking-widest text-xs flex items-center justify-center gap-2 active:bg-[#E5BE94]"
+                className="w-full py-3 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-semibold text-center text-sm shadow-sm transition-all"
               >
-                <Calendar className="w-4 h-4 text-[#0D0D0D]" />
-                Plan Your Visit
+                Plan Your Visit This Sunday
               </button>
-              <a
-                href="tel:8625207004"
-                className="w-full min-h-[44px] py-2.5 border border-white/20 text-white font-condensed uppercase tracking-wider text-xs flex items-center justify-center gap-2 active:bg-white/10"
+
+              <button
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenPrayerModal();
+                }}
+                className="w-full py-2.5 rounded-xl border border-stone-300 text-stone-700 hover:bg-stone-50 font-medium text-center text-xs"
               >
-                <Phone className="w-3.5 h-3.5 text-[#FFD2A4]" />
-                Call (862) 520-7004
-              </a>
+                Need Prayer? Submit Request
+              </button>
+            </div>
+
+            {/* Sanctuary Address Card in Mobile Drawer */}
+            <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 text-center text-[11px] text-stone-600 space-y-0.5">
+              <div className="font-semibold text-[#0A192F]">121 E 2nd Ave, Roselle, NJ 07203</div>
+              <div>Sunday Worship: 10:00 AM · Bible Study: Wed 7:00 PM</div>
             </div>
           </div>
         )}

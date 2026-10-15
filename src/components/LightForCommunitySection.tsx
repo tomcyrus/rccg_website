@@ -2,6 +2,8 @@ import React from 'react';
 import { PageTab } from '../types';
 import { ArrowRight, Flame } from 'lucide-react';
 
+import fellowshipImg from '../assets/images/fellowship_community_1791981784483.jpg';
+
 interface LightForCommunitySectionProps {
   onSelectTab: (tab: PageTab) => void;
 }
@@ -16,7 +18,7 @@ export const LightForCommunitySection: React.FC<LightForCommunitySectionProps> =
             <div className="relative">
               <div className="aspect-[4/3] bg-stone-200 overflow-hidden shadow-xl border border-stone-300">
                 <img
-                  src="/src/assets/images/fellowship_community_1791981784483.jpg"
+                  src={fellowshipImg}
                   alt="Joyful fellowship and welcoming congregation at RCCG Kingdom First Assembly"
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"

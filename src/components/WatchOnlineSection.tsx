@@ -1,5 +1,6 @@
 import React from 'react';
 import { Tv, Play, ExternalLink, Radio, Check } from 'lucide-react';
+import heroImg from '../assets/images/hero_church_sanctuary_1791981782802.jpg';
 
 export const WatchOnlineSection: React.FC = () => {
   const youtubeUrl = 'https://www.youtube.com/@RCCGKFA';
@@ -71,7 +72,7 @@ export const WatchOnlineSection: React.FC = () => {
               >
                 <div className="aspect-video bg-stone-900 relative overflow-hidden flex items-center justify-center">
                   <img
-                    src="/src/assets/images/hero_church_sanctuary_1791981782802.jpg"
+                    src={heroImg}
                     alt="RCCG Kingdom First Assembly Livestream"
                     className="w-full h-full object-cover opacity-60 group-hover:opacity-75 transition-opacity"
                     referrerPolicy="no-referrer"
