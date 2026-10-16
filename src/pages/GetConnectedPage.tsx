@@ -116,25 +116,24 @@ export const GetConnectedPage: React.FC<GetConnectedPageProps> = ({
   ];
 
   return (
-    <div className="bg-[#FAF8F5]">
+    <div className="bg-white">
       {/* Header */}
-      <section className="bg-gradient-to-r from-[#071324] via-[#0A192F] to-[#071324] text-white py-16 sm:py-24 border-b border-amber-500/20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.1),transparent_70%)]" />
+      <section className="bg-gradient-to-r from-[#070D1F] via-[#0B132B] to-[#070D1F] text-white py-16 sm:py-24 border-b border-white/10 relative overflow-hidden">
         <div className="max-w-4xl mx-auto px-4 sm:px-8 text-center space-y-4 relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-400/30 text-amber-300 text-xs font-semibold tracking-wider uppercase">
-            <Heart className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-            <span>Welcome to the Family</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/15 border border-blue-400/30 text-blue-300 text-xs font-semibold tracking-wider uppercase">
+            <Heart className="w-3.5 h-3.5 fill-blue-400 text-blue-400" />
+            <span>Welcome to RCCG Kingdom First Assembly</span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif font-bold text-white tracking-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight">
             We Would Love to Meet You!
           </h1>
 
           <p className="text-base sm:text-lg text-slate-200 font-sans max-w-2xl mx-auto leading-relaxed">
-            Whether you are newly moving to Roselle, searching for a spirit-filled church home, or simply exploring faith in Jesus Christ, you have a seat at our table.
+            Whether you are newly moving to Roselle, searching for a spirit-filled church family, or exploring faith in Jesus Christ, you have a seat at our table.
           </p>
 
-          <p className="text-sm font-serif italic text-amber-300">
+          <p className="text-sm font-sans italic text-blue-300">
             "At Kingdom First Assembly, we are growing together in faith and love, and there is always room for you."
           </p>
         </div>
@@ -156,36 +155,37 @@ export const GetConnectedPage: React.FC<GetConnectedPageProps> = ({
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* 4 Connection Pillars: 2 cols on mobile, 4 on desktop */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-6">
             {pillars.map((pillar) => {
               const Icon = pillar.icon;
               return (
                 <div
                   key={pillar.id}
-                  className="bg-[#FAF8F5] rounded-2xl border border-stone-200/90 p-6 sm:p-7 flex flex-col justify-between hover:border-amber-400/60 shadow-xs hover:shadow-xl transition-all duration-300 group"
+                  className="bg-white rounded-xl sm:rounded-2xl border border-slate-200/90 p-3 xs:p-4 sm:p-7 flex flex-col justify-between hover:border-blue-400/60 shadow-xs hover:shadow-lg transition-all duration-300 group"
                 >
-                  <div className="space-y-3.5">
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center border ${pillar.color} group-hover:scale-110 transition-transform`}>
-                      <Icon className="w-6 h-6" />
+                  <div className="space-y-2 sm:space-y-3.5">
+                    <div className={`w-9 h-9 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center border ${pillar.color} group-hover:scale-110 transition-transform`}>
+                      <Icon className="w-4 h-4 sm:w-6 sm:h-6" />
                     </div>
 
-                    <div className="text-[10px] font-bold uppercase tracking-widest text-amber-800">
+                    <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-[#1D63ED] truncate">
                       {pillar.category}
                     </div>
 
-                    <h3 className="text-xl font-serif font-bold text-[#0A192F] group-hover:text-emerald-800 transition-colors">
+                    <h3 className="text-xs xs:text-sm sm:text-xl font-bold text-[#0F172A] group-hover:text-[#1D63ED] transition-colors leading-snug">
                       {pillar.title}
                     </h3>
 
-                    <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
+                    <p className="text-[10px] xs:text-xs sm:text-sm text-slate-500 leading-relaxed font-sans line-clamp-3">
                       {pillar.description}
                     </p>
                   </div>
 
-                  <div className="pt-6">
+                  <div className="pt-3 sm:pt-6">
                     <button
                       onClick={pillar.onClick}
-                      className="w-full py-2.5 px-4 rounded-full bg-emerald-800 hover:bg-emerald-900 text-white font-semibold text-xs tracking-wide transition-all cursor-pointer text-center shadow-xs"
+                      className="w-full py-2 sm:py-2.5 px-2 sm:px-4 rounded-full bg-[#1D63ED] hover:bg-[#1551CA] text-white font-semibold text-[10px] xs:text-xs tracking-wide transition-all cursor-pointer text-center shadow-xs"
                     >
                       {pillar.actionLabel}
                     </button>

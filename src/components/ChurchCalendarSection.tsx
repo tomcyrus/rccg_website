@@ -360,22 +360,22 @@ export const ChurchCalendarSection: React.FC<ChurchCalendarSectionProps> = ({
   };
 
   return (
-    <section id="church-calendar" className="py-20 bg-[#FAF8F5] border-t border-stone-200/80 text-[#0A192F]">
+    <section id="church-calendar" className="py-20 bg-white border-t border-slate-100 text-[#0F172A]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 border border-amber-300 text-amber-900 text-xs font-semibold tracking-wider uppercase mb-3">
-            <CalendarIcon className="w-3.5 h-3.5 text-amber-700" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#1D63ED] text-xs font-semibold tracking-wider uppercase mb-3">
+            <CalendarIcon className="w-3.5 h-3.5 text-[#1D63ED]" />
             <span>Church Calendar &amp; Upcoming Dates</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-[#0A192F] tracking-tight leading-tight mb-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#0F172A] tracking-tight leading-tight mb-4">
             Fellowship, Growth &amp; Community Gatherings
           </h2>
 
-          <p className="text-stone-600 text-base sm:text-lg leading-relaxed font-sans">
-            Stay connected with weekly worship celebrations, in-depth Bible studies, and neighborhood outreach programs at RCCG Kingdom First Assembly in Roselle, NJ.
+          <p className="text-slate-600 text-base sm:text-lg leading-relaxed font-sans">
+            Stay connected with weekly worship celebrations, in-depth Bible studies, and neighborhood outreach programs.
           </p>
         </div>
 
@@ -442,7 +442,7 @@ export const ChurchCalendarSection: React.FC<ChurchCalendarSectionProps> = ({
               onClick={() => setActiveCategory('all')}
               className={`px-3.5 py-2 text-xs font-semibold rounded-xl transition-all shrink-0 cursor-pointer ${
                 activeCategory === 'all'
-                  ? 'bg-emerald-800 text-white shadow-xs'
+                  ? 'bg-[#1D63ED] text-white shadow-xs'
                   : 'bg-transparent text-stone-600 hover:bg-stone-100 hover:text-stone-900'
               }`}
             >
@@ -453,7 +453,7 @@ export const ChurchCalendarSection: React.FC<ChurchCalendarSectionProps> = ({
               onClick={() => setActiveCategory('bible-study')}
               className={`px-3.5 py-2 text-xs font-semibold rounded-xl transition-all shrink-0 cursor-pointer ${
                 activeCategory === 'bible-study'
-                  ? 'bg-emerald-800 text-white shadow-xs'
+                  ? 'bg-[#1D63ED] text-white shadow-xs'
                   : 'bg-transparent text-stone-600 hover:bg-stone-100 hover:text-stone-900'
               }`}
             >
@@ -464,7 +464,7 @@ export const ChurchCalendarSection: React.FC<ChurchCalendarSectionProps> = ({
               onClick={() => setActiveCategory('outreach')}
               className={`px-3.5 py-2 text-xs font-semibold rounded-xl transition-all shrink-0 cursor-pointer ${
                 activeCategory === 'outreach'
-                  ? 'bg-emerald-800 text-white shadow-xs'
+                  ? 'bg-[#1D63ED] text-white shadow-xs'
                   : 'bg-transparent text-stone-600 hover:bg-stone-100 hover:text-stone-900'
               }`}
             >
@@ -475,7 +475,7 @@ export const ChurchCalendarSection: React.FC<ChurchCalendarSectionProps> = ({
               onClick={() => setActiveCategory('worship')}
               className={`px-3.5 py-2 text-xs font-semibold rounded-xl transition-all shrink-0 cursor-pointer ${
                 activeCategory === 'worship'
-                  ? 'bg-emerald-800 text-white shadow-xs'
+                  ? 'bg-[#1D63ED] text-white shadow-xs'
                   : 'bg-transparent text-stone-600 hover:bg-stone-100 hover:text-stone-900'
               }`}
             >
@@ -486,7 +486,7 @@ export const ChurchCalendarSection: React.FC<ChurchCalendarSectionProps> = ({
               onClick={() => setActiveCategory('special')}
               className={`px-3.5 py-2 text-xs font-semibold rounded-xl transition-all shrink-0 cursor-pointer ${
                 activeCategory === 'special'
-                  ? 'bg-emerald-800 text-white shadow-xs'
+                  ? 'bg-[#1D63ED] text-white shadow-xs'
                   : 'bg-transparent text-stone-600 hover:bg-stone-100 hover:text-stone-900'
               }`}
             >
@@ -565,14 +565,14 @@ export const ChurchCalendarSection: React.FC<ChurchCalendarSectionProps> = ({
           </div>
         )}
 
-        {/* GRID VIEW (Clean, Grid-Based Layout) */}
+        {/* GRID VIEW (Responsive Mobile Grid: 1 col on <360px, 2 col on mobile >= 360px, 3 col on lg) */}
         {viewMode === 'grid' && filteredEvents.length > 0 && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
             {filteredEvents.map((evt) => (
               <div
                 key={evt.id}
                 onClick={() => handleOpenEventModal(evt)}
-                className="bg-white rounded-2xl border border-stone-200/90 hover:border-amber-400/60 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between cursor-pointer group text-left relative overflow-hidden"
+                className="bg-white rounded-xl sm:rounded-2xl border border-slate-200/90 hover:border-blue-400/60 shadow-xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between cursor-pointer group text-left relative overflow-hidden"
               >
                 {/* Top Banner Accent Line */}
                 <div
@@ -582,81 +582,81 @@ export const ChurchCalendarSection: React.FC<ChurchCalendarSectionProps> = ({
                       : evt.category === 'outreach'
                       ? 'bg-emerald-600'
                       : evt.category === 'worship'
-                      ? 'bg-amber-500'
+                      ? 'bg-[#1D63ED]'
                       : 'bg-purple-600'
                   }`}
                 />
 
-                <div className="p-4 sm:p-6">
+                <div className="p-3 xs:p-3.5 sm:p-6">
                   {/* Date Badge and Clean Metadata Bar */}
-                  <div className="flex items-start justify-between gap-4 mb-4">
+                  <div className="flex items-start justify-between gap-2 sm:gap-4 mb-2.5 sm:mb-4">
                     {/* Editorial Calendar Date Tile */}
-                    <div className="bg-amber-50/60 border border-amber-200/60 rounded-xl w-14 h-16 flex flex-col items-center justify-center shrink-0 group-hover:border-amber-400/60 transition-colors">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800 leading-none">
+                    <div className="bg-blue-50/80 border border-blue-200/80 rounded-lg sm:rounded-xl w-11 h-13 xs:w-12 xs:h-14 sm:w-14 sm:h-16 flex flex-col items-center justify-center shrink-0 group-hover:border-blue-400/80 transition-colors">
+                      <span className="text-[8px] xs:text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-blue-700 leading-none">
                         {evt.dateBadge.month}
                       </span>
-                      <span className="text-xl font-bold font-serif text-[#0A192F] leading-tight">
+                      <span className="text-sm xs:text-base sm:text-xl font-bold text-[#0F172A] leading-tight my-0.5">
                         {evt.dateBadge.day}
                       </span>
-                      <span className="text-[8px] tracking-widest text-stone-500 uppercase leading-none font-semibold">
+                      <span className="text-[7px] sm:text-[8px] tracking-widest text-slate-500 uppercase leading-none font-semibold">
                         {evt.dateBadge.subtext || 'EVENT'}
                       </span>
                     </div>
 
                     {/* Metadata */}
                     <div className="flex-1 min-w-0 text-right">
-                      <span className="inline-block text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-stone-100 text-stone-700">
+                      <span className="inline-block text-[8px] xs:text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 truncate max-w-full">
                         {evt.categoryLabel}
                       </span>
-                      <div className="text-xs text-stone-500 font-medium truncate mt-1">
+                      <div className="text-[10px] xs:text-[11px] sm:text-xs text-slate-500 font-medium truncate mt-0.5">
                         {evt.frequency}
                       </div>
                     </div>
                   </div>
 
                   {/* Event Title */}
-                  <h3 className="font-serif font-bold text-lg sm:text-xl text-[#0A192F] group-hover:text-emerald-800 transition-colors leading-snug mb-3">
+                  <h3 className="font-bold text-xs xs:text-sm sm:text-lg text-[#0F172A] group-hover:text-[#1D63ED] transition-colors leading-snug mb-1.5 sm:mb-2 line-clamp-2">
                     {evt.title}
                   </h3>
 
                   {/* Time & Location Metadata */}
-                  <div className="space-y-1.5 text-xs text-stone-600 mb-4">
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                      <span>{evt.time}</span>
+                  <div className="space-y-1 text-[10px] xs:text-[11px] sm:text-xs text-slate-600 mb-2 sm:mb-3">
+                    <div className="flex items-center gap-1.5 truncate">
+                      <Clock className="w-3 h-3 text-[#1D63ED] shrink-0" />
+                      <span className="truncate">{evt.time}</span>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                    <div className="flex items-center gap-1.5 truncate">
+                      <MapPin className="w-3 h-3 text-emerald-600 shrink-0" />
                       <span className="truncate">{evt.location}</span>
                     </div>
 
                     {evt.isOnlineAvailable && (
-                      <div className="flex items-center gap-2 text-stone-500">
-                        <Tv className="w-3.5 h-3.5 text-red-500 shrink-0" />
-                        <span className="text-[11px]">Streamed on {evt.onlinePlatform}</span>
+                      <div className="flex items-center gap-1.5 text-slate-500 truncate">
+                        <Tv className="w-3 h-3 text-red-500 shrink-0" />
+                        <span className="text-[9px] xs:text-[10px] sm:text-[11px] truncate">Streamed on {evt.onlinePlatform}</span>
                       </div>
                     )}
                   </div>
 
                   {/* Description */}
-                  <p className="text-xs text-stone-600 leading-relaxed line-clamp-3 mb-4 font-sans">
+                  <p className="text-[10px] xs:text-[11px] sm:text-xs text-slate-500 leading-relaxed line-clamp-2 mb-2 font-sans">
                     {evt.description}
                   </p>
 
                   {/* Scripture Anchor / Theme */}
                   {evt.scriptureRef && (
-                    <div className="text-[11px] font-serif italic text-amber-900 bg-amber-50/50 rounded-lg border-l-2 border-amber-400 px-3 py-1.5 mb-4">
+                    <div className="text-[9px] xs:text-[10px] sm:text-[11px] italic text-[#1D63ED] bg-blue-50/70 rounded border-l-2 border-[#1D63ED] px-2 py-1 mb-2 truncate">
                       {evt.scriptureRef}
                     </div>
                   )}
 
                   {/* Highlight bullets */}
                   {evt.highlights && evt.highlights.length > 0 && (
-                    <ul className="space-y-1 mb-2">
+                    <ul className="space-y-0.5 mb-1 hidden sm:block">
                       {evt.highlights.slice(0, 2).map((hl, i) => (
-                        <li key={i} className="text-[11px] text-stone-500 flex items-start gap-1.5">
-                          <span className="text-amber-600 mt-0.5">•</span>
+                        <li key={i} className="text-[11px] text-slate-500 flex items-start gap-1.5">
+                          <span className="text-[#1D63ED] mt-0.5">•</span>
                           <span className="line-clamp-1">{hl}</span>
                         </li>
                       ))}
@@ -665,9 +665,9 @@ export const ChurchCalendarSection: React.FC<ChurchCalendarSectionProps> = ({
                 </div>
 
                 {/* Card Action Footer */}
-                <div className="bg-stone-50/80 border-t border-stone-100 px-6 py-3.5 flex items-center justify-between text-xs">
+                <div className="bg-slate-50 border-t border-slate-100 px-3 xs:px-3.5 sm:px-6 py-2 sm:py-3 flex items-center justify-between text-[10px] xs:text-[11px] sm:text-xs">
                   {/* Add to Calendar Action */}
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1">
                     <button
                       type="button"
                       onClick={(e) => {
@@ -675,9 +675,9 @@ export const ChurchCalendarSection: React.FC<ChurchCalendarSectionProps> = ({
                         downloadCustomEventIcs(evt);
                       }}
                       title="Download iCal / Outlook event"
-                      className="p-1.5 rounded-lg text-stone-500 hover:text-emerald-800 hover:bg-white border border-transparent hover:border-stone-200 transition-all cursor-pointer"
+                      className="p-1 rounded text-slate-500 hover:text-[#1D63ED] hover:bg-white border border-transparent hover:border-slate-200 transition-all cursor-pointer"
                     >
-                      <Download className="w-3.5 h-3.5" />
+                      <Download className="w-3 h-3 xs:w-3.5 xs:h-3.5" />
                     </button>
 
                     <a
@@ -686,29 +686,29 @@ export const ChurchCalendarSection: React.FC<ChurchCalendarSectionProps> = ({
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}
                       title="Add to Google Calendar"
-                      className="p-1.5 rounded-lg text-stone-500 hover:text-emerald-800 hover:bg-white border border-transparent hover:border-stone-200 transition-all cursor-pointer inline-flex items-center"
+                      className="p-1 rounded text-slate-500 hover:text-[#1D63ED] hover:bg-white border border-transparent hover:border-slate-200 transition-all cursor-pointer inline-flex items-center"
                     >
-                      <CalendarPlus className="w-3.5 h-3.5" />
+                      <CalendarPlus className="w-3 h-3 xs:w-3.5 xs:h-3.5" />
                     </a>
 
                     <button
                       type="button"
                       onClick={(e) => handleShareEvent(evt, e)}
                       title="Copy event details"
-                      className="p-1.5 rounded-lg text-stone-500 hover:text-emerald-800 hover:bg-white border border-transparent hover:border-stone-200 transition-all cursor-pointer"
+                      className="p-1 rounded text-slate-500 hover:text-[#1D63ED] hover:bg-white border border-transparent hover:border-slate-200 transition-all cursor-pointer"
                     >
                       {copiedId === evt.id ? (
-                        <Check className="w-3.5 h-3.5 text-emerald-600" />
+                        <Check className="w-3 h-3 xs:w-3.5 xs:h-3.5 text-emerald-600" />
                       ) : (
-                        <Share2 className="w-3.5 h-3.5" />
+                        <Share2 className="w-3 h-3 xs:w-3.5 xs:h-3.5" />
                       )}
                     </button>
                   </div>
 
                   {/* View Details / RSVP link */}
-                  <span className="font-semibold text-xs text-emerald-800 group-hover:text-emerald-950 flex items-center gap-1 transition-colors">
-                    <span>Details &amp; RSVP</span>
-                    <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                  <span className="font-semibold text-[#1D63ED] group-hover:text-[#1551CA] flex items-center gap-0.5 sm:gap-1 transition-colors text-[10px] xs:text-[11px] sm:text-xs">
+                    <span>Details</span>
+                    <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                   </span>
                 </div>
               </div>

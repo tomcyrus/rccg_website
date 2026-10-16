@@ -97,19 +97,19 @@ export const EbooksSection: React.FC<EbooksSectionProps> = ({ onOpenPlanVisit })
   };
 
   return (
-    <div className="bg-[#FAF8F5] min-h-screen py-10 sm:py-16 font-sans">
+    <div className="bg-white min-h-screen py-10 sm:py-16 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-stone-200">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-slate-200">
           <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 border border-amber-300 text-amber-900 text-xs font-semibold tracking-wider uppercase">
-              <Library className="w-3.5 h-3.5 text-amber-700" />
-              <span>RCCG Spiritual Library &amp; E-Books</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#1D63ED] text-xs font-semibold tracking-wider uppercase">
+              <Library className="w-3.5 h-3.5 text-[#1D63ED]" />
+              <span>Spiritual Library &amp; E-Books</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#0A192F] tracking-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0F172A] tracking-tight">
               Equip Your Spirit With Timeless Truth
             </h1>
-            <p className="text-sm sm:text-base text-stone-600 font-sans leading-relaxed">
+            <p className="text-sm sm:text-base text-slate-600 font-sans leading-relaxed">
               Explore curated daily devotionals, discipleship manuals, prayer warfare guides, and biblical family resources. 
               Read sample chapters online or download comprehensive study guides.
             </p>
@@ -121,11 +121,11 @@ export const EbooksSection: React.FC<EbooksSectionProps> = ({ onOpenPlanVisit })
               onClick={() => setShowSavedOnly(!showSavedOnly)}
               className={`px-5 py-2.5 rounded-full font-semibold text-xs tracking-wide transition-all shadow-xs flex items-center gap-2 cursor-pointer border ${
                 showSavedOnly
-                  ? 'bg-amber-400 text-slate-950 border-amber-500 font-bold'
-                  : 'bg-white text-stone-700 hover:bg-stone-50 border-stone-300'
+                  ? 'bg-[#1D63ED] text-white border-[#1D63ED] font-bold'
+                  : 'bg-white text-slate-700 hover:bg-slate-50 border-slate-300'
               }`}
             >
-              <Bookmark className={`w-4 h-4 ${showSavedOnly ? 'fill-slate-950 text-slate-950' : 'text-amber-600'}`} />
+              <Bookmark className={`w-4 h-4 ${showSavedOnly ? 'fill-white text-white' : 'text-[#1D63ED]'}`} />
               <span>My Bookshelf ({savedBookIds.length})</span>
             </button>
           </div>
@@ -291,8 +291,8 @@ export const EbooksSection: React.FC<EbooksSectionProps> = ({ onOpenPlanVisit })
                   }}
                   className={`px-4 py-2 rounded-full text-xs font-medium whitespace-nowrap transition-all cursor-pointer ${
                     active
-                      ? 'bg-emerald-800 text-white shadow-xs font-semibold'
-                      : 'bg-white text-stone-700 hover:bg-stone-100 border border-stone-200'
+                      ? 'bg-[#1D63ED] text-white shadow-xs font-semibold'
+                      : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
                   }`}
                 >
                   {cat.label}
@@ -302,26 +302,26 @@ export const EbooksSection: React.FC<EbooksSectionProps> = ({ onOpenPlanVisit })
           </div>
         </div>
 
-        {/* Ebooks Grid */}
+        {/* Ebooks Grid: 2 columns on mobile, 3 on md, 4 on lg */}
         {filteredBooks.length > 0 ? (
-          <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-6">
             {filteredBooks.map((book) => {
               const isSaved = savedBookIds.includes(book.id);
               return (
                 <div
                   key={book.id}
-                  className="bg-white rounded-2xl sm:rounded-3xl border border-stone-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group"
+                  className="bg-white rounded-xl sm:rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-lg transition-all duration-300 flex flex-col overflow-hidden group"
                 >
                   {/* Stylized Book Cover Header */}
                   <div 
                     onClick={() => handleOpenReader(book)}
-                    className={`aspect-[3/4] bg-gradient-to-br ${coverThemeGradients[book.coverTheme]} p-3.5 sm:p-5 relative overflow-hidden flex flex-col justify-between cursor-pointer border-b border-stone-200 select-none`}
+                    className={`aspect-[3/4] bg-gradient-to-br ${coverThemeGradients[book.coverTheme]} p-3 sm:p-5 relative overflow-hidden flex flex-col justify-between cursor-pointer border-b border-slate-200 select-none`}
                   >
                     {/* Spine strip on left */}
-                    <div className="absolute left-0 top-0 bottom-0 w-2.5 sm:w-3 bg-black/25 border-r border-white/10" />
+                    <div className="absolute left-0 top-0 bottom-0 w-2 sm:w-3 bg-black/25 border-r border-white/10" />
 
                     {/* Top Ribbon & Bookmark */}
-                    <div className="flex items-center justify-between relative z-10 pl-2">
+                    <div className="flex items-center justify-between relative z-10 pl-1.5 sm:pl-2">
                       <span className="text-[8px] sm:text-[9px] uppercase tracking-widest text-amber-300 font-bold truncate">
                         RCCG PRESS
                       </span>
@@ -331,39 +331,39 @@ export const EbooksSection: React.FC<EbooksSectionProps> = ({ onOpenPlanVisit })
                           handleToggleSave(book.id);
                         }}
                         className={`p-1 sm:p-1.5 rounded-full transition-colors cursor-pointer ${
-                          isSaved ? 'bg-amber-400 text-slate-950' : 'bg-black/30 hover:bg-black/50 text-white'
+                          isSaved ? 'bg-[#1D63ED] text-white' : 'bg-black/30 hover:bg-black/50 text-white'
                         }`}
                         title={isSaved ? 'Remove from bookshelf' : 'Save to bookshelf'}
                       >
-                        <Bookmark className={`w-3 sm:w-3.5 h-3 sm:h-3.5 ${isSaved ? 'fill-slate-950' : ''}`} />
+                        <Bookmark className={`w-3 sm:w-3.5 h-3 sm:h-3.5 ${isSaved ? 'fill-white' : ''}`} />
                       </button>
                     </div>
 
                     {/* Book Cover Center Title */}
-                    <div className="space-y-1 text-center relative z-10 px-1 sm:px-2 my-auto">
-                      <h3 className="font-serif font-bold text-white text-sm sm:text-base lg:text-lg leading-snug line-clamp-3 drop-shadow-md">
+                    <div className="space-y-0.5 sm:space-y-1 text-center relative z-10 px-1 sm:px-2 my-auto">
+                      <h3 className="font-bold text-white text-xs sm:text-base lg:text-lg leading-snug line-clamp-3 drop-shadow-md">
                         {book.title}
                       </h3>
                       {book.subtitle && (
-                        <p className="text-[9px] sm:text-[10px] text-amber-200/80 font-sans line-clamp-2 hidden xs:block">
+                        <p className="text-[8px] sm:text-[10px] text-amber-200/80 font-sans line-clamp-1 hidden sm:block">
                           {book.subtitle}
                         </p>
                       )}
                     </div>
 
                     {/* Bottom Author Tag */}
-                    <div className="relative z-10 text-center border-t border-white/15 pt-1.5 sm:pt-2 pl-2">
-                      <div className="text-[11px] sm:text-xs font-semibold text-white truncate">
+                    <div className="relative z-10 text-center border-t border-white/15 pt-1 sm:pt-2 pl-1.5">
+                      <div className="text-[10px] sm:text-xs font-semibold text-white truncate">
                         {book.author}
                       </div>
-                      <div className="text-[9px] sm:text-[10px] text-amber-300/80 font-mono">
-                        {book.pages}p · {book.format}
+                      <div className="text-[8px] sm:text-[10px] text-slate-300 font-mono">
+                        {book.pages}p &middot; {book.format}
                       </div>
                     </div>
 
                     {/* Hover Prompt */}
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <div className="px-3 py-1.5 rounded-full bg-amber-400 text-slate-950 font-bold text-xs shadow-lg flex items-center gap-1.5">
+                      <div className="px-3 py-1.5 rounded-full bg-[#1D63ED] text-white font-bold text-xs shadow-lg flex items-center gap-1.5">
                         <BookOpen className="w-3.5 h-3.5" />
                         <span>Read</span>
                       </div>
@@ -371,46 +371,46 @@ export const EbooksSection: React.FC<EbooksSectionProps> = ({ onOpenPlanVisit })
                   </div>
 
                   {/* Book Card Details & Actions */}
-                  <div className="p-3.5 sm:p-5 flex-1 flex flex-col justify-between space-y-3 sm:space-y-4">
-                    <div className="space-y-1.5 sm:space-y-2">
+                  <div className="p-3 sm:p-5 flex-1 flex flex-col justify-between space-y-2.5 sm:space-y-4">
+                    <div className="space-y-1 sm:space-y-2">
                       {/* Quiet Unboxed Metadata */}
-                      <div className="flex items-center gap-1 text-[10px] sm:text-[11px] text-amber-700 font-semibold tracking-wide uppercase truncate">
+                      <div className="flex items-center gap-1 text-[9px] sm:text-[11px] text-[#1D63ED] font-semibold tracking-wide uppercase truncate">
                         <span className="truncate">{book.categoryLabel}</span>
-                        <span aria-hidden="true">·</span>
-                        <span className="text-stone-500 font-normal shrink-0">{book.publicationYear}</span>
+                        <span aria-hidden="true">&middot;</span>
+                        <span className="text-slate-500 font-normal shrink-0">{book.publicationYear}</span>
                       </div>
 
                       <h4 
                         onClick={() => handleOpenReader(book)}
-                        className="text-sm sm:text-base font-serif font-bold text-[#0A192F] line-clamp-2 group-hover:text-emerald-800 transition-colors cursor-pointer"
+                        className="text-xs sm:text-base font-bold text-[#0F172A] line-clamp-2 group-hover:text-[#1D63ED] transition-colors cursor-pointer leading-tight sm:leading-snug"
                       >
                         {book.title}
                       </h4>
 
-                      <div className="flex items-center gap-1 text-[11px] sm:text-xs text-amber-600 font-semibold">
-                        <Star className="w-3 sm:w-3.5 h-3 sm:h-3.5 fill-amber-400 text-amber-400 shrink-0" />
+                      <div className="flex items-center gap-1 text-[10px] sm:text-xs text-amber-600 font-semibold">
+                        <Star className="w-2.5 sm:w-3.5 h-2.5 sm:h-3.5 fill-amber-400 text-amber-400 shrink-0" />
                         <span>{book.rating.toFixed(1)}</span>
-                        <span className="text-stone-400 font-normal text-[10px] sm:text-xs">({book.reviewCount})</span>
+                        <span className="text-slate-400 font-normal text-[9px] sm:text-xs">({book.reviewCount})</span>
                       </div>
 
-                      <p className="text-[11px] sm:text-xs text-stone-500 line-clamp-2 leading-relaxed">
+                      <p className="text-[10px] sm:text-xs text-slate-500 line-clamp-2 leading-relaxed hidden xs:block">
                         {book.description}
                       </p>
                     </div>
 
                     {/* Bottom Actions */}
-                    <div className="pt-2.5 sm:pt-3 border-t border-stone-100 flex items-center justify-between gap-1 text-xs">
+                    <div className="pt-2 sm:pt-3 border-t border-slate-100 flex items-center justify-between gap-1 text-xs">
                       <button
                         onClick={() => handleOpenReader(book)}
-                        className="text-[11px] sm:text-xs font-semibold text-emerald-800 hover:text-emerald-900 flex items-center gap-0.5 transition-colors cursor-pointer"
+                        className="text-[10px] sm:text-xs font-semibold text-[#1D63ED] hover:text-[#1551CA] flex items-center gap-0.5 transition-colors cursor-pointer"
                       >
-                        <span>Preview Ch. {book.sampleChapter.chapterNumber}</span>
+                        <span>Preview</span>
                         <ChevronRight className="w-3 h-3" />
                       </button>
 
                       <button
                         onClick={() => handleOpenReader(book)}
-                        className="text-[10px] sm:text-[11px] font-medium text-stone-500 hover:text-amber-700 transition-colors flex items-center gap-1 cursor-pointer"
+                        className="text-[9px] sm:text-[11px] font-medium text-slate-500 hover:text-slate-800 transition-colors flex items-center gap-1 cursor-pointer"
                       >
                         <FileText className="w-3 h-3" />
                         <span className="hidden sm:inline">Guide</span>

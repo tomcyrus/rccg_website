@@ -21,6 +21,8 @@ import { updatePageSeo } from './utils/seo';
 export default function App() {
   const [currentTab, setCurrentTab] = useState<PageTab>(() => {
     if (typeof window !== 'undefined') {
+      const hash = window.location.hash.replace('#', '');
+      if (hash === 'admin') return 'admin';
       const params = new URLSearchParams(window.location.search);
       const tabParam = params.get('tab') as PageTab;
       if (tabParam && ['home', 'about', 'videos', 'ebooks', 'gallery', 'connect', 'admin'].includes(tabParam)) {
@@ -32,13 +34,25 @@ export default function App() {
   const [planVisitModalOpen, setPlanVisitModalOpen] = useState(false);
   const [prayerModalOpen, setPrayerModalOpen] = useState(false);
 
+  // Listen to hash changes for direct #admin access
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash === 'admin') {
+        setCurrentTab('admin');
+      }
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
   // Sync document page title, meta description, canonical link, open graph, and breadcrumbs
   useEffect(() => {
     updatePageSeo(currentTab);
   }, [currentTab]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF8F5] text-[#0A192F]">
+    <div className="min-h-screen flex flex-col bg-white text-[#0F172A]">
       {/* Top Navbar */}
       <Navbar
         currentTab={currentTab}

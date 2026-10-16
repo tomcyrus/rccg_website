@@ -76,20 +76,20 @@ export const BenefitsSection: React.FC = () => {
     : ministries.filter(m => m.category === activeTab);
 
   return (
-    <section id="ministries-section" className="py-16 sm:py-24 bg-[#FAF8F5] border-b border-stone-200/80 overflow-hidden">
+    <section id="ministries-section" className="py-16 sm:py-24 bg-slate-50 border-b border-slate-100 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center space-y-3 mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-800 text-xs font-semibold tracking-wider uppercase">
-            <Users className="w-3.5 h-3.5 text-emerald-700" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#1D63ED] text-xs font-semibold tracking-wider uppercase">
+            <Users className="w-3.5 h-3.5 text-[#1D63ED]" />
             <span>Connect &amp; Grow</span>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#0A192F] tracking-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0F172A] tracking-tight">
             Ministries for Every Age &amp; Season of Life
           </h2>
 
-          <p className="text-sm sm:text-base text-stone-600 max-w-2xl mx-auto font-sans leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
             God created us for community, not isolation. Find your circle, discover your spiritual gifts, 
             and make a meaningful impact together.
           </p>
@@ -100,8 +100,8 @@ export const BenefitsSection: React.FC = () => {
               onClick={() => setActiveTab('all')}
               className={`px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                 activeTab === 'all'
-                  ? 'bg-emerald-800 text-white shadow-xs'
-                  : 'bg-white border border-stone-200 text-stone-700 hover:bg-stone-50'
+                  ? 'bg-[#1D63ED] text-white shadow-xs'
+                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
               }`}
             >
               All Ministries
@@ -110,8 +110,8 @@ export const BenefitsSection: React.FC = () => {
               onClick={() => setActiveTab('adults')}
               className={`px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                 activeTab === 'adults'
-                  ? 'bg-emerald-800 text-white shadow-xs'
-                  : 'bg-white border border-stone-200 text-stone-700 hover:bg-stone-50'
+                  ? 'bg-[#1D63ED] text-white shadow-xs'
+                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
               }`}
             >
               Men &amp; Women
@@ -120,8 +120,8 @@ export const BenefitsSection: React.FC = () => {
               onClick={() => setActiveTab('nextgen')}
               className={`px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                 activeTab === 'nextgen'
-                  ? 'bg-emerald-800 text-white shadow-xs'
-                  : 'bg-white border border-stone-200 text-stone-700 hover:bg-stone-50'
+                  ? 'bg-[#1D63ED] text-white shadow-xs'
+                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
               }`}
             >
               Youth &amp; Children
@@ -130,8 +130,8 @@ export const BenefitsSection: React.FC = () => {
               onClick={() => setActiveTab('outreach')}
               className={`px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                 activeTab === 'outreach'
-                  ? 'bg-emerald-800 text-white shadow-xs'
-                  : 'bg-white border border-stone-200 text-stone-700 hover:bg-stone-50'
+                  ? 'bg-[#1D63ED] text-white shadow-xs'
+                  : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-100'
               }`}
             >
               Worship &amp; Outreach
@@ -139,50 +139,51 @@ export const BenefitsSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Ministries Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+        {/* Ministries Responsive Grid: 1 col on <360px, 2 col on mobile >= 360px, 3 col on lg */}
+        <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6 lg:gap-8">
           {filteredMinistries.map((ministry) => {
             const Icon = ministry.icon;
             return (
               <div
                 key={ministry.title}
-                className="group bg-white rounded-2xl overflow-hidden border border-stone-200/90 hover:border-amber-400/60 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+                className="group bg-white rounded-xl sm:rounded-2xl overflow-hidden border border-slate-200/90 hover:border-blue-400/60 shadow-xs hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
               >
                 {/* Photo with Overlay Badge */}
-                <div className="relative h-40 sm:h-48 overflow-hidden bg-stone-100">
+                <div className="relative h-28 xs:h-36 sm:h-48 overflow-hidden bg-slate-100">
                   <img
                     src={ministry.image}
                     alt={ministry.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/20 to-transparent" />
                   
-                  <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-xs text-[#0A192F] text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-xs">
+                  <div className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-white/95 backdrop-blur-xs text-[#0F172A] text-[8px] xs:text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 sm:py-1 rounded-full shadow-xs">
                     {ministry.badge}
                   </div>
 
-                  <div className="absolute bottom-3 left-3 right-3 text-white flex items-center justify-between">
-                    <span className="text-xs font-medium text-amber-300 italic">{ministry.scripture}</span>
-                    <div className="p-1.5 rounded-full bg-white/20 backdrop-blur-xs text-white">
-                      <Icon className="w-4 h-4" />
+                  <div className="absolute bottom-2 left-2 right-2 sm:bottom-3 sm:left-3 sm:right-3 text-white flex items-center justify-between">
+                    <span className="text-[10px] xs:text-[11px] sm:text-xs font-medium text-blue-200 italic truncate max-w-[70%]">{ministry.scripture}</span>
+                    <div className="p-1 sm:p-1.5 rounded-full bg-white/20 backdrop-blur-xs text-white shrink-0">
+                      <Icon className="w-3 h-3 xs:w-3.5 xs:h-3.5 sm:w-4 sm:h-4" />
                     </div>
                   </div>
                 </div>
 
                 {/* Content */}
-                <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
-                  <div className="space-y-2">
-                    <h3 className="text-xl font-serif font-bold text-[#0A192F] group-hover:text-emerald-800 transition-colors">
+                <div className="p-3 xs:p-3.5 sm:p-6 flex-1 flex flex-col justify-between space-y-2.5 sm:space-y-4">
+                  <div className="space-y-1 sm:space-y-2">
+                    <h3 className="text-sm xs:text-base sm:text-xl font-bold text-[#0F172A] group-hover:text-[#1D63ED] transition-colors leading-snug">
                       {ministry.title}
                     </h3>
-                    <p className="text-xs sm:text-sm text-stone-600 leading-relaxed font-sans">
+                    <p className="text-[11px] xs:text-xs sm:text-sm text-slate-600 leading-relaxed font-sans line-clamp-2 xs:line-clamp-3 sm:line-clamp-none">
                       {ministry.description}
                     </p>
                   </div>
 
-                  <div className="pt-4 border-t border-stone-100 flex items-center justify-between text-xs text-stone-500">
-                    <span className="font-medium text-emerald-800">{ministry.schedule}</span>
-                    <span className="text-amber-700 font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
+                  <div className="pt-2.5 sm:pt-4 border-t border-slate-100 flex items-center justify-between text-[11px] sm:text-xs text-slate-500">
+                    <span className="font-medium text-[#1D63ED] text-[10px] xs:text-[11px] sm:text-xs truncate max-w-[75%]">{ministry.schedule}</span>
+                    <span className="text-[#1D63ED] font-semibold group-hover:translate-x-1 transition-transform inline-flex items-center gap-1 shrink-0 text-[11px] sm:text-xs">
                       Join &rarr;
                     </span>
                   </div>

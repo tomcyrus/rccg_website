@@ -155,15 +155,15 @@ export const GallerySection: React.FC = () => {
           ))}
         </div>
 
-        {/* Gallery Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+        {/* Gallery Responsive Grid: 2 columns on mobile, 3 on lg */}
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-6 lg:gap-8">
           {filteredItems.map((item, idx) => (
             <div
               key={item.id}
               onClick={() => handleOpenLightbox(idx)}
-              className="group bg-[#FAF8F5] rounded-2xl border border-stone-200/90 overflow-hidden shadow-xs hover:border-amber-400/60 hover:shadow-xl transition-all duration-300 cursor-pointer flex flex-col justify-between"
+              className="group bg-white rounded-xl sm:rounded-2xl border border-slate-200/90 overflow-hidden shadow-xs hover:border-blue-400/60 hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col justify-between"
             >
-              <div className="relative aspect-[4/3] bg-stone-100 overflow-hidden">
+              <div className="relative aspect-[4/3] bg-slate-100 overflow-hidden">
                 <img
                   src={item.imageSrc}
                   alt={item.title}
@@ -173,33 +173,33 @@ export const GallerySection: React.FC = () => {
 
                 {/* Hover Action Overlay */}
                 <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <div className="px-4 py-2 bg-white/95 rounded-full text-slate-900 font-semibold text-xs flex items-center gap-1.5 shadow-lg backdrop-blur-xs">
-                    <Maximize2 className="w-3.5 h-3.5 text-emerald-800" />
-                    <span>View Photo</span>
+                  <div className="px-3 py-1.5 bg-white/95 rounded-full text-slate-900 font-semibold text-xs flex items-center gap-1.5 shadow-lg backdrop-blur-xs">
+                    <Maximize2 className="w-3.5 h-3.5 text-[#1D63ED]" />
+                    <span className="hidden xs:inline">View Photo</span>
                   </div>
                 </div>
 
                 {/* Top Corner Moment Badge */}
-                <div className="absolute top-3 left-3 bg-[#0A192F]/80 text-amber-300 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full backdrop-blur-xs">
+                <div className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-[#0F172A]/85 text-blue-200 text-[8px] xs:text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 sm:py-1 rounded-full backdrop-blur-xs truncate max-w-[85%]">
                   {item.categoryLabel}
                 </div>
               </div>
 
               {/* Card Meta & Caption */}
-              <div className="p-4 sm:p-6 space-y-3 flex-1 flex flex-col justify-between">
+              <div className="p-2.5 xs:p-3 sm:p-6 space-y-1.5 sm:space-y-3 flex-1 flex flex-col justify-between">
                 <div>
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-amber-700">
+                  <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-[#1D63ED] truncate">
                     {item.dateOrMoment}
                   </div>
-                  <h3 className="text-lg font-serif font-bold text-[#0A192F] group-hover:text-emerald-800 transition-colors mt-0.5">
+                  <h3 className="text-xs xs:text-sm sm:text-lg font-bold text-[#0F172A] group-hover:text-[#1D63ED] transition-colors mt-0.5 line-clamp-1 xs:line-clamp-2">
                     {item.title}
                   </h3>
-                  <p className="text-xs text-stone-600 leading-relaxed font-sans mt-1">
+                  <p className="text-[10px] xs:text-[11px] sm:text-xs text-slate-600 leading-relaxed font-sans mt-0.5 line-clamp-2">
                     {item.caption}
                   </p>
                 </div>
 
-                <div className="pt-3 border-t border-stone-200 text-xs font-serif italic text-amber-900">
+                <div className="pt-2 sm:pt-3 border-t border-slate-100 text-[9px] xs:text-[10px] sm:text-xs italic text-[#1D63ED] truncate">
                   {item.scripture}
                 </div>
               </div>

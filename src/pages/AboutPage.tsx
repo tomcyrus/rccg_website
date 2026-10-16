@@ -49,26 +49,25 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onSelectTab, onOpenPlanVis
   ];
 
   return (
-    <div className="bg-[#FAF8F5]">
+    <div className="bg-white">
       {/* Hero Header */}
-      <section className="bg-gradient-to-r from-[#071324] via-[#0A192F] to-[#071324] text-white py-16 sm:py-24 border-b border-amber-500/20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,175,55,0.1),transparent_70%)]" />
+      <section className="bg-gradient-to-r from-[#070D1F] via-[#0B132B] to-[#070D1F] text-white py-16 sm:py-24 border-b border-white/10 relative overflow-hidden">
         <div className="max-w-4xl mx-auto px-4 sm:px-8 text-center space-y-4 relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-400/30 text-amber-300 text-xs font-semibold tracking-wider uppercase">
-            <Cross className="w-3.5 h-3.5 text-amber-400" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/15 border border-blue-400/30 text-blue-300 text-xs font-semibold tracking-wider uppercase">
+            <Cross className="w-3.5 h-3.5 text-blue-400" />
             <span>The Redeemed Christian Church of God</span>
           </div>
 
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif font-bold text-white tracking-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight">
             About Kingdom First Assembly
           </h1>
 
-          <p className="text-lg sm:text-xl font-serif italic text-amber-100/90 max-w-2xl mx-auto">
+          <p className="text-lg sm:text-xl text-slate-200 max-w-2xl mx-auto font-normal italic">
             "Seeking His Kingdom First. Sharing His Love With All."
           </p>
 
-          <p className="text-xs text-amber-300 font-semibold tracking-widest uppercase">
-            Roselle, New Jersey · Union County · Est. 2026
+          <p className="text-xs text-blue-300 font-semibold tracking-widest uppercase">
+            Roselle, New Jersey &middot; Union County &middot; Matthew 6:33
           </p>
         </div>
       </section>
@@ -136,46 +135,46 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onSelectTab, onOpenPlanVis
       {/* Vision & Mission Cards */}
       <section className="py-16 sm:py-24 bg-[#FAF8F5] border-b border-stone-200/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8">
             {/* Vision Card */}
-            <div className="bg-white rounded-3xl p-8 sm:p-10 border border-stone-200/90 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between space-y-6 relative overflow-hidden group">
-              <div className="space-y-4">
-                <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-700 border border-amber-200 flex items-center justify-center">
-                  <Compass className="w-7 h-7" />
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-10 border border-slate-200/90 shadow-xs hover:shadow-lg transition-all flex flex-col justify-between space-y-4 sm:space-y-6 relative overflow-hidden group">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-blue-50 text-[#1D63ED] border border-blue-200 flex items-center justify-center">
+                  <Compass className="w-5 h-5 sm:w-7 sm:h-7" />
                 </div>
-                <div className="text-xs font-bold uppercase tracking-wider text-amber-700">
+                <div className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#1D63ED]">
                   OUR HORIZON
                 </div>
-                <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#0A192F]">
+                <h3 className="text-xl sm:text-3xl font-bold text-[#0F172A]">
                   Our Vision
                 </h3>
-                <p className="text-base sm:text-lg text-stone-700 font-serif leading-relaxed italic">
+                <p className="text-sm sm:text-lg text-slate-700 leading-relaxed italic">
                   "To be a Christ-centered, Kingdom-minded church family, raising believers who know their identity in Christ and shine His light throughout Roselle, Union County, and the nations."
                 </p>
               </div>
-              <div className="pt-6 border-t border-stone-100 text-xs font-semibold uppercase tracking-wider text-stone-500">
-                Kingdom First Assembly · Vision
+              <div className="pt-4 sm:pt-6 border-t border-slate-100 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500">
+                Kingdom First Assembly &middot; Vision
               </div>
             </div>
 
             {/* Mission Card */}
-            <div className="bg-white rounded-3xl p-8 sm:p-10 border border-stone-200/90 shadow-sm hover:shadow-xl transition-all flex flex-col justify-between space-y-6 relative overflow-hidden group">
-              <div className="space-y-4">
-                <div className="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center justify-center">
-                  <Target className="w-7 h-7" />
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-10 border border-slate-200/90 shadow-xs hover:shadow-lg transition-all flex flex-col justify-between space-y-4 sm:space-y-6 relative overflow-hidden group">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-blue-50 text-[#1D63ED] border border-blue-200 flex items-center justify-center">
+                  <Target className="w-5 h-5 sm:w-7 sm:h-7" />
                 </div>
-                <div className="text-xs font-bold uppercase tracking-wider text-emerald-800">
+                <div className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#1D63ED]">
                   OUR CALLING
                 </div>
-                <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#0A192F]">
+                <h3 className="text-xl sm:text-3xl font-bold text-[#0F172A]">
                   Our Mission
                 </h3>
-                <p className="text-base sm:text-lg text-stone-700 font-serif leading-relaxed italic">
+                <p className="text-sm sm:text-lg text-slate-700 leading-relaxed italic">
                   "To preach Jesus Christ, teach the truth of God's Kingdom, nurture believers in faith and love, equip them for service, and reach our community with the transforming power of the Gospel."
                 </p>
               </div>
-              <div className="pt-6 border-t border-stone-100 text-xs font-semibold uppercase tracking-wider text-stone-500">
-                Kingdom First Assembly · Mission
+              <div className="pt-4 sm:pt-6 border-t border-slate-100 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500">
+                Kingdom First Assembly &middot; Mission
               </div>
             </div>
           </div>
@@ -185,26 +184,26 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onSelectTab, onOpenPlanVis
       {/* 5 Core Values */}
       <section className="py-16 sm:py-24 bg-white border-b border-stone-200/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
-          <div className="max-w-3xl mx-auto text-center space-y-3 mb-12 sm:mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 border border-amber-300 text-amber-900 text-xs font-semibold tracking-wider uppercase">
-              <Shield className="w-3.5 h-3.5 text-amber-700" />
+          <div className="max-w-3xl mx-auto text-center space-y-3 mb-10 sm:mb-16">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#1D63ED] text-xs font-semibold tracking-wider uppercase">
+              <Shield className="w-3.5 h-3.5 text-[#1D63ED]" />
               <span>Guiding Convictions</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#0A192F] tracking-tight">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0F172A] tracking-tight">
               Our 5 Core Values
             </h2>
-            <p className="text-stone-600 text-base max-w-xl mx-auto font-sans leading-relaxed">
+            <p className="text-slate-600 text-sm sm:text-base max-w-xl mx-auto font-sans leading-relaxed">
               Scriptural convictions that shape our spiritual culture, decisions, worship, and everyday actions.
             </p>
           </div>
 
-          <div className="space-y-4 max-w-4xl mx-auto">
+          <div className="space-y-3 sm:space-y-4 max-w-4xl mx-auto">
             {coreValues.map((val) => (
               <div
                 key={val.num}
-                className="bg-[#FAF8F5] rounded-2xl border border-stone-200/80 p-6 sm:p-7 hover:border-amber-400/60 shadow-xs hover:shadow-lg transition-all flex flex-col sm:flex-row items-start gap-5"
+                className="bg-slate-50 rounded-xl sm:rounded-2xl border border-slate-200/80 p-4 sm:p-7 hover:border-blue-400/60 shadow-xs hover:shadow-md transition-all flex flex-col sm:flex-row items-start gap-3 sm:gap-5"
               >
-                <div className="w-12 h-12 rounded-xl bg-amber-100 text-amber-900 font-serif font-bold text-xl flex items-center justify-center shrink-0">
+                <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-100 text-[#1D63ED] font-bold text-base sm:text-xl flex items-center justify-center shrink-0">
                   {val.num}
                 </div>
 

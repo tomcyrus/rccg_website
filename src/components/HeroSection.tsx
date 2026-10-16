@@ -1,7 +1,7 @@
 import React from 'react';
 import { PageTab } from '../types';
-import { ArrowRight, Calendar, MapPin, Tv, Clock, Sparkles, Heart } from 'lucide-react';
-import heroImg from '../assets/images/hero_church_sanctuary_1791981782802.jpg';
+import { Calendar, MapPin, Play, Sparkles } from 'lucide-react';
+import heroImg from '../assets/images/hero_cross_sanctuary_1792160631376.jpg';
 
 interface HeroSectionProps {
   onOpenPlanVisit: () => void;
@@ -14,159 +14,152 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   onNavigateAbout,
   onSelectTab,
 }) => {
-  const scrollToCalendar = () => {
+  const handleWatchOnline = () => {
+    if (onSelectTab) {
+      onSelectTab('videos');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      const el = document.getElementById('latest-sermon-section');
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleLocationClick = () => {
+    window.open('https://www.google.com/maps/search/?api=1&query=121+E+2nd+Ave+Roselle+NJ+07203', '_blank');
+  };
+
+  const handleScheduleClick = () => {
     const el = document.getElementById('church-calendar');
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
-    <section className="relative bg-[#0A192F] text-white overflow-hidden">
-      {/* Background Sanctuary Image with Divine Ambient Gradient Lighting */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src={heroImg}
-          alt="RCCG Kingdom First Assembly Sanctuary bathed in warm sacred light"
-          className="w-full h-full object-cover object-center brightness-75 contrast-105 scale-105 transition-transform duration-1000"
-        />
-        {/* Sacred Multi-layer Gradient Scrim: Deep navy and warm amber overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0A192F]/95 via-[#0A192F]/85 to-[#0A192F]/60" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A192F] via-transparent to-[#0A192F]/40" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(212,175,55,0.15),transparent_50%)]" />
-      </div>
+    <div className="relative">
+      {/* Hero Visual Section matching template layout */}
+      <section className="relative min-h-[540px] sm:min-h-[600px] lg:min-h-[660px] flex items-center bg-[#070D1F] text-white overflow-hidden">
+        {/* Sanctuary Background Image with Glowing Cross */}
+        <div className="absolute inset-0 z-0">
+          <img
+            src={heroImg}
+            alt="RCCG Kingdom First Assembly congregation in worship facing illuminated cross"
+            className="w-full h-full object-cover object-center brightness-65 contrast-105"
+          />
+          {/* Subtle cinematic gradient overlays */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#0B132B] via-slate-950/50 to-slate-950/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/50 to-transparent" />
+        </div>
 
-      {/* Main Hero Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24 lg:pt-28 pb-20 sm:pb-28">
-        <div className="max-w-3xl space-y-6">
-          {/* Sacred Kicker Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-500/15 border border-amber-400/30 text-amber-300 text-xs sm:text-sm font-medium tracking-wide backdrop-blur-xs">
-            <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-            <span className="font-semibold uppercase tracking-wider text-[11px] sm:text-xs">
-              Welcome Home · RCCG Kingdom First Assembly
-            </span>
-          </div>
+        {/* Hero Text Content with Restored RCCG KFA Content */}
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 w-full">
+          <div className="max-w-2xl space-y-5 sm:space-y-6">
+            
+            {/* Church Identity Pill */}
+            <div className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-[10px] xs:text-xs font-semibold tracking-wide backdrop-blur-xs max-w-full">
+              <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse shrink-0" />
+              <span className="truncate">RCCG KINGDOM FIRST ASSEMBLY &middot; ROSELLE, NJ</span>
+            </div>
 
-          {/* Majestic Hero Headline */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif font-bold text-white tracking-tight leading-[1.12]">
-            Where Faith Meets Family &amp;{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-300 to-amber-500">
-              God's Presence
-            </span>{' '}
-            Abides.
-          </h1>
+            {/* Template Headline */}
+            <h1 className="text-3xl xs:text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight leading-[1.08] text-white">
+              A Church<br />
+              For Everyone
+            </h1>
 
-          {/* Scripture Accent Banner */}
-          <div className="p-4 rounded-xl bg-white/5 border-l-4 border-amber-400 backdrop-blur-xs max-w-2xl">
-            <p className="text-amber-100/90 font-serif italic text-base sm:text-lg">
-              "But seek first the kingdom of God and His righteousness, and all these things shall be added to you."
+            {/* Restored Content Subtitle & Scripture */}
+            <p className="text-sm sm:text-xl text-slate-200 font-normal leading-relaxed max-w-xl">
+              Growing in faith. Building people. Impacting our world. Seeking God's Kingdom first and sharing His love with all.
             </p>
-            <p className="text-xs font-semibold uppercase tracking-widest text-amber-400 mt-1">
-              — Matthew 6:33
-            </p>
+
+            {/* Anchor Scripture Tag */}
+            <div className="text-xs sm:text-sm font-sans italic text-blue-200 bg-white/10 border-l-2 border-[#1D63ED] px-3 sm:px-3.5 py-2 rounded-r-lg max-w-lg backdrop-blur-xs">
+              "But seek first the kingdom of God and His righteousness, and all these things shall be added to you." — Matthew 6:33
+            </div>
+
+            {/* Action Buttons matching template */}
+            <div className="flex flex-col xs:flex-row items-stretch xs:items-center gap-3 sm:gap-4 pt-2">
+              <button
+                onClick={onOpenPlanVisit}
+                className="px-6 sm:px-7 py-3 rounded-lg bg-[#1D63ED] hover:bg-[#1551CA] text-white font-semibold text-sm sm:text-base shadow-lg hover:shadow-xl transition-all cursor-pointer text-center"
+              >
+                Plan a Visit
+              </button>
+
+              <button
+                onClick={handleWatchOnline}
+                className="px-6 sm:px-7 py-3 rounded-lg bg-black/40 hover:bg-black/60 text-white font-medium text-sm sm:text-base border border-white/50 hover:border-white transition-all cursor-pointer backdrop-blur-xs flex items-center justify-center gap-2"
+              >
+                <Play className="w-4 h-4 fill-white" />
+                <span>Watch Online</span>
+              </button>
+            </div>
           </div>
+        </div>
+      </section>
 
-          {/* Warm Welcome Description */}
-          <p className="text-base sm:text-lg text-slate-200 font-sans leading-relaxed max-w-2xl">
-            We are a Christ-centered, Spirit-filled church family in Roselle, New Jersey. 
-            Whether you are taking your first steps toward God or seeking a deeper walk of faith, 
-            you have a warm, welcoming home here.
-          </p>
-
-          {/* Call-to-Action Buttons */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-3">
-            <button
-              onClick={onOpenPlanVisit}
-              className="px-7 py-4 rounded-full bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 text-slate-950 font-semibold text-sm sm:text-base shadow-lg hover:shadow-amber-500/30 hover:scale-[1.02] transition-all cursor-pointer flex items-center justify-center gap-2"
+      {/* Dark Service Info Bar with Restored Authentic Schedule & Roselle Location */}
+      <div className="bg-[#0B132B] text-white border-t border-white/10 border-b border-slate-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
+          <div className="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-white/15 gap-4 sm:gap-0">
+            
+            {/* 1. Sunday Service */}
+            <div 
+              onClick={handleScheduleClick}
+              className="flex items-center gap-3.5 sm:px-6 first:sm:pl-0 cursor-pointer group py-2 sm:py-0"
             >
-              <Heart className="w-4 h-4 fill-slate-950" />
-              <span>Plan Your Visit This Sunday</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
+              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-slate-300 group-hover:text-[#60A5FA] group-hover:border-[#1D63ED]/50 transition-colors">
+                <Calendar className="w-5 h-5" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-sm font-bold text-white group-hover:text-[#60A5FA] transition-colors">
+                  Sunday Worship Service
+                </div>
+                <div className="text-xs text-slate-300">
+                  10:00 AM EST (Sunday School 9:00 AM)
+                </div>
+              </div>
+            </div>
 
-            <a
-              href="https://www.youtube.com/@RCCGKFA"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-6 py-4 rounded-full bg-white/10 hover:bg-white/15 border border-white/20 text-white font-semibold text-sm sm:text-base backdrop-blur-xs transition-all flex items-center justify-center gap-2"
+            {/* 2. Location */}
+            <div 
+              onClick={handleLocationClick}
+              className="flex items-center gap-3.5 sm:px-6 cursor-pointer group py-2 sm:py-0"
             >
-              <Tv className="w-4 h-4 text-red-400" />
-              <span>Watch Online</span>
-            </a>
+              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-slate-300 group-hover:text-[#60A5FA] group-hover:border-[#1D63ED]/50 transition-colors">
+                <MapPin className="w-5 h-5" />
+              </div>
+              <div className="min-w-0">
+                <div className="text-sm font-bold text-white group-hover:text-[#60A5FA] transition-colors">
+                  Sanctuary Location
+                </div>
+                <div className="text-xs text-slate-300 truncate">
+                  121 E 2nd Ave, Roselle, NJ 07203
+                </div>
+              </div>
+            </div>
 
-            <button
-              onClick={onNavigateAbout}
-              className="px-5 py-4 rounded-full text-amber-200/90 hover:text-white text-sm font-medium transition-colors text-center"
+            {/* 3. Watch Online */}
+            <div 
+              onClick={handleWatchOnline}
+              className="flex items-center gap-3.5 sm:px-6 last:sm:pr-0 cursor-pointer group py-2 sm:py-0"
             >
-              Our Story &amp; Beliefs →
-            </button>
+              <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 text-slate-300 group-hover:text-[#60A5FA] group-hover:border-[#1D63ED]/50 transition-colors">
+                <div className="w-6 h-4.5 rounded border-2 border-current flex items-center justify-center">
+                  <Play className="w-2.5 h-2.5 fill-current ml-0.5" />
+                </div>
+              </div>
+              <div className="min-w-0">
+                <div className="text-sm font-bold text-white group-hover:text-[#60A5FA] transition-colors">
+                  Watch Online &amp; Midweek
+                </div>
+                <div className="text-xs text-slate-300">
+                  YouTube Live &middot; Wed Digging Deep 7:00 PM
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
-
-      {/* Quick Service Times & Location Dock */}
-      <div className="relative z-10 border-t border-white/10 bg-[#071324]/90 backdrop-blur-md py-6 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          {/* Card 1: Sunday Service */}
-          <div className="flex items-start gap-3.5 p-3 rounded-xl bg-white/5 border border-white/5 hover:border-amber-400/30 transition-all">
-            <div className="p-2.5 rounded-lg bg-amber-500/20 text-amber-300 shrink-0">
-              <Clock className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="text-xs font-semibold uppercase tracking-wider text-amber-300">
-                Sunday Celebration
-              </div>
-              <div className="text-sm font-bold text-white">10:00 AM — 12:00 PM</div>
-              <div className="text-xs text-slate-400 mt-0.5">Worship, Word &amp; Kids Church</div>
-            </div>
-          </div>
-
-          {/* Card 2: Midweek Service */}
-          <div className="flex items-start gap-3.5 p-3 rounded-xl bg-white/5 border border-white/5 hover:border-amber-400/30 transition-all">
-            <div className="p-2.5 rounded-lg bg-emerald-500/20 text-emerald-300 shrink-0">
-              <Sparkles className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="text-xs font-semibold uppercase tracking-wider text-emerald-300">
-                Digging Deep &amp; Faith Clinic
-              </div>
-              <div className="text-sm font-bold text-white">Wednesdays 7:00 PM</div>
-              <div className="text-xs text-slate-400 mt-0.5">In-depth Bible Study &amp; Prayer</div>
-            </div>
-          </div>
-
-          {/* Card 3: Location */}
-          <div className="flex items-start gap-3.5 p-3 rounded-xl bg-white/5 border border-white/5 hover:border-amber-400/30 transition-all">
-            <div className="p-2.5 rounded-lg bg-blue-500/20 text-blue-300 shrink-0">
-              <MapPin className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="text-xs font-semibold uppercase tracking-wider text-blue-300">
-                Worship Sanctuary
-              </div>
-              <div className="text-sm font-bold text-white">121 E 2nd Ave</div>
-              <div className="text-xs text-slate-400 mt-0.5">Roselle, NJ 07203 (Free Parking)</div>
-            </div>
-          </div>
-
-          {/* Card 4: Church Calendar shortcut */}
-          <button
-            onClick={scrollToCalendar}
-            className="flex items-start gap-3.5 p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 hover:bg-amber-500/20 transition-all text-left cursor-pointer group"
-          >
-            <div className="p-2.5 rounded-lg bg-amber-500/30 text-amber-300 shrink-0 group-hover:scale-110 transition-transform">
-              <Calendar className="w-5 h-5" />
-            </div>
-            <div>
-              <div className="text-xs font-semibold uppercase tracking-wider text-amber-300">
-                Church Calendar
-              </div>
-              <div className="text-sm font-bold text-white group-hover:text-amber-200 transition-colors">
-                Upcoming Events &amp; Dates →
-              </div>
-              <div className="text-xs text-slate-300 mt-0.5">Outreach, Vigils &amp; Studies</div>
-            </div>
-          </button>
-        </div>
-      </div>
-    </section>
+    </div>
   );
 };
