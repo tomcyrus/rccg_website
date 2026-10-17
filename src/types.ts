@@ -27,6 +27,7 @@ export type EventCategory = 'all' | 'bible-study' | 'outreach' | 'worship' | 'sp
 export type EventStatus = 'scheduled' | 'live' | 'completed' | 'postponed';
 
 export interface ChurchEvent {
+  revision?: number;
   id: string;
   title: string;
   category: 'bible-study' | 'outreach' | 'worship' | 'special';
@@ -52,6 +53,7 @@ export interface ChurchEvent {
 }
 
 export interface PrayerRequestRecord {
+  revision?: number;
   id: string;
   name: string;
   email: string;
@@ -65,6 +67,7 @@ export interface PrayerRequestRecord {
 }
 
 export interface VisitorInquiryRecord {
+  revision?: number;
   id: string;
   fullName: string;
   email: string;
@@ -78,6 +81,7 @@ export interface VisitorInquiryRecord {
 }
 
 export interface AnnouncementBanner {
+  revision?: number;
   id: string;
   isActive: boolean;
   message: string;
@@ -98,6 +102,7 @@ export type EbookCategory =
   | 'spiritual-growth';
 
 export interface EbookItem {
+  revision?: number;
   id: string;
   title: string;
   subtitle?: string;
@@ -139,6 +144,7 @@ export type VideoCategory =
   | 'prayer-revival';
 
 export interface YouTubeVideoItem {
+  revision?: number;
   id: string;
   youtubeId: string;
   youtubeUrl: string;

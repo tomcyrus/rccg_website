@@ -22,7 +22,7 @@ export default function App() {
   const [currentTab, setCurrentTab] = useState<PageTab>(() => {
     if (typeof window !== 'undefined') {
       const hash = window.location.hash.replace('#', '');
-      if (hash === 'admin') return 'admin';
+      if (['home', 'about', 'videos', 'ebooks', 'gallery', 'connect', 'admin'].includes(hash)) return hash as PageTab;
       const params = new URLSearchParams(window.location.search);
       const tabParam = params.get('tab') as PageTab;
       if (tabParam && ['home', 'about', 'videos', 'ebooks', 'gallery', 'connect', 'admin'].includes(tabParam)) {
@@ -38,9 +38,7 @@ export default function App() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '');
-      if (hash === 'admin') {
-        setCurrentTab('admin');
-      }
+      if (['home', 'about', 'videos', 'ebooks', 'gallery', 'connect', 'admin'].includes(hash)) setCurrentTab(hash as PageTab);
     };
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
@@ -49,6 +47,8 @@ export default function App() {
   // Sync document page title, meta description, canonical link, open graph, and breadcrumbs
   useEffect(() => {
     updatePageSeo(currentTab);
+    window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}#${currentTab}`);
+    setPlanVisitModalOpen(false); setPrayerModalOpen(false);
   }, [currentTab]);
 
   return (

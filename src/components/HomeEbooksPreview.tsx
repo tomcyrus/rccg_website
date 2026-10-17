@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { PageTab, EbookItem } from '../types';
-import { EBOOKS_DATA } from '../data/ebooksData';
+import { usePublicContent } from '../hooks/usePublicContent';
+import { ContentStatus } from './ContentStatus';
+
 import { EbookReaderModal } from './EbookReaderModal';
 import { 
   BookOpen, 
@@ -18,6 +20,7 @@ interface HomeEbooksPreviewProps {
 }
 
 export const HomeEbooksPreview: React.FC<HomeEbooksPreviewProps> = ({ onSelectTab }) => {
+  const { items: books, loading, error } = usePublicContent<EbookItem>('ebooks');
   const [selectedEbook, setSelectedEbook] = useState<EbookItem | null>(null);
   const [isReaderOpen, setIsReaderOpen] = useState(false);
   const [savedBookIds, setSavedBookIds] = useState<string[]>(() => {
@@ -32,7 +35,7 @@ export const HomeEbooksPreview: React.FC<HomeEbooksPreviewProps> = ({ onSelectTa
     return [];
   });
 
-  const previewBooks = EBOOKS_DATA.slice(0, 3);
+  const previewBooks = books.slice(0, 3);
 
   const handleToggleSave = (bookId: string) => {
     const updated = savedBookIds.includes(bookId)
@@ -64,6 +67,7 @@ export const HomeEbooksPreview: React.FC<HomeEbooksPreviewProps> = ({ onSelectTa
 
   return (
     <section className="py-16 sm:py-24 bg-white border-b border-slate-100 font-sans">
+      <ContentStatus loading={loading} error={error} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -88,7 +92,7 @@ export const HomeEbooksPreview: React.FC<HomeEbooksPreviewProps> = ({ onSelectTa
             }}
             className="px-6 py-3 rounded-full bg-[#1D63ED] hover:bg-[#1551CA] text-white font-semibold text-xs sm:text-sm shadow-md transition-all flex items-center gap-2 self-start md:self-end cursor-pointer group"
           >
-            <span>Browse All {EBOOKS_DATA.length} E-Books</span>
+            <span>Browse All {books.length} E-Books</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>

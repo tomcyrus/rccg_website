@@ -9,22 +9,9 @@ import {
   PageTab,
   EventStatus
 } from '../types';
-import { 
-  getStoredEvents, 
-  saveStoredEvents, 
-  getStoredPrayers, 
-  saveStoredPrayers, 
-  getStoredInquiries, 
-  saveStoredInquiries, 
-  getStoredAnnouncement, 
-  saveStoredAnnouncement,
-  getAdminAuth,
-  setAdminAuth,
-  resetAllToDefaults
-} from '../utils/adminStore';
+import { api, ApiError, errorMessage, contentChanged } from '../utils/api';
+import { EbookEditor, newEbook } from '../components/EbookEditor';
 import { extractYouTubeId, getYouTubeThumbnailUrl } from '../utils/youtube';
-import { INITIAL_YOUTUBE_VIDEOS } from '../data/videoGalleryData';
-import { EBOOKS_DATA } from '../data/ebooksData';
 import { 
   ShieldCheck, 
   Calendar as CalendarIcon, 
@@ -63,47 +50,44 @@ interface AdminPageProps {
 type AdminTab = 'events' | 'videos' | 'ebooks' | 'prayers' | 'inquiries' | 'announcements' | 'backup';
 
 export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTab }) => {
-  // Authentication State
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => getAdminAuth());
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [checkingSession, setCheckingSession] = useState(true);
+  const [email, setEmail] = useState('');
   const [passcode, setPasscode] = useState('');
-  const [authError, setAuthError] = useState(false);
-
-  // Active Admin Sub-tab
+  const [authError, setAuthError] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [dataError, setDataError] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
   const [activeTab, setActiveTab] = useState<AdminTab>('events');
+  const [events, setEvents] = useState<ChurchEvent[]>([]);
+  const [prayers, setPrayers] = useState<PrayerRequestRecord[]>([]);
+  const [inquiries, setInquiries] = useState<VisitorInquiryRecord[]>([]);
+  const [announcement, setAnnouncement] = useState<AnnouncementBanner>({ id: 'main', isActive: false, message: '', type: 'notice', targetTab: 'home' });
+  const [videos, setVideos] = useState<YouTubeVideoItem[]>([]);
+  const [ebooks, setEbooks] = useState<EbookItem[]>([]);
 
-  // Core Data States
-  const [events, setEvents] = useState<ChurchEvent[]>(() => getStoredEvents());
-  const [prayers, setPrayers] = useState<PrayerRequestRecord[]>(() => getStoredPrayers());
-  const [inquiries, setInquiries] = useState<VisitorInquiryRecord[]>(() => getStoredInquiries());
-  const [announcement, setAnnouncement] = useState<AnnouncementBanner>(() => getStoredAnnouncement());
-  
-  // Custom videos & ebooks
-  const [videos, setVideos] = useState<YouTubeVideoItem[]>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const stored = localStorage.getItem('rccg_kfa_custom_videos');
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          return [...parsed, ...INITIAL_YOUTUBE_VIDEOS];
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    }
-    return INITIAL_YOUTUBE_VIDEOS;
-  });
-
-  const [ebooks, setEbooks] = useState<EbookItem[]>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const stored = localStorage.getItem('rccg_kfa_admin_ebooks');
-        if (stored) return JSON.parse(stored);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-    return EBOOKS_DATA;
-  });
+  const clearPrivateData = () => { setPrayers([]); setInquiries([]); };
+  const loadData = async () => {
+    const [ev, pr, iq, an, vi, eb] = await Promise.all([
+      api<ChurchEvent[]>('/admin/events'), api<PrayerRequestRecord[]>('/admin/prayers'),
+      api<VisitorInquiryRecord[]>('/admin/inquiries'), api<AnnouncementBanner[]>('/admin/announcements'),
+      api<YouTubeVideoItem[]>('/admin/videos'), api<EbookItem[]>('/admin/ebooks'),
+    ]);
+    setEvents(ev); setPrayers(pr); setInquiries(iq); setVideos(vi); setEbooks(eb);
+    setAnnouncement(an[0] || { id: 'main', isActive: false, message: '', type: 'notice', targetTab: 'home' });
+    setDataError('');
+  };
+  useEffect(() => {
+    let active = true;
+    api('/auth/me').then(() => {
+      if (active) { setIsAuthenticated(true); return loadData(); }
+    }).catch(err => {
+      if (active) { setIsAuthenticated(false); clearPrivateData(); if (!(err instanceof ApiError && [401, 403].includes(err.status))) setAuthError(errorMessage(err)); }
+    }).finally(() => { if (active) setCheckingSession(false); });
+    return () => { active = false; };
+  }, []);
+  useEffect(() => { setStatusFilter('all'); setSearchTerm(''); }, [activeTab]);
 
   // UI Search and Filter States
   const [searchTerm, setSearchTerm] = useState('');
@@ -125,72 +109,70 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
     setTimeout(() => setToastMsg(null), 3000);
   };
 
-  // Auth Submit
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (passcode.trim() === '7777' || passcode.trim().toLowerCase() === 'admin' || passcode.trim().toLowerCase() === 'pastor') {
-      setIsAuthenticated(true);
-      setAdminAuth(true);
-      setAuthError(false);
+  const handleFailure = (err: unknown) => {
+    setDataError(errorMessage(err));
+    if (err instanceof ApiError && [401, 403].includes(err.status)) {
+      clearPrivateData(); setIsAuthenticated(false); setAuthError(errorMessage(err));
+    }
+  };
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault(); setBusy(true); setAuthError('');
+    try {
+      await api('/auth/login', { method: 'POST', body: JSON.stringify({ email, password: passcode }) });
       setPasscode('');
-    } else {
-      setAuthError(true);
-    }
+      await loadData();
+      setIsAuthenticated(true);
+    } catch (err) { setAuthError(errorMessage(err)); }
+    finally { setBusy(false); }
+  };
+  const handleLogout = async () => {
+    setBusy(true);
+    try { await api('/auth/logout', { method: 'POST' }); }
+    catch (err) { setAuthError(errorMessage(err)); }
+    finally { clearPrivateData(); setIsAuthenticated(false); setBusy(false); }
+  };
+  const reload = async () => {
+    setBusy(true);
+    try { await loadData(); triggerToast('Data refreshed from Supabase.'); }
+    catch (err) { handleFailure(err); }
+    finally { setBusy(false); }
   };
 
-  const handleLogout = () => {
-    setIsAuthenticated(false);
-    setAdminAuth(false);
-  };
-
-  // Sync helpers
-  const handleSaveEvents = (updated: ChurchEvent[]) => {
-    setEvents(updated);
-    saveStoredEvents(updated);
-    triggerToast('Church calendar events updated successfully!');
-  };
-
-  const handleSavePrayers = (updated: PrayerRequestRecord[]) => {
-    setPrayers(updated);
-    saveStoredPrayers(updated);
-    triggerToast('Prayer requests pipeline updated!');
-  };
-
-  const handleSaveInquiries = (updated: VisitorInquiryRecord[]) => {
-    setInquiries(updated);
-    saveStoredInquiries(updated);
-    triggerToast('Visitor inquiry status updated!');
-  };
-
-  const handleSaveAnnouncement = (updated: AnnouncementBanner) => {
-    setAnnouncement(updated);
-    saveStoredAnnouncement(updated);
-    triggerToast('Live announcement banner saved!');
-  };
-
-  const handleSaveVideos = (updated: YouTubeVideoItem[]) => {
-    setVideos(updated);
-    if (typeof window !== 'undefined') {
-      try {
-        const customOnly = updated.filter(v => v.isCustomAdded);
-        localStorage.setItem('rccg_kfa_custom_videos', JSON.stringify(customOnly));
-      } catch (e) {
-        console.error(e);
+  // Write only the changed record; never replace a collection or erase new submissions.
+  const saveCollection = async <T extends { id: string; revision?: number },>(kind: string, before: T[], after: T[], setter: (rows: T[]) => void) => {
+    if (busy) return false;
+    setBusy(true); setDataError('');
+    try {
+      const removed = before.filter(old => !after.some(item => item.id === old.id));
+      const changed = after.filter(item => JSON.stringify(item) !== JSON.stringify(before.find(old => old.id === item.id)));
+      if (removed.length + changed.length === 0) return true;
+      if (removed.length + changed.length !== 1) throw new Error('Please save one record at a time.');
+      for (const item of removed) await api(`/admin/${kind}/${item.id}`, { method: 'DELETE', headers: { 'If-Match': String(item.revision) } });
+      for (const item of changed) {
+        const exists = before.some(old => old.id === item.id);
+        await api(`/admin/${kind}${exists ? `/${item.id}` : ''}`, {
+          method: exists ? 'PUT' : 'POST', headers: exists ? { 'If-Match': String(item.revision) } : {}, body: JSON.stringify(item),
+        });
       }
-    }
-    triggerToast('YouTube videos archive updated!');
+      setter(await api<T[]>(`/admin/${kind}`));
+      contentChanged(); triggerToast('Changes saved to Supabase.'); return true;
+    } catch (err) { handleFailure(err); return false; }
+    finally { setBusy(false); }
   };
-
-  const handleSaveEbooks = (updated: EbookItem[]) => {
-    setEbooks(updated);
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.setItem('rccg_kfa_admin_ebooks', JSON.stringify(updated));
-      } catch (e) {
-        console.error(e);
-      }
-    }
-    triggerToast('E-Books library updated!');
+  const handleSaveEvents = (updated: ChurchEvent[]) => saveCollection('events', events, updated, setEvents);
+  const handleSavePrayers = (updated: PrayerRequestRecord[]) => saveCollection('prayers', prayers, updated, setPrayers);
+  const handleSaveInquiries = (updated: VisitorInquiryRecord[]) => saveCollection('inquiries', inquiries, updated, setInquiries);
+  const handleSaveVideos = (updated: YouTubeVideoItem[]) => saveCollection('videos', videos, updated, setVideos);
+  const handleSaveEbooks = (updated: EbookItem[]) => saveCollection('ebooks', ebooks, updated, setEbooks);
+  const handleSaveAnnouncement = async (updated: AnnouncementBanner) => {
+    setBusy(true); setDataError('');
+    try {
+      setAnnouncement(await api<AnnouncementBanner>(`/admin/announcements${updated.revision ? `/${updated.id}` : ''}`, {
+        method: updated.revision ? 'PUT' : 'POST', headers: updated.revision ? { 'If-Match': String(updated.revision) } : {}, body: JSON.stringify(updated),
+      }));
+      contentChanged(); triggerToast('Announcement saved.');
+    } catch (err) { handleFailure(err); }
+    finally { setBusy(false); }
   };
 
   // Event Handlers
@@ -206,16 +188,16 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
     }
   };
 
-  const handleSaveEventForm = (e: React.FormEvent) => {
+  const handleSaveEventForm = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingEvent) return;
     const exists = events.some(ev => ev.id === editingEvent.id);
     const updated = exists
       ? events.map(ev => ev.id === editingEvent.id ? editingEvent : ev)
       : [editingEvent, ...events];
-    handleSaveEvents(updated);
-    setIsEventModalOpen(false);
-    setEditingEvent(null);
+    if (await handleSaveEvents(updated)) {
+      setIsEventModalOpen(false); setEditingEvent(null);
+    }
   };
 
   // Video Handlers
@@ -267,42 +249,19 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
     }
   };
 
-  // Backup Export
-  const handleExportBackup = () => {
-    const payload = {
-      exportDate: new Date().toISOString(),
-      church: 'The Redeemed Christian Church of God - Kingdom First Assembly',
-      events,
-      prayers,
-      inquiries,
-      announcement,
-      customVideos: videos.filter(v => v.isCustomAdded),
-      ebooks
-    };
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `RCCG_KFA_Backup_${new Date().toISOString().slice(0, 10)}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    triggerToast('Backup file downloaded successfully!');
+  const handleExportBackup = async () => {
+    setBusy(true);
+    try {
+      const payload = await api('/admin/backup');
+      const url = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' }));
+      const a = document.createElement('a'); a.href = url;
+      a.download = `RCCG_KFA_Backup_${new Date().toISOString().slice(0, 10)}.json`;
+      a.click(); URL.revokeObjectURL(url); triggerToast('Backup downloaded. Keep this file private.');
+    } catch (err) { handleFailure(err); }
+    finally { setBusy(false); }
   };
 
-  const handleFactoryReset = () => {
-    if (confirm('WARNING: This will reset all church calendar events, prayers, and inquiries to factory defaults. Continue?')) {
-      resetAllToDefaults();
-      setEvents(getStoredEvents());
-      setPrayers(getStoredPrayers());
-      setInquiries(getStoredInquiries());
-      setAnnouncement(getStoredAnnouncement());
-      setVideos(INITIAL_YOUTUBE_VIDEOS);
-      setEbooks(EBOOKS_DATA);
-      triggerToast('All data has been reset to default state.');
-    }
-  };
+  if (checkingSession) return <div role="status" className="p-16 text-center">Checking admin session…</div>;
 
   // Unauthenticated Gate Screen
   if (!isAuthenticated) {
@@ -327,20 +286,24 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
+            <label className="block text-xs text-amber-300">Admin email
+              <input type="email" autoComplete="username" required value={email} onChange={e => setEmail(e.target.value)} className="mt-2 w-full rounded-xl bg-black/40 border border-white/20 p-3 text-white" />
+            </label>
             <div className="space-y-1.5">
               <label className="block text-xs font-semibold text-amber-300 uppercase tracking-wider">
-                Enter Ministerial Access PIN
+                Password
               </label>
               <div className="relative">
                 <KeyRound className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="password"
                   required
-                  placeholder="Enter 4-digit PIN..."
+                  placeholder="Enter your password"
+                  autoComplete="current-password"
                   value={passcode}
                   onChange={(e) => {
                     setPasscode(e.target.value);
-                    setAuthError(false);
+                    setAuthError('');
                   }}
                   className="w-full pl-10 pr-4 py-3 rounded-xl bg-black/40 border border-white/20 text-white text-sm focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400"
                 />
@@ -348,29 +311,21 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
               {authError && (
                 <div className="text-xs text-red-400 flex items-center gap-1.5 pt-1">
                   <AlertCircle className="w-3.5 h-3.5" />
-                  <span>Invalid passcode. (Hint: Use 7777 or click Quick Sign In)</span>
+                  <span>{authError}</span>
                 </div>
               )}
             </div>
 
             <button
               type="submit"
+              disabled={busy}
               className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-bold text-sm shadow-md transition-all cursor-pointer flex items-center justify-center gap-2"
             >
-              <span>Unlock Admin Console</span>
+              <span>{busy ? 'Signing in…' : 'Sign in to Admin Console'}</span>
               <ShieldCheck className="w-4 h-4" />
             </button>
 
-            <button
-              type="button"
-              onClick={() => {
-                setIsAuthenticated(true);
-                setAdminAuth(true);
-              }}
-              className="w-full py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-slate-300 text-xs font-medium border border-white/10 transition-colors cursor-pointer"
-            >
-              Quick Sign In (Default PIN: 7777)
-            </button>
+            <p className="text-xs text-slate-400">Access is limited to accounts approved by the church administrator. Contact the project owner if you need access or a password reset.</p>
           </form>
 
           <div className="pt-4 border-t border-white/10 text-center">
@@ -425,6 +380,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
 
             <button
               onClick={handleLogout}
+              disabled={busy}
               className="px-3.5 py-1.5 rounded-lg bg-red-600/80 hover:bg-red-600 text-white text-xs font-medium transition-colors flex items-center gap-1.5"
             >
               <LogOut className="w-3.5 h-3.5" />
@@ -474,6 +430,13 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
         </div>
       </div>
 
+      <div className="max-w-7xl mx-auto px-4 pt-4 flex flex-wrap items-center gap-3">
+        <button type="button" disabled={busy} onClick={reload} className="rounded-lg border border-stone-300 px-4 py-2 text-sm">Reload data</button>
+        {busy && <span role="status">Saving / loading…</span>}
+        {dataError && <p role="alert" className="text-red-700">{dataError}</p>}
+      </div>
+      {['events', 'videos', 'ebooks', 'prayers', 'inquiries'].includes(activeTab) && <div className="max-w-7xl mx-auto px-4 pt-3"><input aria-label="Search records" placeholder="Search records…" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="w-full max-w-md border border-stone-300 rounded-xl px-4 py-2" /></div>}
+      <fieldset disabled={busy} className="disabled:opacity-70">
       {/* Main Content Area */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
         {/* KPI Summary Cards */}
@@ -543,7 +506,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
                     coordinator: 'Pastoral Team',
                     status: 'scheduled'
                   });
-                  setIsEventModalOpen(true);
+                  setDataError(''); setIsEventModalOpen(true);
                 }}
                 className="px-4 py-2.5 rounded-full bg-emerald-800 hover:bg-emerald-700 text-white font-semibold text-xs tracking-wide shadow-md flex items-center gap-1.5 cursor-pointer self-start sm:self-auto"
               >
@@ -554,7 +517,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
 
             {/* Events List */}
             <div className="space-y-4">
-              {events.map((evt) => (
+              {events.filter(item => JSON.stringify(item).toLowerCase().includes(searchTerm.toLowerCase())).map((evt) => (
                 <div
                   key={evt.id}
                   className="p-5 rounded-2xl border border-stone-200 hover:border-amber-400/50 transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-stone-50/50"
@@ -616,7 +579,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
                     <button
                       onClick={() => {
                         setEditingEvent({ ...evt });
-                        setIsEventModalOpen(true);
+                        setDataError(''); setIsEventModalOpen(true);
                       }}
                       className="p-2 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 transition-colors"
                       title="Edit Event"
@@ -666,7 +629,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
                     description: '',
                     isCustomAdded: true,
                   });
-                  setIsVideoModalOpen(true);
+                  setDataError(''); setIsVideoModalOpen(true);
                 }}
                 className="px-4 py-2.5 rounded-full bg-red-600 hover:bg-red-500 text-white font-semibold text-xs tracking-wide shadow-md flex items-center gap-1.5 cursor-pointer self-start sm:self-auto"
               >
@@ -676,7 +639,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {videos.map((vid) => (
+              {videos.filter(item => JSON.stringify(item).toLowerCase().includes(searchTerm.toLowerCase())).map((vid) => (
                 <div key={vid.id} className="border border-stone-200 rounded-2xl overflow-hidden bg-stone-50/50 flex flex-col justify-between">
                   <div>
                     <div className="aspect-video bg-black relative">
@@ -715,6 +678,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
                     </button>
 
                     <div className="flex items-center gap-1">
+                      <button title="Edit video" onClick={() => { setEditingVideo(vid); setDataError(''); setIsVideoModalOpen(true); }} className="p-2 rounded-lg bg-stone-100"><Edit3 className="w-3.5 h-3.5" /></button>
                       <a
                         href={vid.youtubeUrl}
                         target="_blank"
@@ -754,11 +718,12 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
 
               <div className="text-xs text-stone-500">
                 <strong>{ebooks.length}</strong> Publications Published
+                <button onClick={() => { setEditingEbook(newEbook()); setDataError(''); setIsEbookModalOpen(true); }} className="ml-3 rounded-full bg-emerald-800 px-4 py-2 text-white">Add e-book</button>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {ebooks.map((bk) => (
+              {ebooks.filter(item => JSON.stringify(item).toLowerCase().includes(searchTerm.toLowerCase())).map((bk) => (
                 <div key={bk.id} className="border border-stone-200 rounded-2xl overflow-hidden bg-stone-50/50 flex flex-col justify-between">
                   <div className="p-4 space-y-2">
                     <span className="text-[10px] uppercase font-bold text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full">
@@ -772,7 +737,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
 
                   <div className="p-4 pt-2 border-t border-stone-200 flex items-center justify-between text-xs">
                     <span className="font-semibold text-emerald-800">
-                      Ch. {bk.sampleChapter.chapterNumber} Available
+                      <button onClick={() => { setEditingEbook(bk); setDataError(''); setIsEbookModalOpen(true); }} className="mr-2 underline">Edit</button>
+                      <button className="text-red-700" onClick={() => { if (confirm('Delete this e-book?')) void handleSaveEbooks(ebooks.filter(b => b.id !== bk.id)); }}>Delete</button>
                     </span>
                     <button
                       onClick={() => {
@@ -821,7 +787,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
 
             <div className="space-y-4">
               {prayers
-                .filter(p => statusFilter === 'all' || p.status === statusFilter)
+                .filter(p => (statusFilter === 'all' || p.status === statusFilter) && JSON.stringify(p).toLowerCase().includes(searchTerm.toLowerCase()))
                 .map((pr) => (
                   <div
                     key={pr.id}
@@ -832,7 +798,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
                         <span className="font-serif font-bold text-base text-[#0A192F]">
                           {pr.name}
                         </span>
-                        <span className="text-xs text-stone-400">· {pr.submittedAt}</span>
+                        <span className="text-xs text-stone-400">· {new Date(pr.submittedAt).toLocaleString()}</span>
                         <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-amber-100 text-amber-800">
                           {pr.category}
                         </span>
@@ -898,8 +864,10 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
                         <input
                           type="text"
                           placeholder="Add pastoral notes..."
+                          aria-label={`Pastoral note for ${pr.name}`}
+                          key={`${pr.id}-${pr.revision}`}
                           defaultValue={pr.pastoralNotes || ''}
-                          onBlur={(e) => handleUpdatePrayerNotes(pr.id, e.target.value)}
+                          onBlur={(e) => { if (e.target.value !== (pr.pastoralNotes || '')) void handleUpdatePrayerNotes(pr.id, e.target.value); }}
                           className="w-full px-2.5 py-1 text-xs rounded-lg border border-stone-300 bg-white"
                         />
                       </div>
@@ -929,7 +897,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
             </div>
 
             <div className="space-y-4">
-              {inquiries.map((inq) => (
+              {inquiries.filter(i => JSON.stringify(i).toLowerCase().includes(searchTerm.toLowerCase())).map((inq) => (
                 <div
                   key={inq.id}
                   className="p-5 rounded-2xl border border-stone-200 bg-stone-50/50 space-y-3"
@@ -939,7 +907,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
                       <span className="font-serif font-bold text-base text-[#0A192F]">
                         {inq.fullName}
                       </span>
-                      <span className="text-xs text-stone-400">· {inq.submittedAt}</span>
+                      <span className="text-xs text-stone-400">· {new Date(inq.submittedAt).toLocaleString()}</span>
                       <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-emerald-100 text-emerald-800">
                         {inq.inquiryType}
                       </span>
@@ -996,12 +964,15 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
                     </div>
 
                     <div className="flex items-center gap-2">
+                      <label className="text-xs">Pastoral note<input key={`note-${inq.id}-${inq.revision}`} aria-label={`Pastoral note for ${inq.fullName}`} defaultValue={inq.pastoralNotes || ''} onBlur={e => { if (e.target.value !== (inq.pastoralNotes || '')) void handleSaveInquiries(inquiries.map(i => i.id === inq.id ? { ...i, pastoralNotes: e.target.value } : i)); }} className="block border rounded p-1" /></label>
                       <span className="text-[10px] font-bold uppercase text-stone-400">Assigned Host:</span>
                       <input
                         type="text"
                         placeholder="e.g. Deaconess Ade"
+                        aria-label={`Assigned host for ${inq.fullName}`}
+                        key={`${inq.id}-${inq.revision}`}
                         defaultValue={inq.assignedTo || ''}
-                        onBlur={(e) => handleUpdateInquiryHost(inq.id, e.target.value)}
+                        onBlur={(e) => { if (e.target.value !== (inq.assignedTo || '')) void handleUpdateInquiryHost(inq.id, e.target.value); }}
                         className="px-2.5 py-1 text-xs rounded-lg border border-stone-300 bg-white"
                       />
                     </div>
@@ -1092,6 +1063,10 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
                 </div>
               </div>
 
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <label className="text-xs">Link to page<select aria-label="Announcement target page" className="block w-full border rounded-lg p-2" value={announcement.targetTab || 'home'} onChange={e => setAnnouncement({ ...announcement, targetTab: e.target.value as PageTab })}>{['home', 'about', 'videos', 'ebooks', 'gallery', 'connect'].map(tab => <option key={tab} value={tab}>{tab}</option>)}</select></label>
+                <label className="text-xs">External link (optional, overrides page)<input type="url" placeholder="https://…" className="block w-full border rounded-lg p-2" value={announcement.actionUrl || ''} onChange={e => setAnnouncement({ ...announcement, actionUrl: e.target.value })} /></label>
+              </div>
               {/* Live Preview of Banner */}
               <div className="space-y-1.5 pt-2">
                 <div className="text-xs font-bold text-stone-500 uppercase tracking-wider">Live Banner Preview:</div>
@@ -1135,10 +1110,23 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
                 Data Management &amp; System Backup
               </h2>
               <p className="text-xs text-stone-500">
-                All church activities, prayers, and inquiries are securely stored in your browser storage. Export JSON archives anytime.
+                Church records are stored in Supabase. Export current server records anytime. Backups contain confidential pastoral information; store them securely.
               </p>
             </div>
 
+            <form className="space-y-3 rounded-xl border p-5" onSubmit={async e => {
+              e.preventDefault(); setBusy(true); setDataError('');
+              try {
+                await api('/auth/password', { method: 'POST', body: JSON.stringify({ currentPassword, newPassword }) });
+                setCurrentPassword(''); setNewPassword(''); triggerToast('Your password has been changed.');
+              } catch (err) { handleFailure(err); }
+              finally { setBusy(false); }
+            }}>
+              <h3 className="font-semibold">Change your password</h3>
+              <label className="block text-sm">Current password<input type="password" autoComplete="current-password" required value={currentPassword} onChange={e => setCurrentPassword(e.target.value)} className="block w-full rounded-lg border p-2" /></label>
+              <label className="block text-sm">New password (12 characters minimum)<input type="password" autoComplete="new-password" required minLength={12} maxLength={128} value={newPassword} onChange={e => setNewPassword(e.target.value)} className="block w-full rounded-lg border p-2" /></label>
+              <button className="rounded-full bg-emerald-800 px-5 py-2 text-white text-sm">Change password</button>
+            </form>
             <div className="space-y-4">
               <div className="p-5 rounded-2xl bg-stone-50 border border-stone-200 space-y-3">
                 <div className="font-bold text-sm text-[#0A192F] flex items-center gap-2">
@@ -1157,22 +1145,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
                 </button>
               </div>
 
-              <div className="p-5 rounded-2xl bg-red-50/60 border border-red-200 space-y-3">
-                <div className="font-bold text-sm text-red-900 flex items-center gap-2">
-                  <RefreshCw className="w-4 h-4 text-red-600" />
-                  <span>Reset System to Factory Defaults</span>
-                </div>
-                <p className="text-xs text-stone-600">
-                  Restores original RCCG church calendar, initial sermons archive, and clears mock test data.
-                </p>
-                <button
-                  onClick={handleFactoryReset}
-                  className="px-5 py-2.5 rounded-full bg-red-600 hover:bg-red-700 text-white font-semibold text-xs transition-all shadow-sm flex items-center gap-1.5 cursor-pointer"
-                >
-                  <RefreshCw className="w-3.5 h-3.5" />
-                  <span>Reset All to Defaults</span>
-                </button>
-              </div>
+              <p className="text-xs text-stone-600">Administrator access is managed in Supabase. Ask the project owner to add or remove approved accounts. Use Reload data to retrieve the latest changes.</p>
             </div>
           </div>
         )}
@@ -1195,6 +1168,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
             </div>
 
             <form onSubmit={handleSaveEventForm} className="p-6 space-y-4 max-h-[75vh] overflow-y-auto text-xs">
+              {dataError && <p role="alert" className="text-red-700">{dataError}</p>}
               <div className="space-y-1">
                 <label className="font-semibold uppercase tracking-wider text-stone-700">Event / Activity Title *</label>
                 <input
@@ -1297,6 +1271,10 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
                 </div>
               </div>
 
+              <div className="grid grid-cols-3 gap-3">
+                {(['month', 'day', 'subtext'] as const).map(key => <label key={key}>Date badge {key}<input aria-label={`Date badge ${key}`} className="w-full border rounded p-2" value={editingEvent.dateBadge[key] || ''} onChange={e => setEditingEvent({ ...editingEvent, dateBadge: { ...editingEvent.dateBadge, [key]: e.target.value } })} /></label>)}
+              </div>
+              <label className="block"><input type="checkbox" checked={!!editingEvent.rsvpRequired} onChange={e => setEditingEvent({ ...editingEvent, rsvpRequired: e.target.checked })} /> Accept event RSVPs</label>
               <div className="space-y-1">
                 <label className="font-semibold uppercase tracking-wider text-stone-700">Description</label>
                 <textarea
@@ -1334,14 +1312,14 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-sm overflow-y-auto">
           <div className="relative w-full max-w-xl bg-white rounded-3xl border border-stone-200 shadow-2xl overflow-hidden my-auto">
             <div className="bg-[#0A192F] text-white px-6 py-4 flex items-center justify-between border-b border-amber-500/20">
-              <h3 className="font-serif font-bold text-lg text-white">Add YouTube Video / Livestream</h3>
+              <h3 className="font-serif font-bold text-lg text-white">YouTube Video / Livestream</h3>
               <button onClick={() => setIsVideoModalOpen(false)} className="p-1 text-slate-300 hover:text-white">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <form
-              onSubmit={(e) => {
+              onSubmit={async (e) => {
                 e.preventDefault();
                 const detectedId = extractYouTubeId(editingVideo.youtubeUrl);
                 if (!detectedId) {
@@ -1353,12 +1331,12 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
                   youtubeId: detectedId,
                   isCustomAdded: true,
                 };
-                handleSaveVideos([newVid, ...videos]);
-                setIsVideoModalOpen(false);
-                setEditingVideo(null);
+                const updated = videos.some(v => v.id === newVid.id) ? videos.map(v => v.id === newVid.id ? newVid : v) : [newVid, ...videos];
+                if (await handleSaveVideos(updated)) { setIsVideoModalOpen(false); setEditingVideo(null); }
               }}
               className="p-6 space-y-4 text-xs"
             >
+              {dataError && <p role="alert" className="text-red-700">{dataError}</p>}
               <div className="space-y-1">
                 <label className="font-semibold uppercase tracking-wider text-stone-700">YouTube URL *</label>
                 <input
@@ -1404,6 +1382,10 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
                 </div>
               </div>
 
+              <label className="block">Category<select aria-label="Video category" className="w-full border rounded p-2" value={editingVideo.category} onChange={e => setEditingVideo({ ...editingVideo, category: e.target.value as YouTubeVideoItem['category'], categoryLabel: e.target.selectedOptions[0].text })}>{['sunday-service', 'bible-study', 'worship', 'holy-ghost', 'youth', 'prayer-revival'].map(c => <option key={c} value={c}>{c.replaceAll('-', ' ')}</option>)}</select></label>
+              <label className="block">Date<input aria-label="Video date" className="w-full border rounded p-2" value={editingVideo.date} onChange={e => setEditingVideo({ ...editingVideo, date: e.target.value })} /></label>
+              <label className="block">Description<textarea aria-label="Video description" className="w-full border rounded p-2" value={editingVideo.description} onChange={e => setEditingVideo({ ...editingVideo, description: e.target.value })} /></label>
+              <label className="block">Scripture<input aria-label="Video scripture" className="w-full border rounded p-2" value={editingVideo.scriptureRef || ''} onChange={e => setEditingVideo({ ...editingVideo, scriptureRef: e.target.value })} /></label>
               <div className="pt-3 border-t flex justify-end gap-2">
                 <button
                   type="button"
@@ -1416,13 +1398,18 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
                   type="submit"
                   className="px-6 py-2 rounded-full bg-red-600 text-white font-bold shadow-md cursor-pointer"
                 >
-                  Add Video
+                  Save Video
                 </button>
               </div>
             </form>
           </div>
         </div>
       )}
+      {isEbookModalOpen && editingEbook && <EbookEditor book={editingEbook} busy={busy} error={dataError} onClose={() => setIsEbookModalOpen(false)} onSave={async book => {
+        const updated = ebooks.some(b => b.id === book.id) ? ebooks.map(b => b.id === book.id ? book : b) : [book, ...ebooks];
+        if (await handleSaveEbooks(updated)) { setIsEbookModalOpen(false); setEditingEbook(null); }
+      }} />}
+      </fieldset>
     </div>
   );
 };
