@@ -6,6 +6,7 @@ from time import monotonic
 from uuid import uuid4
 import asyncio
 import re
+from urllib.parse import urlsplit
 
 from fastapi import Body, Depends, FastAPI, Header, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -31,11 +32,24 @@ app.add_middleware(CORSMiddleware, allow_origins=settings.allowed_origins, allow
                    allow_methods=['GET', 'POST', 'PUT', 'DELETE'], allow_headers=['Content-Type', 'X-Requested-With', 'If-Match'])
 
 
+def same_origin(request: Request, origin: str | None) -> bool:
+    """Accept the deployment's own host, including dynamic preview domains."""
+    if not origin:
+        return True
+    parsed = urlsplit(origin)
+    hosts = {request.headers.get('host', '').lower()}
+    forwarded_host = request.headers.get('x-forwarded-host', '').split(',', 1)[0].strip().lower()
+    if forwarded_host:
+        hosts.add(forwarded_host)
+    return parsed.scheme in {'http', 'https'} and parsed.netloc.lower() in hosts
+
+
 @app.middleware('http')
 async def request_guards(request: Request, call_next):
     if request.url.path.startswith('/api/') and request.method in {'POST', 'PUT', 'DELETE', 'PATCH'}:
         origin = request.headers.get('origin')
-        if request.headers.get('x-requested-with') != 'rccg-web' or (origin and origin not in settings.allowed_origins):
+        origin_allowed = origin in settings.allowed_origins or same_origin(request, origin)
+        if request.headers.get('x-requested-with') != 'rccg-web' or not origin_allowed:
             return JSONResponse({'detail': 'Request origin is not allowed.'}, status_code=403)
         # Bound actual received bytes, including chunked requests without Content-Length.
         body = bytearray()

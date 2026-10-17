@@ -1,4 +1,6 @@
+import os
 from pathlib import Path
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -8,7 +10,9 @@ class Settings(BaseSettings):
     supabase_publishable_key: str = ''
     supabase_secret_key: str = ''
     allowed_origins: list[str] = ['http://localhost:3000', 'http://127.0.0.1:3000']
-    cookie_secure: bool = False
+    # Vercel always serves public deployments over HTTPS. Local development
+    # remains HTTP-friendly unless COOKIE_SECURE is explicitly enabled.
+    cookie_secure: bool = bool(os.getenv('VERCEL'))
 
     @property
     def configured(self):

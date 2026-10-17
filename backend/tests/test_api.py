@@ -124,6 +124,20 @@ def test_wrong_password_does_not_set_cookies(client):
 def test_csrf_and_body_limit(client):
     assert client.post('/api/public/prayers', headers={'Origin': 'https://evil.example'}, json=PRAYER).status_code == 403
     assert client.post('/api/public/prayers', headers={'X-Requested-With': ''}, json=PRAYER).status_code == 403
+    assert client.post(
+        '/api/public/prayers',
+        headers={'Origin': 'http://testserver'},
+        json=PRAYER,
+    ).status_code == 201
+    assert client.post(
+        '/api/public/prayers',
+        headers={
+            'Host': 'backend.internal',
+            'Origin': 'https://preview.example',
+            'X-Forwarded-Host': 'preview.example',
+        },
+        json=PRAYER,
+    ).status_code == 201
     assert client.post('/api/public/prayers', content='x' * 512001).status_code == 413
 
 

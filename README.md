@@ -88,7 +88,20 @@ Vite proxies `/api` to FastAPI, so the browser uses one origin. Leave `VITE_API_
 
 ## Production
 
-The supported simplest deployment serves the built frontend and FastAPI from the same HTTPS origin:
+The supported deployment serves the Vite frontend and FastAPI from the same HTTPS origin. The checked-in `vercel.json` defines two [Vercel Services](https://vercel.com/docs/services): Vite handles the site and FastAPI handles `/api/*` with the original request path preserved.
+
+In each Vercel project connected to this repository, add these environment variables for **Preview** and **Production**:
+
+```text
+SUPABASE_URL=https://YOUR_PROJECT.supabase.co
+SUPABASE_PUBLISHABLE_KEY=your-publishable-key
+SUPABASE_SECRET_KEY=your-secret-key
+COOKIE_SECURE=true
+```
+
+Leave `VITE_API_BASE_URL` unset so the browser calls the same-origin `/api`. Vercel supplies HTTPS and sets `VERCEL`, which also enables secure cookies automatically; `COOKIE_SECURE=true` makes the intent explicit. Dynamic preview domains are accepted only when the request `Origin` matches its `Host`. Add `ALLOWED_ORIGINS` only for a separate trusted browser origin.
+
+For a non-Vercel host, build the frontend before starting FastAPI:
 
 ```sh
 npm ci
@@ -96,9 +109,7 @@ npm run build
 .venv/bin/uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --workers 1
 ```
 
-Build **before** starting FastAPI. It serves `dist/` plus `/api`. Put it behind an HTTPS reverse proxy, set `COOKIE_SECURE=true`, and set `ALLOWED_ORIGINS` to the exact public origin (for example `["https://church.example.org"]`). Never use wildcard origins with credentials. Cookies use `HttpOnly`, `SameSite=Lax`, and `/api` scope. Mutating browser requests require the custom request header and an allowed Origin. Sign-out clears local cookies and revokes the Supabase refresh session; already-issued access tokens follow Supabase's expiry behavior.
-
-The existing `vercel.json` only deploys the static frontend. It does **not** deploy FastAPI. If keeping Vercel, deploy FastAPI separately and configure a same-origin `/api/:path*` reverse proxy rewrite **before** the SPA fallback. Arbitrary cross-site frontend/API hosting is not supported by the default SameSite cookie configuration; prefer the same-origin proxy. Do not publish before confirming the proxy and secure cookies work.
+FastAPI serves `dist/` plus `/api` in that setup. Put it behind an HTTPS reverse proxy, set `COOKIE_SECURE=true`, and set `ALLOWED_ORIGINS` to any additional exact browser origin (for example `["https://church.example.org"]`). Never use wildcard origins with credentials. Cookies use `HttpOnly`, `SameSite=Lax`, and `/api` scope. Mutating browser requests require the custom request header and either the same origin or an explicitly allowed Origin. Sign-out clears local cookies and revokes the Supabase refresh session; already-issued access tokens follow Supabase's expiry behavior.
 
 The included rate limiter is per-process (10 public submissions and 10 login attempts per IP per 10 minutes). It bounds memory and is suitable for local/small single-process use. For multiple workers/instances, use shared Redis or an ingress rate limiter. Configure trusted proxy IP forwarding at deployment; do not trust arbitrary client-supplied forwarding headers. Public forms do not send email notifications or newsletter campaigns; staff review the admin inbox, including newsletter signup requests.
 
