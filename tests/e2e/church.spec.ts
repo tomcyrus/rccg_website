@@ -22,7 +22,7 @@ async function mockApi(page: Page) {
     if (path === '/admin/backup') return respond(records);
     if (method === 'GET') return respond(kind === 'announcements' && scope === 'public' ? records[kind].filter(r => r.isActive) : records[kind] || []);
     if (scope === 'public') {
-      if (failSubmission) return respond({ detail: 'Unable to reach Supabase. Please try again.' }, 503);
+      if (failSubmission) return respond({ detail: 'The church records service is temporarily unavailable. Please try again.' }, 503);
       records[kind].push({ ...payload, id: crypto.randomUUID(), status: 'new', submittedAt: new Date().toISOString(), revision: 1 });
       return respond({ ok: true }, 201);
     }
@@ -38,7 +38,7 @@ async function mockApi(page: Page) {
 }
 
 async function signIn(page: Page) {
-  await page.goto('/#admin', { waitUntil: 'domcontentloaded' });
+  await page.goto('/admin', { waitUntil: 'domcontentloaded' });
   await page.getByLabel('Admin email').fill('admin@example.com');
   await page.getByPlaceholder('Enter your password').fill('test-password');
   await page.getByRole('button', { name: 'Sign in to Admin Console' }).click();
@@ -47,7 +47,7 @@ async function signIn(page: Page) {
 
 test('admin sign-in, event creation, public publishing, deletion and logout', async ({ page }) => {
   const { records } = await mockApi(page);
-  await page.goto('/#admin', { waitUntil: 'domcontentloaded' });
+  await page.goto('/admin', { waitUntil: 'domcontentloaded' });
   await expect(page.getByText('Quick Sign In')).toHaveCount(0);
   await page.getByLabel('Admin email').fill('admin@example.com');
   await page.getByPlaceholder('Enter your password').fill('wrong');
@@ -63,7 +63,7 @@ test('admin sign-in, event creation, public publishing, deletion and logout', as
   expect(records.events).toHaveLength(1);
   await page.getByRole('button', { name: 'View Live Site' }).click();
   await expect(page.getByText('Community Thanksgiving', { exact: true }).first()).toBeVisible();
-  await page.goto('/#admin', { waitUntil: 'domcontentloaded' });
+  await page.goto('/admin', { waitUntil: 'domcontentloaded' });
   page.once('dialog', dialog => dialog.accept());
   await page.getByTitle('Delete Event').click();
   await expect(page.getByText('Community Thanksgiving', { exact: true })).toHaveCount(0);
@@ -102,7 +102,7 @@ test('prayer form keeps entered text on failure and saves privately on retry', a
   await dialog.locator('input[type="email"]').fill('guest@example.com');
   await dialog.locator('textarea').fill('Please pray for our family.');
   await dialog.getByRole('button', { name: /Submit|Send/i }).click();
-  await expect(dialog.getByRole('alert')).toContainText('Unable to reach Supabase');
+  await expect(dialog.getByRole('alert')).toContainText('church records service is temporarily unavailable');
   await expect(dialog.locator('textarea')).toHaveValue('Please pray for our family.');
   expect(fixture.records.prayers).toHaveLength(0);
   fixture.fail(false);
@@ -124,4 +124,18 @@ test('mobile admin login fits viewport and no console runtime errors', async ({ 
   await expect(page.getByRole('button', { name: 'Reload data' })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy();
   expect(errors).toEqual([]);
+});
+
+test('clean routes support direct loads and browser history without hashes', async ({ page }) => {
+  await mockApi(page);
+  await page.goto('/about', { waitUntil: 'domcontentloaded' });
+  await expect(page).toHaveURL(/\/about$/);
+  await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Sermons', exact: true }).click();
+  await expect(page).toHaveURL(/\/sermons$/);
+  expect(new URL(page.url()).hash).toBe('');
+
+  await page.goBack();
+  await expect(page).toHaveURL(/\/about$/);
 });

@@ -12,7 +12,7 @@ class Supabase:
 
     async def request(self, method, path, *, token=None, auth=False, **kwargs):
         if not settings.configured:
-            raise HTTPException(503, 'Supabase is not configured. Follow README.md to set up backend/.env.')
+            raise HTTPException(503, 'The church records service is not configured. Contact the site administrator.')
         key = settings.supabase_publishable_key if auth else settings.supabase_secret_key
         headers = {'apikey': key}
         # New Supabase secret keys are API keys, not JWT bearer tokens.
@@ -24,7 +24,7 @@ class Supabase:
         try:
             response = await self.client.request(method, settings.supabase_url.rstrip('/') + path, headers=headers, **kwargs)
         except httpx.RequestError as exc:
-            raise HTTPException(503, 'Unable to reach Supabase. Please try again.') from exc
+            raise HTTPException(503, 'The church records service is temporarily unavailable. Please try again.') from exc
         if response.is_error:
             if auth and response.status_code in (400, 401, 403, 422):
                 raise HTTPException(401, 'Invalid credentials or expired session.')
@@ -32,7 +32,7 @@ class Supabase:
                 raise HTTPException(429, 'Too many attempts. Please try again later.')
             if response.status_code == 409:
                 raise HTTPException(409, 'This record already exists. Refresh and try again.')
-            raise HTTPException(502, 'Supabase could not complete this request. Check the project configuration and migration.')
+            raise HTTPException(502, 'The church records service could not complete this request. Please try again later.')
         return response.json() if response.content else None
 
     async def rows(self, kind, **params):

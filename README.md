@@ -80,11 +80,11 @@ npm run dev
 ```
 
 - Website: http://localhost:3000
-- Admin console: http://localhost:3000/#admin
+- Admin console: http://localhost:3000/admin
 - API documentation: http://127.0.0.1:8000/docs
 - Configuration health: http://127.0.0.1:8000/api/health
 
-Vite proxies `/api` to FastAPI, so the browser uses one origin. Leave `VITE_API_BASE_URL` unset for this setup. Without Supabase configuration, health remains available and data/auth endpoints return an actionable 503; there is no silent local/demo fallback. `supabase_configured` checks presence of settings, not remote connectivity.
+Vite proxies `/api` to FastAPI, so the browser uses one origin. Leave `VITE_API_BASE_URL` unset for this setup. Without service configuration, health remains available and data/auth endpoints return an actionable 503; there is no silent local/demo fallback. `service_configured` checks presence of settings, not remote connectivity.
 
 ## Production
 

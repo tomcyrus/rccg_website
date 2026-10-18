@@ -10,32 +10,39 @@
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
-  <!-- Church Calendar & Events -->
-  <url>
-    <loc>https://rccgkingdomfirst.org/#church-calendar</loc>
-    <lastmod>2026-10-14</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
   <!-- About Us: Mission, Vision, Beliefs -->
   <url>
-    <loc>https://rccgkingdomfirst.org/?tab=about</loc>
+    <loc>https://rccgkingdomfirst.org/about</loc>
     <lastmod>2026-10-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <!-- Connect, Visit, Prayer Request & Service Times -->
   <url>
-    <loc>https://rccgkingdomfirst.org/?tab=connect</loc>
+    <loc>https://rccgkingdomfirst.org/connect</loc>
     <lastmod>2026-10-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <!-- Church Life & Photo Gallery -->
   <url>
-    <loc>https://rccgkingdomfirst.org/?tab=gallery</loc>
+    <loc>https://rccgkingdomfirst.org/gallery</loc>
     <lastmod>2026-10-14</lastmod>
     <changefreq>biweekly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <!-- Sermons & Video Library -->
+  <url>
+    <loc>https://rccgkingdomfirst.org/sermons</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <!-- E-Books & Spiritual Library -->
+  <url>
+    <loc>https://rccgkingdomfirst.org/ebooks</loc>
+    <lastmod>2026-10-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
   </url>
 </urlset>
