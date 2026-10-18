@@ -52,7 +52,7 @@ type AdminTab = 'events' | 'videos' | 'ebooks' | 'prayers' | 'inquiries' | 'anno
 export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTab }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [checkingSession, setCheckingSession] = useState(true);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('rccgkfa@gmail.com');
   const [passcode, setPasscode] = useState('');
   const [authError, setAuthError] = useState('');
   const [busy, setBusy] = useState(false);

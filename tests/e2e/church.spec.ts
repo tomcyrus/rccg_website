@@ -49,6 +49,7 @@ test('admin sign-in, event creation, public publishing, deletion and logout', as
   const { records } = await mockApi(page);
   await page.goto('/admin', { waitUntil: 'domcontentloaded' });
   await expect(page.getByText('Quick Sign In')).toHaveCount(0);
+  await expect(page.getByLabel('Admin email')).toHaveValue('rccgkfa@gmail.com');
   await page.getByLabel('Admin email').fill('admin@example.com');
   await page.getByPlaceholder('Enter your password').fill('wrong');
   await page.getByRole('button', { name: 'Sign in to Admin Console' }).click();
