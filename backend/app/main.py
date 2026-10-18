@@ -114,7 +114,7 @@ def set_session(response, session):
 
 @app.get('/api/health')
 def health():
-    return {'status': 'ok', 'supabase_configured': settings.configured}
+    return {'status': 'ok', 'service_configured': settings.configured}
 
 
 @app.post('/api/auth/login')
@@ -176,7 +176,7 @@ async def logout(request: Request, database=Depends(db)):
             await database.request('POST', '/auth/v1/logout', auth=True, token=token, params={'scope': 'local'})
         except HTTPException as exc:
             if exc.status_code != 401:
-                response = JSONResponse({'detail': 'Signed out locally; Supabase session revocation is temporarily unavailable.'}, status_code=503)
+                response = JSONResponse({'detail': 'Signed out locally; remote session revocation is temporarily unavailable.'}, status_code=503)
     for name in ('rccg_access', 'rccg_refresh'):
         response.delete_cookie(name, path='/api', secure=settings.cookie_secure, httponly=True, samesite='lax')
     return response

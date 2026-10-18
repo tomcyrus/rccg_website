@@ -22,7 +22,7 @@ async function mockApi(page: Page) {
     if (path === '/admin/backup') return respond(records);
     if (method === 'GET') return respond(kind === 'announcements' && scope === 'public' ? records[kind].filter(r => r.isActive) : records[kind] || []);
     if (scope === 'public') {
-      if (failSubmission) return respond({ detail: 'Unable to reach Supabase. Please try again.' }, 503);
+      if (failSubmission) return respond({ detail: 'The church records service is temporarily unavailable. Please try again.' }, 503);
       records[kind].push({ ...payload, id: crypto.randomUUID(), status: 'new', submittedAt: new Date().toISOString(), revision: 1 });
       return respond({ ok: true }, 201);
     }
@@ -102,7 +102,7 @@ test('prayer form keeps entered text on failure and saves privately on retry', a
   await dialog.locator('input[type="email"]').fill('guest@example.com');
   await dialog.locator('textarea').fill('Please pray for our family.');
   await dialog.getByRole('button', { name: /Submit|Send/i }).click();
-  await expect(dialog.getByRole('alert')).toContainText('Unable to reach Supabase');
+  await expect(dialog.getByRole('alert')).toContainText('church records service is temporarily unavailable');
   await expect(dialog.locator('textarea')).toHaveValue('Please pray for our family.');
   expect(fixture.records.prayers).toHaveLength(0);
   fixture.fail(false);
