@@ -1,7 +1,7 @@
 import React from 'react';
 import { PageTab } from '../types';
 import { Calendar, MapPin, Play, Sparkles } from 'lucide-react';
-import heroImg from '../assets/images/hero_cross_sanctuary_1792160631376.jpg';
+import heroImg from '../assets/images/gallery_worship_service_1791982292757.jpg';
 
 interface HeroSectionProps {
   onOpenPlanVisit: () => void;
@@ -35,18 +35,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
   return (
     <div className="relative">
-      {/* Hero Visual Section matching template layout */}
-      <section className="relative min-h-[540px] sm:min-h-[600px] lg:min-h-[660px] flex items-center bg-[#070D1F] text-white overflow-hidden">
-        {/* Sanctuary Background Image with Glowing Cross */}
+      {/* Hero visual section */}
+      <section className="relative min-h-[540px] sm:min-h-[600px] lg:min-h-[660px] flex items-center bg-[#0C4A6E] text-white overflow-hidden">
+        {/* Bright, energetic worship background */}
         <div className="absolute inset-0 z-0">
           <img
             src={heroImg}
-            alt="RCCG Kingdom First Assembly congregation in worship facing illuminated cross"
-            className="w-full h-full object-cover object-center brightness-65 contrast-105"
+            alt="Worship team and congregation praising together"
+            className="w-full h-full object-cover object-center brightness-105 saturate-110 contrast-100"
           />
-          {/* Subtle cinematic gradient overlays */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0B132B] via-slate-950/50 to-slate-950/40" />
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/50 to-transparent" />
+          {/* Focused overlays keep the copy readable while letting the photo stay bright. */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#06253D]/70 via-transparent to-white/5" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#06253D]/85 via-[#0A526E]/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-300/10 via-transparent to-cyan-300/10" />
         </div>
 
         {/* Hero Text Content with Restored RCCG KFA Content */}
@@ -54,8 +55,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="max-w-2xl space-y-5 sm:space-y-6">
             
             {/* Church Identity Pill */}
-            <div className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-[10px] xs:text-xs font-semibold tracking-wide backdrop-blur-xs max-w-full">
-              <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse shrink-0" />
+            <div className="inline-flex items-center gap-2 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full bg-white/20 border border-white/40 text-white text-[10px] xs:text-xs font-semibold tracking-wide backdrop-blur-sm max-w-full shadow-sm">
+              <span className="w-2 h-2 rounded-full bg-amber-300 animate-pulse shrink-0" />
               <span className="truncate">RCCG KINGDOM FIRST ASSEMBLY &middot; ROSELLE, NJ</span>
             </div>
 
@@ -66,12 +67,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </h1>
 
             {/* Restored Content Subtitle & Scripture */}
-            <p className="text-sm sm:text-xl text-slate-200 font-normal leading-relaxed max-w-xl">
+            <p className="text-sm sm:text-xl text-white/90 font-normal leading-relaxed max-w-xl drop-shadow-sm">
               Growing in faith. Building people. Impacting our world. Seeking God's Kingdom first and sharing His love with all.
             </p>
 
             {/* Anchor Scripture Tag */}
-            <div className="text-xs sm:text-sm font-sans italic text-blue-200 bg-white/10 border-l-2 border-[#1D63ED] px-3 sm:px-3.5 py-2 rounded-r-lg max-w-lg backdrop-blur-xs">
+            <div className="text-xs sm:text-sm font-sans italic text-amber-50 bg-[#06253D]/35 border-l-2 border-amber-300 px-3 sm:px-3.5 py-2 rounded-r-lg max-w-lg backdrop-blur-sm">
               "But seek first the kingdom of God and His righteousness, and all these things shall be added to you." — Matthew 6:33
             </div>
 
@@ -86,7 +87,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
               <button
                 onClick={handleWatchOnline}
-                className="px-6 sm:px-7 py-3 rounded-lg bg-black/40 hover:bg-black/60 text-white font-medium text-sm sm:text-base border border-white/50 hover:border-white transition-all cursor-pointer backdrop-blur-xs flex items-center justify-center gap-2"
+                className="px-6 sm:px-7 py-3 rounded-lg bg-white/15 hover:bg-white/25 text-white font-medium text-sm sm:text-base border border-white/60 hover:border-white transition-all cursor-pointer backdrop-blur-sm flex items-center justify-center gap-2"
               >
                 <Play className="w-4 h-4 fill-white" />
                 <span>Watch Online</span>
