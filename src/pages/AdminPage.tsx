@@ -287,7 +287,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
 
           <form onSubmit={handleLogin} className="space-y-4">
             <label className="block text-xs text-amber-300">Admin email
-              <input type="email" autoComplete="username" required value={email} onChange={e => setEmail(e.target.value)} className="mt-2 w-full rounded-xl bg-black/40 border border-white/20 p-3 text-white" />
+              <input type="email" autoComplete="username" placeholder="rccgkfa@gmail.com" required value={email} onChange={e => setEmail(e.target.value)} className="mt-2 w-full rounded-xl bg-black/40 border border-white/20 p-3 text-white" />
             </label>
             <div className="space-y-1.5">
               <label className="block text-xs font-semibold text-amber-300 uppercase tracking-wider">
