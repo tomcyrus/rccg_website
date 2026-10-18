@@ -21,287 +21,31 @@ import {
   CalendarPlus
 } from 'lucide-react';
 import { downloadCustomEventIcs, getCustomEventGoogleCalendarUrl } from '../utils/calendar';
-import { getStoredEvents } from '../utils/adminStore';
+import { usePublicContent } from '../hooks/usePublicContent';
+import { ContentStatus } from './ContentStatus';
+import { addLiveVisitorInquiry } from '../utils/adminStore';
+import { errorMessage } from '../utils/api';
 
 interface ChurchCalendarSectionProps {
   onOpenPlanVisit: () => void;
 }
 
-export const CHURCH_EVENTS: ChurchEvent[] = [
-  {
-    id: 'sunday-worship',
-    title: 'Sunday Celebration Worship Service',
-    category: 'worship',
-    categoryLabel: 'Worship Service',
-    dateBadge: {
-      month: 'SUN',
-      day: '18',
-      subtext: 'WEEKLY'
-    },
-    dayOfWeek: 'Every Sunday',
-    time: '9:00 AM – 11:30 AM EST',
-    frequency: 'Every Sunday Morning',
-    location: '121 E 2nd Ave, Roselle, NJ 07203',
-    isOnlineAvailable: true,
-    onlinePlatform: 'YouTube & Facebook Live',
-    scriptureRef: 'Psalm 100:4 · Matthew 6:33',
-    description: 'Vibrant praise, heartfelt worship, practical expository teaching of God\'s Word, and warm fellowship for the whole family.',
-    highlights: [
-      'Kingdom Kids Ministry available',
-      'Warm welcoming tea & fellowship after service',
-      'First-time guests receive a special gift package',
-      'Free parking on 2nd Ave & adjacent municipal lots'
-    ],
-    coordinator: 'Pastoral Team & Ushers Department',
-    audience: 'All ages & families welcome',
-    rsvpRequired: false
-  },
-  {
-    id: 'midweek-bible-study',
-    title: 'Digging Deep: Midweek Bible Study',
-    category: 'bible-study',
-    categoryLabel: 'Bible Study',
-    dateBadge: {
-      month: 'WED',
-      day: '21',
-      subtext: 'WEEKLY'
-    },
-    dayOfWeek: 'Every Wednesday',
-    time: '7:00 PM – 8:30 PM EST',
-    frequency: 'Weekly on Wednesday Evenings',
-    location: 'Sanctuary & Zoom Live Stream',
-    isOnlineAvailable: true,
-    onlinePlatform: 'Zoom & YouTube Stream',
-    scriptureRef: '2 Timothy 2:15 · Psalm 119:105',
-    description: 'An interactive, verse-by-verse exploration of Scripture. Bring your questions, study notes, and an open heart to grow deep roots in Christ.',
-    highlights: [
-      'Interactive Q&A and group reflections',
-      'Current series: Walking in Kingdom Authority (Ephesians)',
-      'Digital study guides provided weekly',
-      'Live chat interaction for online participants'
-    ],
-    coordinator: 'Bible Teaching Ministry',
-    audience: 'Believers, seekers, and Bible students',
-    rsvpRequired: false
-  },
-  {
-    id: 'community-food-pantry',
-    title: 'Roselle Community Food Pantry & Grocery Drive',
-    category: 'outreach',
-    categoryLabel: 'Community Outreach',
-    dateBadge: {
-      month: 'SAT',
-      day: '24',
-      subtext: 'OUTREACH'
-    },
-    dayOfWeek: '2nd & 4th Saturday',
-    time: '10:00 AM – 1:00 PM EST',
-    frequency: 'Bi-Weekly Saturday Outreach',
-    location: 'Church Fellowship Hall & Roselle Community Center',
-    isOnlineAvailable: false,
-    scriptureRef: 'Matthew 25:35 · 1 John 3:18',
-    description: 'Sharing Christ\'s love through practical assistance. Distributing fresh groceries, pantry staples, and fresh produce to our Roselle neighbors in need.',
-    highlights: [
-      'No ID or pre-registration required for families',
-      'Volunteer loading & distribution opportunities',
-      'Prayer station available for anyone needing personal prayer',
-      'Partnered with local Union County food banks'
-    ],
-    coordinator: 'Outreach & Benevolence Committee',
-    audience: 'Open to the entire public / All volunteers welcome',
-    rsvpRequired: false
-  },
-  {
-    id: 'holy-ghost-vigil',
-    title: 'Monthly Holy Ghost Night & Breakthrough Vigil',
-    category: 'special',
-    categoryLabel: 'Special Gathering',
-    dateBadge: {
-      month: 'FRI',
-      day: '06',
-      subtext: 'MONTHLY'
-    },
-    dayOfWeek: '1st Friday of the Month',
-    time: '10:00 PM – 2:00 AM EST',
-    frequency: 'Monthly Prophetic Prayer Night',
-    location: 'Sanctuary · 121 E 2nd Ave, Roselle, NJ',
-    isOnlineAvailable: true,
-    onlinePlatform: 'RCCG KFA YouTube Broadcast',
-    scriptureRef: 'Acts 16:25-26 · Isaiah 43:19',
-    description: 'An intensive night of apostolic worship, fervent intercessory prayer, deliverance, prophetic decree, and thanksgiving testimonies.',
-    highlights: [
-      'Midnight praise & thanksgiving offering',
-      'Individual pastoral laying of hands & anointing',
-      'Testimonies of answered prayers and miracles',
-      'Quiet prayer sanctuary open prior at 9:30 PM'
-    ],
-    coordinator: 'Prayer & Intercession Department',
-    audience: 'All seeking spiritual breakthrough & renewal',
-    rsvpRequired: false
-  },
-  {
-    id: 'faith-foundations-class',
-    title: 'Faith Foundations & Believers Discipleship',
-    category: 'bible-study',
-    categoryLabel: 'Bible Study',
-    dateBadge: {
-      month: 'SUN',
-      day: '25',
-      subtext: 'MORNING'
-    },
-    dayOfWeek: 'Sundays Before Service',
-    time: '8:15 AM – 8:50 AM EST',
-    frequency: 'Sunday Pre-Service Class',
-    location: 'Training Room 2 & Online Hybrid',
-    isOnlineAvailable: true,
-    onlinePlatform: 'Class Google Meet',
-    scriptureRef: 'Hebrews 6:1-2 · Romans 12:2',
-    description: 'A 6-week structured foundational course covering core Christian doctrines: salvation, water baptism, prayer, stewardship, and finding your calling.',
-    highlights: [
-      'Course syllabus and workbook included',
-      'Graduation certificate and ministry placement',
-      'Ideal for new converts and believers desiring strong foundation'
-    ],
-    coordinator: 'Discipleship & Training Academy',
-    audience: 'New members & all growing disciples',
-    rsvpRequired: true
-  },
-  {
-    id: 'seniors-care-visitation',
-    title: 'Roselle Seniors & Neighbor Care Outreach',
-    category: 'outreach',
-    categoryLabel: 'Community Outreach',
-    dateBadge: {
-      month: 'SAT',
-      day: '31',
-      subtext: 'OUTREACH'
-    },
-    dayOfWeek: '3rd Saturday Monthly',
-    time: '11:00 AM – 2:00 PM EST',
-    frequency: 'Monthly Care Outreach',
-    location: 'Roselle Senior Living & Union County Residences',
-    isOnlineAvailable: false,
-    scriptureRef: 'James 1:27 · Leviticus 19:32',
-    description: 'Visiting local nursing homes and homebound seniors with hymn singing, personal friendship, care packages, and reading scriptures together.',
-    highlights: [
-      'Distribution of handwritten encouraging greeting cards',
-      'Hymn singing & acoustic worship songs',
-      'Care packages containing personal toiletries and gifts',
-      'Family and youth participation encouraged'
-    ],
-    coordinator: 'Visitation & Pastoral Care Ministry',
-    audience: 'Volunteers and carpool teams',
-    rsvpRequired: true
-  },
-  {
-    id: 'youth-ignite-fellowship',
-    title: 'Ignite: Youth & Young Adults Fellowship',
-    category: 'special',
-    categoryLabel: 'Special Gathering',
-    dateBadge: {
-      month: 'FRI',
-      day: '13',
-      subtext: 'YOUTH'
-    },
-    dayOfWeek: 'Alternate Fridays',
-    time: '7:00 PM – 9:00 PM EST',
-    frequency: 'Bi-Weekly Friday Gathering',
-    location: 'Church Fellowship Hall',
-    isOnlineAvailable: false,
-    scriptureRef: '1 Timothy 4:12 · Ecclesiastes 12:1',
-    description: 'An energetic, candid space for teens and young professionals to tackle real-world topics, faith questions, career purpose, and contemporary worship.',
-    highlights: [
-      'Panel discussions & roundtable discussions',
-      'Acoustic praise, spoken word, and creative arts',
-      'Pizza, refreshments, and casual social connection',
-      'College & career mentorship network'
-    ],
-    coordinator: 'Kingdom Ignite Youth Leaders',
-    audience: 'Teens, College Students, and Young Adults (13–35)',
-    rsvpRequired: false
-  },
-  {
-    id: 'back-to-school-family-fair',
-    title: 'Family Care & Warmth Clothing Drive',
-    category: 'outreach',
-    categoryLabel: 'Community Outreach',
-    dateBadge: {
-      month: 'SAT',
-      day: '14',
-      subtext: 'COMMUNITY'
-    },
-    dayOfWeek: 'Seasonal Outreach Saturday',
-    time: '11:00 AM – 3:00 PM EST',
-    frequency: 'Community Seasonal Event',
-    location: '121 E 2nd Ave Sanctuary Grounds',
-    isOnlineAvailable: false,
-    scriptureRef: 'Galatians 6:10 · Proverbs 19:17',
-    description: 'Providing winter coats, warm clothing, student supplies, and warm hot cocoa packages to families in Roselle, Linden, and Elizabeth.',
-    highlights: [
-      'Free gently used and brand-new winter clothing',
-      'Hot soup & family lunch served on-site',
-      'Kids craft station and Christian story corner',
-      'All supplies distributed completely free of charge'
-    ],
-    coordinator: 'Evangelism & Community Action Team',
-    audience: 'Open to the entire community',
-    rsvpRequired: false
-  },
-  {
-    id: 'thanksgiving-anointing-service',
-    title: 'Thanksgiving, Anointing & Baby Dedication Service',
-    category: 'worship',
-    categoryLabel: 'Worship Service',
-    dateBadge: {
-      month: 'SUN',
-      day: '01',
-      subtext: 'SPECIAL'
-    },
-    dayOfWeek: '1st Sunday of the Month',
-    time: '9:00 AM – 11:45 AM EST',
-    frequency: '1st Sunday Monthly Celebration',
-    location: 'Main Sanctuary · 121 E 2nd Ave, Roselle, NJ',
-    isOnlineAvailable: true,
-    onlinePlatform: 'Live on YouTube & Facebook',
-    scriptureRef: 'Psalm 107:1 · James 5:14',
-    description: 'A grand celebration service thanking God for preserving our lives, dedicated prayer for newborns and families, and prophetic anointing for the new month.',
-    highlights: [
-      'Thanksgiving dance & corporate praise offering',
-      'Consecration anointing oil service for families',
-      'Baby & child dedication ceremonies',
-      'Community thanksgiving lunch following service'
-    ],
-    coordinator: 'Senior Pastoral Board',
-    audience: 'Entire church family and friends',
-    rsvpRequired: false
-  }
-];
-
 export const ChurchCalendarSection: React.FC<ChurchCalendarSectionProps> = ({
   onOpenPlanVisit
 }) => {
-  const [eventsList, setEventsList] = useState<ChurchEvent[]>(() => getStoredEvents());
+  const { items: eventsList, loading, error } = usePublicContent<ChurchEvent>('events');
   const [activeCategory, setActiveCategory] = useState<EventCategory>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedEvent, setSelectedEvent] = useState<ChurchEvent | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'grid' | 'agenda'>('grid');
 
-  // Sync with storage updates when admin makes changes
-  React.useEffect(() => {
-    const refresh = () => setEventsList(getStoredEvents());
-    window.addEventListener('focus', refresh);
-    window.addEventListener('storage', refresh);
-    return () => {
-      window.removeEventListener('focus', refresh);
-      window.removeEventListener('storage', refresh);
-    };
-  }, []);
-
   // Modal RSVP state
   const [rsvpName, setRsvpName] = useState('');
   const [rsvpEmail, setRsvpEmail] = useState('');
   const [rsvpGuestCount, setRsvpGuestCount] = useState('1');
+  const [rsvpError, setRsvpError] = useState('');
+  const [rsvpBusy, setRsvpBusy] = useState(false);
   const [rsvpSuccess, setRsvpSuccess] = useState(false);
 
   // Filter events based on category and search text
@@ -347,22 +91,28 @@ export const ChurchCalendarSection: React.FC<ChurchCalendarSectionProps> = ({
 
   const handleOpenEventModal = (event: ChurchEvent) => {
     setSelectedEvent(event);
-    setRsvpSuccess(false);
+    setRsvpSuccess(false); setRsvpError('');
     setRsvpName('');
     setRsvpEmail('');
     setRsvpGuestCount('1');
   };
 
-  const handleRsvpSubmit = (e: React.FormEvent) => {
+  const handleRsvpSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!rsvpName || !rsvpEmail) return;
-    setRsvpSuccess(true);
+    if (!selectedEvent || rsvpBusy) return;
+    setRsvpBusy(true); setRsvpError('');
+    try {
+      await addLiveVisitorInquiry({ fullName: rsvpName, email: rsvpEmail, inquiryType: 'Event RSVP', message: `RSVP for ${selectedEvent.title} (${selectedEvent.id}). Guests: ${rsvpGuestCount}. Schedule: ${selectedEvent.dayOfWeek}, ${selectedEvent.time}.` });
+      setRsvpSuccess(true);
+    } catch (err) { setRsvpError(errorMessage(err)); }
+    finally { setRsvpBusy(false); }
   };
 
   return (
     <section id="church-calendar" className="py-20 bg-white border-t border-slate-100 text-[#0F172A]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
+        <ContentStatus loading={loading} error={error} />
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#1D63ED] text-xs font-semibold tracking-wider uppercase mb-3">
@@ -606,7 +356,7 @@ export const ChurchCalendarSection: React.FC<ChurchCalendarSectionProps> = ({
                     {/* Metadata */}
                     <div className="flex-1 min-w-0 text-right">
                       <span className="inline-block text-[8px] xs:text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 truncate max-w-full">
-                        {evt.categoryLabel}
+                        {evt.categoryLabel} {evt.status && evt.status !== 'scheduled' ? ` · ${evt.status}` : ''}
                       </span>
                       <div className="text-[10px] xs:text-[11px] sm:text-xs text-slate-500 font-medium truncate mt-0.5">
                         {evt.frequency}
@@ -739,7 +489,7 @@ export const ChurchCalendarSection: React.FC<ChurchCalendarSectionProps> = ({
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 text-xs text-stone-500">
                       <span className="font-condensed font-bold uppercase text-[#A5682C]">
-                        {evt.categoryLabel}
+                        {evt.categoryLabel} {evt.status && evt.status !== 'scheduled' ? ` · ${evt.status}` : ''}
                       </span>
                       <span>·</span>
                       <span>{evt.frequency}</span>
@@ -997,6 +747,8 @@ export const ChurchCalendarSection: React.FC<ChurchCalendarSectionProps> = ({
                   </div>
                 ) : (
                   <form onSubmit={handleRsvpSubmit} className="space-y-3">
+                    {rsvpError && <p role="alert" className="text-red-700">{rsvpError}</p>}
+                    {rsvpBusy && <p role="status">Sending your RSVP…</p>}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-[11px] font-condensed font-bold uppercase tracking-wider text-stone-600 mb-1">
@@ -1045,7 +797,7 @@ export const ChurchCalendarSection: React.FC<ChurchCalendarSectionProps> = ({
                       </div>
 
                       <button
-                        type="submit"
+                        type="submit" disabled={rsvpBusy}
                         className="px-5 py-2 text-xs font-condensed font-bold uppercase tracking-widest bg-[#161722] text-[#FFD2A4] hover:bg-stone-800 transition-colors cursor-pointer font-bold"
                       >
                         Confirm Attendance

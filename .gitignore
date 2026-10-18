@@ -6,3 +6,11 @@ coverage/
 *.log
 .env*
 !.env.example
+.venv/
+.vercel/
+__pycache__/
+.pytest_cache/
+*.pyc
+test-results/
+playwright-report/
+!.env.database.example

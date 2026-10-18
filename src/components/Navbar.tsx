@@ -14,7 +14,8 @@ import {
   MapPin
 } from 'lucide-react';
 import { ChurchBrandLogo } from './ChurchBrandLogo';
-import { getStoredAnnouncement } from '../utils/adminStore';
+import { usePublicContent } from '../hooks/usePublicContent';
+import { AnnouncementBanner } from '../types';
 
 interface NavbarProps {
   currentTab: PageTab;
@@ -33,16 +34,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [announcementDismissed, setAnnouncementDismissed] = useState(false);
-  const [announcement, setAnnouncement] = useState(() => getStoredAnnouncement());
-
-  // Listen to potential storage updates for announcement
-  useEffect(() => {
-    const handleStorageChange = () => {
-      setAnnouncement(getStoredAnnouncement());
-    };
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
+  const { items: announcements } = usePublicContent<AnnouncementBanner>('announcements');
+  const announcement = announcements[0];
 
   const handleNavClick = (tab: PageTab) => {
     onSelectTab(tab);
@@ -76,8 +69,8 @@ export const Navbar: React.FC<NavbarProps> = ({
   return (
     <>
       {/* Top Live Announcement (if active & not dismissed) */}
-      {announcement.isActive && !announcementDismissed && (
-        <div className="bg-[#0B132B] text-white text-xs py-2 px-4 border-b border-white/10">
+      {announcement?.isActive && !announcementDismissed && (
+        <div className={`${{ notice: 'bg-[#0B132B]', celebration: 'bg-emerald-900', urgent: 'bg-amber-800', broadcast: 'bg-red-900' }[announcement.type]} text-white text-xs py-2 px-4 border-b border-white/10`}>
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
             <div className="flex items-center gap-2 truncate">
               <span className="w-2 h-2 rounded-full bg-[#1D63ED] animate-pulse shrink-0" />
@@ -87,7 +80,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               {announcement.actionLabel && (
                 <button
                   onClick={() => {
-                    if (announcement.targetTab) handleNavClick(announcement.targetTab);
+                    if (announcement.actionUrl) window.open(announcement.actionUrl, '_blank', 'noopener,noreferrer');
+                    else if (announcement.targetTab) handleNavClick(announcement.targetTab);
                   }}
                   className="text-xs font-semibold text-[#60A5FA] hover:text-white flex items-center gap-0.5 cursor-pointer"
                 >

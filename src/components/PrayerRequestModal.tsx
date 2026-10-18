@@ -1,3 +1,4 @@
+import { errorMessage } from '../utils/api';
 import React, { useState } from 'react';
 import { X, Send, HeartHandshake, CheckCircle2, Sparkles, ShieldCheck } from 'lucide-react';
 import { addLivePrayerRequest } from '../utils/adminStore';
@@ -13,20 +14,27 @@ export const PrayerRequestModal: React.FC<PrayerRequestModalProps> = ({ isOpen, 
   const [category, setCategory] = useState('Healing & Health');
   const [requestText, setRequestText] = useState('');
   const [isConfidential, setIsConfidential] = useState(true);
+  const [submitError, setSubmitError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    addLivePrayerRequest({
-      name: name.trim() || 'Anonymous Believer',
-      email: email.trim(),
-      category,
-      requestText: requestText.trim(),
-      isConfidential,
-    });
-    setIsSubmitted(true);
+    if (submitting) return;
+    setSubmitting(true); setSubmitError('');
+    try {
+      await addLivePrayerRequest({
+        name: name.trim() || 'Anonymous Believer',
+        email: email.trim(),
+        category,
+        requestText: requestText.trim(),
+        isConfidential,
+      });
+      setIsSubmitted(true);
+    } catch (err) { setSubmitError(errorMessage(err)); }
+    finally { setSubmitting(false); }
   };
 
   const handleReset = () => {
@@ -92,6 +100,8 @@ export const PrayerRequestModal: React.FC<PrayerRequestModalProps> = ({ isOpen, 
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4 text-xs sm:text-sm">
+              {submitError && <p role="alert" className="text-red-700">{submitError}</p>}
+              {submitting && <p role="status">Sending…</p>}
               <p className="text-xs text-stone-600 leading-relaxed">
                 Whatever burden you are carrying, God hears and answers prayer. Our intercessors pray over every request weekly during Wednesday Faith Clinic and Sunday services.
               </p>
@@ -175,7 +185,7 @@ export const PrayerRequestModal: React.FC<PrayerRequestModalProps> = ({ isOpen, 
                 </div>
 
                 <button
-                  type="submit"
+                  type="submit" disabled={submitting}
                   className="px-6 py-2.5 rounded-full bg-emerald-800 hover:bg-emerald-900 text-white font-semibold text-xs tracking-wide flex items-center gap-2 transition-all cursor-pointer shadow-md"
                 >
                   <Send className="w-3.5 h-3.5" />

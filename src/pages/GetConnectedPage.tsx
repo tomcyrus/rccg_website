@@ -1,3 +1,4 @@
+import { errorMessage } from '../utils/api';
 import React, { useState } from 'react';
 import { InquiryFormData } from '../types';
 import { Mail, Phone, MapPin, Tv, Clock, Send, CheckCircle2, UserCheck, HeartHandshake, BookOpen, Users, ExternalLink, Copy, Check, Calendar, Sparkles, Heart } from 'lucide-react';
@@ -21,6 +22,8 @@ export const GetConnectedPage: React.FC<GetConnectedPageProps> = ({
     message: '',
   });
 
+  const [submitError, setSubmitError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [copiedAddress, setCopiedAddress] = useState(false);
 
@@ -33,16 +36,21 @@ export const GetConnectedPage: React.FC<GetConnectedPageProps> = ({
     setTimeout(() => setCopiedAddress(false), 2000);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    addLiveVisitorInquiry({
-      fullName: formData.fullName,
-      email: formData.email,
-      phone: formData.phone,
-      inquiryType: formData.inquiryType,
-      message: formData.message,
-    });
-    setSubmitted(true);
+    if (submitting) return;
+    setSubmitting(true); setSubmitError('');
+    try {
+      await addLiveVisitorInquiry({
+        fullName: formData.fullName,
+        email: formData.email,
+        phone: formData.phone,
+        inquiryType: formData.inquiryType,
+        message: formData.message,
+      });
+      setSubmitted(true);
+    } catch (err) { setSubmitError(errorMessage(err)); }
+    finally { setSubmitting(false); }
   };
 
   const handleReset = () => {
@@ -347,6 +355,8 @@ export const GetConnectedPage: React.FC<GetConnectedPageProps> = ({
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-5">
+              {submitError && <p role="alert" className="text-red-700">{submitError}</p>}
+              {submitting && <p role="status">Sending…</p>}
                     <div>
                       <div className="text-xs font-bold uppercase tracking-wider text-amber-700">
                         Get in Touch
@@ -355,7 +365,7 @@ export const GetConnectedPage: React.FC<GetConnectedPageProps> = ({
                         Send Our Ministry a Message
                       </h3>
                       <p className="text-xs text-stone-500 mt-1">
-                        Messages are delivered privately to our ministry staff at <span className="font-mono text-stone-700">rccgkfa@gmail.com</span>.
+                        Messages are saved privately for our pastoral ministry team to review and follow up.
                       </p>
                     </div>
 
@@ -443,10 +453,10 @@ export const GetConnectedPage: React.FC<GetConnectedPageProps> = ({
 
                     <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
                       <span className="text-xs text-stone-500 order-2 sm:order-1 text-center sm:text-left">
-                        Delivered to <span className="text-stone-800 font-medium">rccgkfa@gmail.com</span>
+                        Saved privately for the church ministry team
                       </span>
                       <button
-                        type="submit"
+                        type="submit" disabled={submitting}
                         className="w-full sm:w-auto px-7 py-3 rounded-full bg-emerald-800 hover:bg-emerald-900 text-white font-semibold text-xs tracking-wider uppercase flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md order-1 sm:order-2"
                       >
                         <Send className="w-3.5 h-3.5" />

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { YouTubeVideoItem, VideoCategory } from '../types';
-import { INITIAL_YOUTUBE_VIDEOS } from '../data/videoGalleryData';
+import { usePublicContent } from '../hooks/usePublicContent';
+import { ContentStatus } from './ContentStatus';
+
 import { getYouTubeThumbnailUrl, getYouTubeWatchUrl } from '../utils/youtube';
 import { VideoPlayerModal } from './VideoPlayerModal';
-import { AddYouTubeVideoModal } from './AddYouTubeVideoModal';
 import { 
   Play, 
   Search, 
@@ -20,45 +21,16 @@ import {
 } from 'lucide-react';
 
 export const VideoGallerySection: React.FC = () => {
-  const [videos, setVideos] = useState<YouTubeVideoItem[]>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const stored = localStorage.getItem('rccg_kfa_custom_videos');
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          return [...parsed, ...INITIAL_YOUTUBE_VIDEOS];
-        }
-      } catch (e) {
-        console.error('Failed to load custom videos:', e);
-      }
-    }
-    return INITIAL_YOUTUBE_VIDEOS;
-  });
-
+  const { items: videos, loading, error } = usePublicContent<YouTubeVideoItem>('videos');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<VideoCategory>('all');
   const [activeVideo, setActiveVideo] = useState<YouTubeVideoItem | null>(null);
   const [isPlayerOpen, setIsPlayerOpen] = useState(false);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3000);
-  };
-
-  const handleAddVideo = (newVideo: YouTubeVideoItem) => {
-    const updated = [newVideo, ...videos];
-    setVideos(updated);
-    if (typeof window !== 'undefined') {
-      try {
-        const customOnly = updated.filter((v) => v.isCustomAdded);
-        localStorage.setItem('rccg_kfa_custom_videos', JSON.stringify(customOnly));
-      } catch (e) {
-        console.error('Failed to persist custom video:', e);
-      }
-    }
-    showToast(`"${newVideo.title}" added to Video Gallery!`);
   };
 
   const handleOpenVideo = (video: YouTubeVideoItem) => {
@@ -95,6 +67,7 @@ export const VideoGallerySection: React.FC = () => {
 
   return (
     <div className="bg-[#FAF8F5] min-h-screen py-10 sm:py-16 font-sans">
+      <ContentStatus loading={loading} error={error} />
       {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 bg-[#0A192F] text-amber-300 border border-amber-400/40 px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 text-xs sm:text-sm animate-in slide-in-from-bottom duration-300">
@@ -122,14 +95,6 @@ export const VideoGallerySection: React.FC = () => {
 
           {/* Action Buttons: Add Custom YouTube Video & Official Channel */}
           <div className="flex flex-wrap items-center gap-3 shrink-0">
-            <button
-              onClick={() => setIsAddModalOpen(true)}
-              className="px-5 py-2.5 rounded-full bg-[#1D63ED] hover:bg-[#1551CA] text-white font-semibold text-xs tracking-wide transition-all shadow-md flex items-center gap-2 cursor-pointer"
-            >
-              <Plus className="w-4 h-4 text-white" />
-              <span>Add YouTube Video</span>
-            </button>
-
             <a
               href="https://www.youtube.com/@RCCGKFA"
               target="_blank"
@@ -421,12 +386,6 @@ export const VideoGallerySection: React.FC = () => {
         }}
       />
 
-      {/* Add Custom Video Modal */}
-      <AddYouTubeVideoModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onAddVideo={handleAddVideo}
-      />
     </div>
   );
 };

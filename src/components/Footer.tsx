@@ -1,3 +1,5 @@
+import { addLiveVisitorInquiry } from '../utils/adminStore';
+import { errorMessage } from '../utils/api';
 import React, { useState } from 'react';
 import { PageTab } from '../types';
 import { Phone, Mail, Tv, MapPin, Send, CheckCircle2, Heart, ShieldCheck, ArrowRight } from 'lucide-react';
@@ -18,14 +20,17 @@ export const Footer: React.FC<FooterProps> = ({
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const [subscribeError, setSubscribeError] = useState('');
+  const [subscribing, setSubscribing] = useState(false);
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (newsletterEmail) {
+    if (!newsletterEmail || subscribing) return;
+    setSubscribing(true); setSubscribeError('');
+    try {
+      await addLiveVisitorInquiry({ fullName: 'Newsletter subscriber', email: newsletterEmail, inquiryType: 'Newsletter Subscription', message: 'Please add me to church updates. Subscription requested through the website.' });
       setSubscribed(true);
-      setTimeout(() => {
-        setNewsletterEmail('');
-      }, 4000);
-    }
+    } catch (err) { setSubscribeError(errorMessage(err)); }
+    finally { setSubscribing(false); }
   };
 
   return (
@@ -60,10 +65,11 @@ export const Footer: React.FC<FooterProps> = ({
           </div>
 
           <div className="w-full md:w-auto">
+            {subscribeError && <p role="alert" className="mb-2 text-red-300 text-xs">{subscribeError}</p>}
             {subscribed ? (
               <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-semibold">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                <span>Thank you! You're subscribed to weekly updates.</span>
+                <span>Thank you! Your request for church updates has been received.</span>
               </div>
             ) : (
               <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2 w-full md:w-96">
@@ -76,10 +82,10 @@ export const Footer: React.FC<FooterProps> = ({
                   className="px-4 py-2.5 rounded-lg bg-white/10 border border-white/20 text-white placeholder-slate-400 text-xs focus:outline-none focus:border-[#1D63ED] flex-1"
                 />
                 <button
-                  type="submit"
+                  type="submit" disabled={subscribing}
                   className="px-5 py-2.5 rounded-lg bg-[#1D63ED] hover:bg-[#1551CA] text-white font-semibold text-xs transition-colors shrink-0 cursor-pointer"
                 >
-                  Subscribe
+                  {subscribing ? 'Sending…' : 'Subscribe'}
                 </button>
               </form>
             )}

@@ -383,14 +383,14 @@ YouTube: https://www.youtube.com/@RCCGKFA
               {/* Download or Request CTA at End of Chapter */}
               <div className="pt-6 border-t border-stone-300/40 flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="text-xs text-stone-500 text-center sm:text-left">
-                  Finished reading Chapter {ebook.sampleChapter.chapterNumber}? Continue exploring the full {ebook.pages}-page edition.
+                  Download the available chapter text, reflection questions, and study outline for offline reading.
                 </div>
                 <button
                   onClick={handleDownload}
                   className="px-6 py-2.5 rounded-full bg-emerald-800 hover:bg-emerald-700 text-white text-xs font-semibold transition-all flex items-center gap-2 cursor-pointer shadow-md"
                 >
                   <Download className="w-4 h-4" />
-                  <span>Download Full Study Guide</span>
+                  <span>Download Available Study Text</span>
                 </button>
               </div>
             </div>

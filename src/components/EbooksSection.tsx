@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { EbookItem, EbookCategory } from '../types';
-import { EBOOKS_DATA } from '../data/ebooksData';
+import { usePublicContent } from '../hooks/usePublicContent';
+import { ContentStatus } from './ContentStatus';
+
 import { EbookReaderModal } from './EbookReaderModal';
 import { 
   BookOpen, 
@@ -23,6 +25,7 @@ interface EbooksSectionProps {
 }
 
 export const EbooksSection: React.FC<EbooksSectionProps> = ({ onOpenPlanVisit }) => {
+  const { items: books, loading, error } = usePublicContent<EbookItem>('ebooks');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<EbookCategory>('all');
   const [savedBookIds, setSavedBookIds] = useState<string[]>(() => {
@@ -61,7 +64,7 @@ export const EbooksSection: React.FC<EbooksSectionProps> = ({ onOpenPlanVisit })
   };
 
   // Filter books
-  const filteredBooks = EBOOKS_DATA.filter((book) => {
+  const filteredBooks = books.filter((book) => {
     const matchesCategory = selectedCategory === 'all' || book.category === selectedCategory;
     const matchesSaved = !showSavedOnly || savedBookIds.includes(book.id);
     const query = searchQuery.toLowerCase().trim();
@@ -86,7 +89,7 @@ export const EbooksSection: React.FC<EbooksSectionProps> = ({ onOpenPlanVisit })
     { key: 'faith-encouragement', label: 'Comfort & Healing' },
   ];
 
-  const featuredBook = EBOOKS_DATA.find((b) => b.isFeatured) || EBOOKS_DATA[0];
+  const featuredBook = books.find((b) => b.isFeatured) || books[0];
 
   const coverThemeGradients: Record<EbookItem['coverTheme'], string> = {
     'royal-amber': 'from-[#92400E] via-[#B45309] to-[#78350F]',
@@ -99,7 +102,8 @@ export const EbooksSection: React.FC<EbooksSectionProps> = ({ onOpenPlanVisit })
   return (
     <div className="bg-white min-h-screen py-10 sm:py-16 font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        {/* Section Header */}
+        <ContentStatus loading={loading} error={error} />
+      {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-slate-200">
           <div className="space-y-2 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#1D63ED] text-xs font-semibold tracking-wider uppercase">
@@ -274,7 +278,7 @@ export const EbooksSection: React.FC<EbooksSectionProps> = ({ onOpenPlanVisit })
 
             {/* Counter */}
             <div className="text-xs text-stone-500 self-end md:self-center font-medium">
-              Showing <strong>{filteredBooks.length}</strong> of {EBOOKS_DATA.length} publications
+              Showing <strong>{filteredBooks.length}</strong> of {books.length} publications
             </div>
           </div>
 

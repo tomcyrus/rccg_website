@@ -1,3 +1,5 @@
+import { addLiveVisitorInquiry } from '../utils/adminStore';
+import { errorMessage } from '../utils/api';
 import React, { useState } from 'react';
 import { X, MapPin, Clock, Phone, Check, ExternalLink, Calendar, Heart, Sparkles, UserCheck } from 'lucide-react';
 import { downloadServiceIcs, getGoogleCalendarUrl } from '../utils/calendar';
@@ -9,6 +11,20 @@ interface PlanVisitModalProps {
 
 export const PlanVisitModal: React.FC<PlanVisitModalProps> = ({ isOpen, onClose }) => {
   const [copied, setCopied] = useState(false);
+  const [visitName, setVisitName] = useState('');
+  const [visitEmail, setVisitEmail] = useState('');
+  const [visitNote, setVisitNote] = useState('');
+  const [visitStatus, setVisitStatus] = useState<'idle' | 'sending' | 'sent'>('idle');
+  const [visitError, setVisitError] = useState('');
+  const submitVisit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (visitStatus === 'sending') return;
+    setVisitStatus('sending'); setVisitError('');
+    try {
+      await addLiveVisitorInquiry({ fullName: visitName, email: visitEmail, inquiryType: 'Plan a Visit', message: visitNote.trim() || 'I am planning to visit a Sunday service. Please welcome me.' });
+      setVisitStatus('sent');
+    } catch (err) { setVisitStatus('idle'); setVisitError(errorMessage(err)); }
+  };
 
   if (!isOpen) return null;
 
@@ -154,6 +170,17 @@ export const PlanVisitModal: React.FC<PlanVisitModalProps> = ({ isOpen, onClose 
                 </a>
               </div>
             </div>
+          </div>
+          <div className="rounded-2xl border border-stone-200 bg-white p-5">
+            <h3 className="text-lg font-serif font-bold">Let us know you’re coming</h3>
+            {visitStatus === 'sent' ? <p role="status" className="mt-3 text-emerald-800">Your visit request has been received. Our welcome team looks forward to meeting you.</p> :
+              <form onSubmit={submitVisit} className="mt-3 space-y-3 text-sm">
+                {visitError && <p role="alert" className="text-red-700">{visitError}</p>}
+                <label className="block">Your name<input required className="mt-1 w-full border rounded-lg p-2" value={visitName} onChange={e => setVisitName(e.target.value)} /></label>
+                <label className="block">Email<input type="email" required className="mt-1 w-full border rounded-lg p-2" value={visitEmail} onChange={e => setVisitEmail(e.target.value)} /></label>
+                <label className="block">Visit date, guests, or questions (optional)<textarea className="mt-1 w-full border rounded-lg p-2" value={visitNote} onChange={e => setVisitNote(e.target.value)} /></label>
+                <button disabled={visitStatus === 'sending'} className="rounded-full px-5 py-2 bg-emerald-800 text-white">{visitStatus === 'sending' ? 'Sending…' : 'Send visit request'}</button>
+              </form>}
           </div>
         </div>
 
