@@ -53,10 +53,10 @@ export const Navbar: React.FC<NavbarProps> = ({
     <>
       {/* Top Live Announcement (if active & not dismissed) */}
       {announcement?.isActive && !announcementDismissed && (
-        <div className={`${{ notice: 'bg-[#0B132B]', celebration: 'bg-emerald-900', urgent: 'bg-amber-800', broadcast: 'bg-red-900' }[announcement.type]} text-white text-xs py-2 px-4 border-b border-white/10`}>
+        <div className={`${{ notice: 'bg-[#063f31]', celebration: 'bg-emerald-900', urgent: 'bg-amber-800', broadcast: 'bg-red-900' }[announcement.type]} text-white text-xs py-2 px-4 border-b border-white/10`}>
           <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
             <div className="flex items-center gap-2 truncate">
-              <span className="w-2 h-2 rounded-full bg-[#1D63ED] animate-pulse shrink-0" />
+              <span className="w-2 h-2 rounded-full bg-[#007450] animate-pulse shrink-0" />
               <span className="truncate">{announcement.message}</span>
             </div>
             <div className="flex items-center gap-3 shrink-0">
@@ -66,7 +66,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     if (announcement.actionUrl) window.open(announcement.actionUrl, '_blank', 'noopener,noreferrer');
                     else if (announcement.targetTab) handleNavClick(announcement.targetTab);
                   }}
-                  className="text-xs font-semibold text-[#60A5FA] hover:text-white flex items-center gap-0.5 cursor-pointer"
+                  className="text-xs font-semibold text-[#f4c54b] hover:text-white flex items-center gap-0.5 cursor-pointer"
                 >
                   <span>{announcement.actionLabel}</span>
                   <ChevronRight className="w-3.5 h-3.5" />
@@ -155,8 +155,10 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             <button
-              onClick={() => handleNavClick('connect')}
-              className="hover:text-[#007450] transition-colors cursor-pointer py-1"
+              onClick={() => handleNavClick('contact')}
+              className={`transition-colors cursor-pointer py-1 ${
+                currentTab === 'contact' ? 'nav-link-active' : 'hover:text-[#007450]'
+              }`}
             >
               Contact
             </button>
@@ -196,12 +198,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   autoFocus
-                  className="w-full pl-10 pr-4 py-2 bg-white rounded-xl border border-slate-200 text-xs sm:text-sm focus:outline-none focus:border-[#1D63ED] focus:ring-1 focus:ring-[#1D63ED]"
+                  className="w-full pl-10 pr-4 py-2 bg-white rounded-xl border border-slate-200 text-xs sm:text-sm focus:outline-none focus:border-[#007450] focus:ring-1 focus:ring-[#007450]"
                 />
               </div>
               <button
                 type="submit"
-                className="px-3.5 sm:px-4 py-2 bg-[#1D63ED] text-white text-xs font-semibold rounded-xl hover:bg-[#1551CA] transition-colors cursor-pointer shrink-0"
+                className="px-3.5 sm:px-4 py-2 bg-[#007450] text-white text-xs font-semibold rounded-xl hover:bg-[#005c40] transition-colors cursor-pointer shrink-0"
               >
                 Search
               </button>
@@ -237,7 +239,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     placeholder="Search sermons, e-books, topics..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-[#1D63ED] focus:bg-white"
+                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-900 focus:outline-none focus:border-[#007450] focus:bg-white"
                   />
                 </div>
               </form>
@@ -246,7 +248,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onClick={() => handleNavClick('home')}
                 className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center justify-between ${
                   currentTab === 'home'
-                    ? 'bg-blue-50 text-[#1D63ED]'
+                    ? 'bg-emerald-50 text-[#007450]'
                     : 'text-slate-700 hover:bg-slate-50'
                 }`}
               >
@@ -258,7 +260,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onClick={() => handleNavClick('about')}
                 className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center justify-between ${
                   currentTab === 'about'
-                    ? 'bg-blue-50 text-[#1D63ED]'
+                    ? 'bg-emerald-50 text-[#007450]'
                     : 'text-slate-700 hover:bg-slate-50'
                 }`}
               >
@@ -270,12 +272,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onClick={() => handleNavClick('videos')}
                 className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center justify-between ${
                   currentTab === 'videos'
-                    ? 'bg-blue-50 text-[#1D63ED]'
+                    ? 'bg-emerald-50 text-[#007450]'
                     : 'text-slate-700 hover:bg-slate-50'
                 }`}
               >
                 <span className="flex items-center gap-2">
-                  <Tv className="w-4 h-4 text-[#1D63ED]" />
+                  <Tv className="w-4 h-4 text-[#007450]" />
                   <span>Sermons &amp; Broadcasts</span>
                 </span>
                 <ChevronRight className="w-4 h-4 text-slate-400" />
@@ -286,7 +288,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center justify-between"
               >
                 <span className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-[#1D63ED]" />
+                  <Calendar className="w-4 h-4 text-[#007450]" />
                   <span>Events &amp; Services</span>
                 </span>
                 <ChevronRight className="w-4 h-4 text-slate-400" />
@@ -296,12 +298,12 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onClick={() => handleNavClick('ebooks')}
                 className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center justify-between ${
                   currentTab === 'ebooks'
-                    ? 'bg-blue-50 text-[#1D63ED]'
+                    ? 'bg-emerald-50 text-[#007450]'
                     : 'text-slate-700 hover:bg-slate-50'
                 }`}
               >
                 <span className="flex items-center gap-2">
-                  <BookOpen className="w-4 h-4 text-[#1D63ED]" />
+                  <BookOpen className="w-4 h-4 text-[#007450]" />
                   <span>E-Books &amp; Publications</span>
                 </span>
                 <ChevronRight className="w-4 h-4 text-slate-400" />
@@ -311,13 +313,28 @@ export const Navbar: React.FC<NavbarProps> = ({
                 onClick={() => handleNavClick('connect')}
                 className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center justify-between ${
                   currentTab === 'connect'
-                    ? 'bg-blue-50 text-[#1D63ED]'
+                    ? 'bg-emerald-50 text-[#007450]'
                     : 'text-slate-700 hover:bg-slate-50'
                 }`}
               >
                 <span className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-[#1D63ED]" />
+                  <MapPin className="w-4 h-4 text-[#007450]" />
                   <span>Get Connected &amp; Visit</span>
+                </span>
+                <ChevronRight className="w-4 h-4 text-slate-400" />
+              </button>
+
+              <button
+                onClick={() => handleNavClick('contact')}
+                className={`w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold flex items-center justify-between ${
+                  currentTab === 'contact'
+                    ? 'bg-emerald-50 text-[#007450]'
+                    : 'text-slate-700 hover:bg-slate-50'
+                }`}
+              >
+                <span className="flex items-center gap-2">
+                  <MapPin className="w-4 h-4 text-[#007450]" />
+                  <span>Contact Us</span>
                 </span>
                 <ChevronRight className="w-4 h-4 text-slate-400" />
               </button>
@@ -329,7 +346,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     setMobileMenuOpen(false);
                     onOpenPlanVisit();
                   }}
-                  className="w-full py-2.5 rounded-xl bg-[#1D63ED] hover:bg-[#1551CA] text-white font-semibold text-sm shadow-xs text-center cursor-pointer"
+                  className="w-full py-2.5 rounded-xl bg-[#007450] hover:bg-[#005c40] text-white font-semibold text-sm shadow-xs text-center cursor-pointer"
                 >
                   Plan a Visit (I'm New)
                 </button>
@@ -347,7 +364,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 {/* Quick Contact Footer in Menu */}
                 <div className="pt-2 text-center text-[10px] text-slate-400 border-t border-slate-100">
                   <div>121 E 2nd Ave, Roselle, NJ 07203</div>
-                  <div className="text-slate-500 font-medium mt-0.5">Sunday Service: 10:00 AM EST &middot; (862) 520-7004</div>
+                  <div className="text-slate-500 font-medium mt-0.5">Sunday Service: 9:00 AM – 11:30 AM &middot; (862) 205-5958</div>
                 </div>
               </div>
             </div>

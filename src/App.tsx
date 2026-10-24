@@ -10,6 +10,7 @@ import { Footer } from './components/Footer';
 import { HomePage } from './pages/HomePage';
 import { AboutPage } from './pages/AboutPage';
 import { GetConnectedPage } from './pages/GetConnectedPage';
+import { ContactPage } from './pages/ContactPage';
 import { PlanVisitModal } from './components/PlanVisitModal';
 import { PrayerRequestModal } from './components/PrayerRequestModal';
 import { GallerySection } from './components/GallerySection';
@@ -79,15 +80,11 @@ export default function App() {
         )}
 
         {currentTab === 'videos' && (
-          <div className="pt-2">
-            <VideoGallerySection />
-          </div>
+          <VideoGallerySection />
         )}
 
         {currentTab === 'ebooks' && (
-          <div className="pt-2">
-            <EbooksSection onOpenPlanVisit={() => setPlanVisitModalOpen(true)} />
-          </div>
+          <EbooksSection onOpenPlanVisit={() => setPlanVisitModalOpen(true)} />
         )}
 
         {currentTab === 'events' && (
@@ -95,9 +92,7 @@ export default function App() {
         )}
 
         {currentTab === 'gallery' && (
-          <div className="pt-2">
-            <GallerySection />
-          </div>
+          <GallerySection />
         )}
 
         {currentTab === 'connect' && (
@@ -105,6 +100,10 @@ export default function App() {
             onOpenPlanVisit={() => setPlanVisitModalOpen(true)}
             onOpenPrayerModal={() => setPrayerModalOpen(true)}
           />
+        )}
+
+        {currentTab === 'contact' && (
+          <ContactPage onOpenPlanVisit={() => setPlanVisitModalOpen(true)} />
         )}
 
         {currentTab === 'admin' && (

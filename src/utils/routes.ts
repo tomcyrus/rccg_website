@@ -8,6 +8,7 @@ export const PAGE_PATHS: Record<PageTab, string> = {
   ebooks: '/ebooks',
   gallery: '/gallery',
   connect: '/connect',
+  contact: '/contact',
   admin: '/admin',
 };
 
@@ -21,6 +22,7 @@ const PATH_TABS: Record<string, PageTab> = {
   '/ebooks': 'ebooks',
   '/gallery': 'gallery',
   '/connect': 'connect',
+  '/contact': 'contact',
   '/admin': 'admin',
 };
 

@@ -145,6 +145,14 @@ test('clean routes support direct loads and browser history without hashes', asy
   await page.goto('/events', { waitUntil: 'domcontentloaded' });
   await expect(page).toHaveURL(/\/events$/);
   expect(new URL(page.url()).hash).toBe('');
+
+  await page.getByRole('button', { name: 'Contact', exact: true }).click();
+  await expect(page).toHaveURL(/\/contact$/);
+  await expect(page.getByRole('heading', { name: 'Contact Kingdom First Assembly' })).toBeVisible();
+
+  await page.getByRole('button', { name: 'Visit & Connect', exact: true }).click();
+  await expect(page).toHaveURL(/\/connect$/);
+  await expect(page.getByRole('heading', { name: 'Visit, Worship & Grow With Us' })).toBeVisible();
 });
 
 test('homepage uses a real YouTube player for the featured message', async ({ page }) => {
