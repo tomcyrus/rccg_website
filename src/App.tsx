@@ -16,6 +16,7 @@ import { GallerySection } from './components/GallerySection';
 import { VideoGallerySection } from './components/VideoGallerySection';
 import { EbooksSection } from './components/EbooksSection';
 import { AdminPage } from './pages/AdminPage';
+import { ChurchCalendarSection } from './components/ChurchCalendarSection';
 import { updatePageSeo } from './utils/seo';
 import { PAGE_PATHS, pageTabFromLocation } from './utils/routes';
 
@@ -87,6 +88,10 @@ export default function App() {
           <div className="pt-2">
             <EbooksSection onOpenPlanVisit={() => setPlanVisitModalOpen(true)} />
           </div>
+        )}
+
+        {currentTab === 'events' && (
+          <ChurchCalendarSection onOpenPlanVisit={() => setPlanVisitModalOpen(true)} />
         )}
 
         {currentTab === 'gallery' && (

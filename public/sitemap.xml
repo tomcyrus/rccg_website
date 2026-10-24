@@ -38,6 +38,13 @@
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
+  <!-- Church Events & Calendar -->
+  <url>
+    <loc>https://rccgkingdomfirst.org/events</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
   <!-- E-Books & Spiritual Library -->
   <url>
     <loc>https://rccgkingdomfirst.org/ebooks</loc>

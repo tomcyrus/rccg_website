@@ -4,13 +4,10 @@ import {
   Menu, 
   X, 
   Search, 
-  ShieldCheck, 
   BookOpen, 
   Tv, 
   Calendar, 
-  Heart, 
   ChevronRight,
-  Phone,
   MapPin
 } from 'lucide-react';
 import { ChurchBrandLogo } from './ChurchBrandLogo';
@@ -41,20 +38,6 @@ export const Navbar: React.FC<NavbarProps> = ({
     onSelectTab(tab);
     setMobileMenuOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleScrollTo = (elementId: string) => {
-    setMobileMenuOpen(false);
-    if (currentTab !== 'home') {
-      onSelectTab('home');
-      setTimeout(() => {
-        const el = document.getElementById(elementId);
-        if (el) el.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    } else {
-      const el = document.getElementById(elementId);
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
-    }
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -101,9 +84,9 @@ export const Navbar: React.FC<NavbarProps> = ({
         </div>
       )}
 
-      {/* Main Header matching GracePoint template */}
-      <header className="sticky top-0 z-40 bg-white border-b border-slate-100 shadow-xs">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
+      {/* Main church header */}
+      <header className="sticky top-0 z-40 border-b border-[#e8dfc9] bg-white shadow-sm">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-2 px-3 sm:h-20 sm:gap-4 sm:px-6 lg:px-8">
           
           {/* Left: Brand Logo & Name (flex-1 & min-w-0 ensures no mobile overflow) */}
           <button
@@ -115,11 +98,11 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
 
           {/* Desktop Navigation Links (hidden on tablets/mobile, visible on lg+) */}
-          <nav className="hidden lg:flex items-center gap-5 xl:gap-8 text-sm font-medium text-slate-700">
+          <nav className="hidden items-center gap-3 text-[11px] font-bold text-[#172334] lg:flex xl:gap-5 xl:text-xs">
             <button
               onClick={() => handleNavClick('home')}
               className={`transition-colors cursor-pointer py-1 ${
-                currentTab === 'home' ? 'nav-link-active' : 'hover:text-[#1D63ED]'
+                currentTab === 'home' ? 'nav-link-active' : 'hover:text-[#007450]'
               }`}
             >
               Home
@@ -128,31 +111,36 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={() => handleNavClick('about')}
               className={`transition-colors cursor-pointer py-1 ${
-                currentTab === 'about' ? 'nav-link-active' : 'hover:text-[#1D63ED]'
+                currentTab === 'about' ? 'nav-link-active' : 'hover:text-[#007450]'
               }`}
             >
-              About
+              About Us
             </button>
 
             <button
               onClick={() => handleNavClick('videos')}
+              aria-label="Sermons"
               className={`transition-colors cursor-pointer py-1 ${
-                currentTab === 'videos' ? 'nav-link-active' : 'hover:text-[#1D63ED]'
+                currentTab === 'videos' ? 'nav-link-active' : 'hover:text-[#007450]'
               }`}
             >
-              Sermons
+              Watch &amp; Messages
             </button>
 
             <button
-              onClick={() => handleScrollTo('ministries-section')}
-              className="hover:text-[#1D63ED] transition-colors cursor-pointer py-1"
+              onClick={() => handleNavClick('connect')}
+              className={`transition-colors cursor-pointer py-1 ${
+                currentTab === 'connect' ? 'nav-link-active' : 'hover:text-[#007450]'
+              }`}
             >
-              Ministries
+              Visit &amp; Connect
             </button>
 
             <button
-              onClick={() => handleScrollTo('church-calendar')}
-              className="hover:text-[#1D63ED] transition-colors cursor-pointer py-1"
+              onClick={() => handleNavClick('events')}
+              className={`transition-colors cursor-pointer py-1 ${
+                currentTab === 'events' ? 'nav-link-active' : 'hover:text-[#007450]'
+              }`}
             >
               Events
             </button>
@@ -160,7 +148,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               onClick={() => handleNavClick('ebooks')}
               className={`transition-colors cursor-pointer py-1 ${
-                currentTab === 'ebooks' ? 'nav-link-active' : 'hover:text-[#1D63ED]'
+                currentTab === 'ebooks' ? 'nav-link-active' : 'hover:text-[#007450]'
               }`}
             >
               E-Books
@@ -168,45 +156,27 @@ export const Navbar: React.FC<NavbarProps> = ({
 
             <button
               onClick={() => handleNavClick('connect')}
-              className={`transition-colors cursor-pointer py-1 ${
-                currentTab === 'connect' ? 'nav-link-active' : 'hover:text-[#1D63ED]'
-              }`}
+              className="hover:text-[#007450] transition-colors cursor-pointer py-1"
             >
-              Connect
-            </button>
-
-            <button
-              onClick={() => handleScrollTo('giving-section')}
-              className="hover:text-[#1D63ED] transition-colors cursor-pointer py-1"
-            >
-              Give
+              Contact
             </button>
           </nav>
 
           {/* Right Action Controls: Scaled & Non-wrapping */}
           <div className="flex items-center gap-1.5 xs:gap-2 sm:gap-3.5 shrink-0">
-            {/* Search Icon Trigger */}
-            <button
-              onClick={() => setSearchOpen(!searchOpen)}
-              className="p-1.5 xs:p-2 text-slate-600 hover:text-[#1D63ED] transition-colors rounded-full hover:bg-slate-50 cursor-pointer shrink-0"
-              aria-label="Search sermons and resources"
-              title="Search"
-            >
-              <Search className="w-4.5 h-4.5 sm:w-5 sm:h-5" />
-            </button>
-
-            {/* "I'm New" Solid Blue Pill Button matching template */}
+            {/* Primary visit action */}
             <button
               onClick={onOpenPlanVisit}
-              className="px-3 xs:px-4 sm:px-6 py-1.5 xs:py-2 sm:py-2.5 rounded-full bg-[#1D63ED] hover:bg-[#1551CA] text-white text-[11px] xs:text-xs sm:text-sm font-semibold shadow-xs hover:shadow-md transition-all cursor-pointer whitespace-nowrap shrink-0"
+              className="inline-flex shrink-0 items-center gap-1.5 whitespace-nowrap rounded-full bg-[#007450] px-3 py-2 text-[10px] font-bold text-white shadow-sm transition-all hover:bg-[#005c40] hover:shadow-md xs:px-4 sm:px-5 sm:py-2.5 sm:text-xs"
             >
-              I'm New
+              <MapPin className="h-3.5 w-3.5 fill-white" />
+              Plan Your Visit
             </button>
 
             {/* Mobile Hamburger Toggle Button (lg:hidden) */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-1.5 xs:p-2 rounded-xl text-slate-700 hover:text-[#1D63ED] hover:bg-slate-100 transition-colors cursor-pointer shrink-0 focus:outline-none"
+              className="lg:hidden p-1.5 xs:p-2 rounded-xl text-slate-700 hover:text-[#007450] hover:bg-emerald-50 transition-colors cursor-pointer shrink-0 focus:outline-none"
               aria-label={mobileMenuOpen ? 'Close Menu' : 'Open Menu'}
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -312,15 +282,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
 
               <button
-                onClick={() => handleScrollTo('ministries-section')}
-                className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center justify-between"
-              >
-                <span>Ministries &amp; Fellowship</span>
-                <ChevronRight className="w-4 h-4 text-slate-400" />
-              </button>
-
-              <button
-                onClick={() => handleScrollTo('church-calendar')}
+                onClick={() => handleNavClick('events')}
                 className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center justify-between"
               >
                 <span className="flex items-center gap-2">
@@ -356,17 +318,6 @@ export const Navbar: React.FC<NavbarProps> = ({
                 <span className="flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-[#1D63ED]" />
                   <span>Get Connected &amp; Visit</span>
-                </span>
-                <ChevronRight className="w-4 h-4 text-slate-400" />
-              </button>
-
-              <button
-                onClick={() => handleScrollTo('giving-section')}
-                className="w-full text-left px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-50 flex items-center justify-between"
-              >
-                <span className="flex items-center gap-2">
-                  <Heart className="w-4 h-4 text-rose-600" />
-                  <span>Give &amp; Online Offering</span>
                 </span>
                 <ChevronRight className="w-4 h-4 text-slate-400" />
               </button>

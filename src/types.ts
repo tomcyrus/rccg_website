@@ -1,4 +1,4 @@
-export type PageTab = 'home' | 'about' | 'videos' | 'gallery' | 'ebooks' | 'connect' | 'admin';
+export type PageTab = 'home' | 'about' | 'videos' | 'events' | 'gallery' | 'ebooks' | 'connect' | 'admin';
 
 export interface ServiceTime {
   day: string;

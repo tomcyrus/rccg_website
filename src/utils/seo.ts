@@ -30,6 +30,13 @@ export const SEO_PAGE_CONFIGS: Record<PageTab, PageSeoConfig> = {
     canonicalPath: '/sermons',
     breadcrumbName: 'Video Gallery',
   },
+  events: {
+    title: 'Church Events & Calendar | RCCG Kingdom First Assembly',
+    description: 'View worship services, Bible studies, community outreach, and special gatherings at RCCG Kingdom First Assembly in Roselle, New Jersey.',
+    keywords: 'RCCG Events Roselle NJ, Church Calendar, Bible Study Roselle, Sunday Worship, Community Outreach Roselle',
+    canonicalPath: '/events',
+    breadcrumbName: 'Events & Calendar',
+  },
   ebooks: {
     title: 'E-Books & Spiritual Library | RCCG Kingdom First Assembly',
     description: 'Access curated Christian e-books, Open Heavens daily devotionals, prayer warfare guides, and discipleship study manuals from RCCG Kingdom First Assembly.',

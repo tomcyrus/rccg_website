@@ -64,6 +64,7 @@ test('admin sign-in, event creation, public publishing, deletion and logout', as
   await expect(page.getByText('Community Thanksgiving', { exact: true })).toBeVisible();
   expect(records.events).toHaveLength(1);
   await page.getByRole('button', { name: 'View Live Site' }).click();
+  await page.getByRole('button', { name: 'Events', exact: true }).click();
   await expect(page.getByText('Community Thanksgiving', { exact: true }).first()).toBeVisible();
   await page.goto('/admin', { waitUntil: 'domcontentloaded' });
   page.once('dialog', dialog => dialog.accept());
@@ -97,8 +98,8 @@ test('e-book editor persists chapter and survives refresh; logout gates admin', 
 test('prayer form keeps entered text on failure and saves privately on retry', async ({ page }) => {
   const fixture = await mockApi(page);
   fixture.fail(true);
-  await page.goto('/', { waitUntil: 'domcontentloaded' });
-  await page.locator('footer').getByRole('button', { name: 'Prayer Request', exact: true }).click();
+  await page.goto('/connect', { waitUntil: 'domcontentloaded' });
+  await page.getByRole('button', { name: 'Submit Prayer Request', exact: true }).click();
   const dialog = page.getByRole('dialog', { name: 'Submit a Prayer Request' });
   await dialog.locator('input[type="text"]').fill('Test Guest');
   await dialog.locator('input[type="email"]').fill('guest@example.com');
@@ -140,4 +141,17 @@ test('clean routes support direct loads and browser history without hashes', asy
 
   await page.goBack();
   await expect(page).toHaveURL(/\/about$/);
+
+  await page.goto('/events', { waitUntil: 'domcontentloaded' });
+  await expect(page).toHaveURL(/\/events$/);
+  expect(new URL(page.url()).hash).toBe('');
+});
+
+test('homepage uses a real YouTube player for the featured message', async ({ page }) => {
+  await mockApi(page);
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  const player = page.locator('#latest-sermon-section iframe');
+  await expect(player).toBeVisible();
+  await expect(player).toHaveAttribute('src', /youtube-nocookie\.com\/embed\/FUAhAuUbDz4/);
+  await expect(player).toHaveAttribute('allowfullscreen', '');
 });

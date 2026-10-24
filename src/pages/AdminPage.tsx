@@ -1064,7 +1064,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <label className="text-xs">Link to page<select aria-label="Announcement target page" className="block w-full border rounded-lg p-2" value={announcement.targetTab || 'home'} onChange={e => setAnnouncement({ ...announcement, targetTab: e.target.value as PageTab })}>{['home', 'about', 'videos', 'ebooks', 'gallery', 'connect'].map(tab => <option key={tab} value={tab}>{tab}</option>)}</select></label>
+                <label className="text-xs">Link to page<select aria-label="Announcement target page" className="block w-full border rounded-lg p-2" value={announcement.targetTab || 'home'} onChange={e => setAnnouncement({ ...announcement, targetTab: e.target.value as PageTab })}>{['home', 'about', 'videos', 'events', 'ebooks', 'gallery', 'connect'].map(tab => <option key={tab} value={tab}>{tab}</option>)}</select></label>
                 <label className="text-xs">External link (optional, overrides page)<input type="url" placeholder="https://…" className="block w-full border rounded-lg p-2" value={announcement.actionUrl || ''} onChange={e => setAnnouncement({ ...announcement, actionUrl: e.target.value })} /></label>
               </div>
               {/* Live Preview of Banner */}
