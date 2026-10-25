@@ -146,7 +146,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
       const removed = before.filter(old => !after.some(item => item.id === old.id));
       const changed = after.filter(item => JSON.stringify(item) !== JSON.stringify(before.find(old => old.id === item.id)));
       if (removed.length + changed.length === 0) return true;
-      if (removed.length + changed.length !== 1) throw new Error('Please save one record at a time.');
+      const isExclusiveFeaturedVideoUpdate = kind === 'videos' && removed.length === 0 && changed.length > 0;
+      if (removed.length + changed.length !== 1 && !isExclusiveFeaturedVideoUpdate) throw new Error('Please save one record at a time.');
       for (const item of removed) await api(`/admin/${kind}/${item.id}`, { method: 'DELETE', headers: { 'If-Match': String(item.revision) } });
       for (const item of changed) {
         const exists = before.some(old => old.id === item.id);
@@ -209,8 +210,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
   };
 
   const handleToggleFeaturedVideo = (videoId: string) => {
-    const updated = videos.map(v => v.id === videoId ? { ...v, isFeatured: !v.isFeatured } : v);
-    handleSaveVideos(updated);
+    const updated = videos.map(v => ({ ...v, isFeatured: v.id === videoId }));
+    void handleSaveVideos(updated);
   };
 
   // Prayer Handlers
@@ -610,7 +611,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
                   YouTube Video Gallery &amp; Sermons
                 </h2>
                 <p className="text-xs text-stone-500">
-                  Manage livestreams, Sunday sermon recordings, and praise sessions. Featured video appears on the homepage.
+                  Set each message topic and YouTube link here. The featured Sunday service appears on the homepage and Watch &amp; Messages page.
                 </p>
               </div>
 
@@ -1191,7 +1192,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
                       const labels: Record<ChurchEvent['category'], string> = {
                         worship: 'Worship Service',
                         'bible-study': 'Bible Study',
-                        outreach: 'Community Outreach',
+                        outreach: 'Evangelism / Community Outreach',
                         special: 'Special Gathering'
                       };
                       setEditingEvent({ ...editingEvent, category: cat, categoryLabel: labels[cat] });
@@ -1200,7 +1201,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
                   >
                     <option value="worship">Worship Service</option>
                     <option value="bible-study">Bible Study &amp; Discipleship</option>
-                    <option value="outreach">Community Outreach &amp; Food Pantry</option>
+                    <option value="outreach">Evangelism / Community Outreach</option>
                     <option value="special">Special Conference / Vigil / Youth</option>
                   </select>
                 </div>
@@ -1312,7 +1313,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-sm overflow-y-auto">
           <div className="relative w-full max-w-xl bg-white rounded-3xl border border-stone-200 shadow-2xl overflow-hidden my-auto">
             <div className="bg-[#0A192F] text-white px-6 py-4 flex items-center justify-between border-b border-amber-500/20">
-              <h3 className="font-serif font-bold text-lg text-white">YouTube Video / Livestream</h3>
+              <h3 className="font-serif font-bold text-lg text-white">YouTube Message / Livestream</h3>
               <button onClick={() => setIsVideoModalOpen(false)} className="p-1 text-slate-300 hover:text-white">
                 <X className="w-5 h-5" />
               </button>
@@ -1350,11 +1351,11 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
               </div>
 
               <div className="space-y-1">
-                <label className="font-semibold uppercase tracking-wider text-stone-700">Sermon / Message Title *</label>
+                <label className="font-semibold uppercase tracking-wider text-stone-700">Sermon / Message Topic *</label>
                 <input
                   type="text"
                   required
-                  placeholder="Title of service or sermon"
+                  placeholder="e.g. Sunday Service"
                   value={editingVideo.title}
                   onChange={(e) => setEditingVideo({ ...editingVideo, title: e.target.value })}
                   className="w-full px-3.5 py-2 text-sm rounded-xl border border-stone-300"

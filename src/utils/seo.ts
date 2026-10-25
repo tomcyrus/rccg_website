@@ -11,7 +11,7 @@ export interface PageSeoConfig {
 export const SEO_PAGE_CONFIGS: Record<PageTab, PageSeoConfig> = {
   home: {
     title: 'RCCG Kingdom First Assembly | Church in Roselle, NJ',
-    description: 'RCCG Kingdom First Assembly is a Christ-centered, Kingdom-minded church family in Roselle, New Jersey. Seeking His Kingdom First. Sharing His Love With All.',
+    description: "RCCG Kingdom First Assembly is a Christ-centered, Kingdom-minded church family in Roselle, New Jersey. Putting God's Kingdom First. Becoming Like Christ Everywhere.",
     keywords: 'RCCG, Kingdom First Assembly, Roselle NJ Church, The Redeemed Christian Church of God, Sunday Worship, Bible Study Roselle, Christian Church Union County',
     canonicalPath: '/',
     breadcrumbName: 'Home',

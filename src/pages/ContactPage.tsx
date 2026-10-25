@@ -57,7 +57,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onOpenPlanVisit }) => 
             <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#007450] text-white">
               <MapPin className="h-5 w-5" />
             </div>
-            <h2 className="mt-4 [font-family:Georgia,serif] text-2xl font-bold text-[#12372c]">Visit Us</h2>
+            <h2 className="mt-4 [font-family:Georgia,serif] text-2xl font-bold text-[#12372c]">Temporary Worship Site</h2>
             <p className="mt-2 text-sm leading-relaxed text-stone-600">
               Sphinx Banquet Center<br />121 E 2nd Ave<br />Roselle, NJ 07203
             </p>

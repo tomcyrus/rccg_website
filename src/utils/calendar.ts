@@ -7,7 +7,7 @@ export function downloadServiceIcs(type: 'sunday' | 'wednesday') {
     ? 'Sunday Worship Service - RCCG Kingdom First Assembly'
     : 'Midweek Bible Study - RCCG Kingdom First Assembly';
   const desc = isSunday
-    ? 'Sunday Worship Service at RCCG Kingdom First Assembly. Seeking His Kingdom First. Sharing His Love With All.'
+    ? "Sunday Worship Service at RCCG Kingdom First Assembly. Putting God's Kingdom First. Becoming Like Christ Everywhere."
     : 'Midweek Bible Study with RCCG Kingdom First Assembly. Growing rooted in God\'s Word and prayer.';
   const location = '121 E 2nd Ave, Roselle, NJ 07203 (Temporary Worship Location)';
   
@@ -71,7 +71,7 @@ export function getGoogleCalendarUrl(type: 'sunday' | 'wednesday'): string {
       : 'Midweek Bible Study - RCCG Kingdom First Assembly'
   );
   const details = encodeURIComponent(
-    'RCCG Kingdom First Assembly. Seeking His Kingdom First. Sharing His Love With All. 121 E 2nd Ave, Roselle, NJ 07203'
+    "RCCG Kingdom First Assembly. Putting God's Kingdom First. Becoming Like Christ Everywhere. 121 E 2nd Ave, Roselle, NJ 07203"
   );
   const location = encodeURIComponent('121 E 2nd Ave, Roselle, NJ 07203');
   const recurrence = encodeURIComponent(isSunday ? 'RRULE:FREQ=WEEKLY;BYDAY=SU' : 'RRULE:FREQ=WEEKLY;BYDAY=WE');
@@ -144,7 +144,7 @@ export function getCustomEventGoogleCalendarUrl(event: {
 }): string {
   const text = encodeURIComponent(`${event.title} - RCCG Kingdom First Assembly`);
   const details = encodeURIComponent(
-    `${event.description}\n\nTime: ${event.time}\nLocation: ${event.location}\nRCCG Kingdom First Assembly · Seeking His Kingdom First`
+    `${event.description}\n\nTime: ${event.time}\nLocation: ${event.location}\nRCCG Kingdom First Assembly · Putting God's Kingdom First`
   );
   const location = encodeURIComponent(event.location);
 
