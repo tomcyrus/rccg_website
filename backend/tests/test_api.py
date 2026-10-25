@@ -21,7 +21,7 @@ class FakeDatabase:
 
     async def request(self, method, path, **kwargs):
         if self.fail:
-            raise HTTPException(503, 'Supabase unavailable')
+            raise HTTPException(503, 'Service unavailable')
         if path == '/auth/v1/token':
             if kwargs.get('json', {}).get('password') == 'wrong':
                 raise HTTPException(401, 'Invalid credentials or expired session.')
@@ -41,7 +41,7 @@ class FakeDatabase:
 
     async def all_rows(self, kind):
         if self.fail:
-            raise HTTPException(503, 'Supabase unavailable')
+            raise HTTPException(503, 'Service unavailable')
         return deepcopy(list(self.data[kind].values()))
 
     async def rows(self, kind, **params):
@@ -50,7 +50,7 @@ class FakeDatabase:
 
     async def insert(self, kind, data):
         if self.fail:
-            raise HTTPException(503, 'Supabase unavailable')
+            raise HTTPException(503, 'Service unavailable')
         if data['id'] in self.data[kind]:
             raise HTTPException(409, 'Duplicate')
         self.data[kind][data['id']] = {**deepcopy(data), 'revision': 1}

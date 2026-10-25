@@ -94,7 +94,7 @@ PRAYER OF DEDICATION:
 ========================================================
 RCCG Kingdom First Assembly
 121 E 2nd Ave, Roselle, NJ 07203
-Sunday Worship: 10:00 AM | Midweek Bible Study: 7:00 PM
+Sunday Worship: 9:00 AM | Midweek Bible Study: 7:00 PM
 YouTube: https://www.youtube.com/@RCCGKFA
 ========================================================`;
 

@@ -5,6 +5,7 @@ import { ContentStatus } from './ContentStatus';
 
 import { getYouTubeThumbnailUrl, getYouTubeWatchUrl } from '../utils/youtube';
 import { VideoPlayerModal } from './VideoPlayerModal';
+import { PageHero } from './PageHero';
 import { 
   Play, 
   Search, 
@@ -66,51 +67,38 @@ export const VideoGallerySection: React.FC = () => {
   ];
 
   return (
-    <div className="bg-[#FAF8F5] min-h-screen py-10 sm:py-16 font-sans">
+    <div className="min-h-screen bg-[#fbf8f0] font-sans">
+      <PageHero
+        eyebrow="Watch & Be Blessed"
+        title="Messages, Worship & the Word"
+        description="Watch Sunday services, Bible studies, worship, and special gatherings from Kingdom First Assembly."
+      >
+        <a
+          href="https://www.youtube.com/@RCCGKFA"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 rounded-full bg-[#ed1234] px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-[#cf0d2a]"
+        >
+          <Tv className="h-4 w-4" />
+          Visit Our YouTube Channel
+          <ExternalLink className="h-3.5 w-3.5" />
+        </a>
+      </PageHero>
+
       <ContentStatus loading={loading} error={error} />
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#0A192F] text-amber-300 border border-amber-400/40 px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 text-xs sm:text-sm animate-in slide-in-from-bottom duration-300">
+        <div className="fixed bottom-6 right-6 z-50 bg-[#12372c] text-amber-300 border border-amber-400/40 px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 text-xs sm:text-sm animate-in slide-in-from-bottom duration-300">
           <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
           <span>{toastMessage}</span>
         </div>
       )}
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-stone-200">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#1D63ED] text-xs font-semibold tracking-wider uppercase">
-              <Tv className="w-3.5 h-3.5 text-[#1D63ED]" />
-              <span>Sermons &amp; Video Gallery</span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0F172A] tracking-tight">
-              Word, Worship &amp; Prophetic Encounters
-            </h1>
-            <p className="text-sm sm:text-base text-slate-600 font-sans leading-relaxed">
-              Watch inspired Sunday sermons, midweek Bible studies, and special gatherings. 
-              Stream live or on-demand directly from YouTube.
-            </p>
-          </div>
-
-          {/* Action Buttons: Add Custom YouTube Video & Official Channel */}
-          <div className="flex flex-wrap items-center gap-3 shrink-0">
-            <a
-              href="https://www.youtube.com/@RCCGKFA"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-5 py-2.5 rounded-full bg-[#0B132B] hover:bg-slate-800 text-white font-semibold text-xs tracking-wide transition-all shadow-md flex items-center gap-2 shrink-0 border border-white/10"
-            >
-              <Tv className="w-4 h-4 text-red-500" />
-              <span>YouTube Channel</span>
-              <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
-            </a>
-          </div>
-        </div>
+      <div className="mx-auto max-w-7xl space-y-12 px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
 
         {/* Featured Video Showcase Banner */}
         {featuredVideo && !searchQuery && selectedCategory === 'all' && (
-          <div className="rounded-3xl bg-gradient-to-br from-[#0A192F] via-[#102A43] to-[#0A192F] text-white p-6 sm:p-10 border border-amber-500/30 shadow-2xl overflow-hidden relative">
+          <div className="rounded-3xl bg-gradient-to-br from-[#12372c] via-[#07513f] to-[#12372c] text-white p-6 sm:p-10 border border-amber-500/30 shadow-2xl overflow-hidden relative">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
               {/* Left Column: Description & Call to Watch */}
               <div className="lg:col-span-7 space-y-5">
@@ -240,7 +228,7 @@ export const VideoGallerySection: React.FC = () => {
                   onClick={() => setSelectedCategory(cat.key)}
                   className={`px-4 py-2 rounded-full text-xs font-medium whitespace-nowrap transition-all cursor-pointer ${
                     active
-                      ? 'bg-[#1D63ED] text-white shadow-xs font-semibold'
+                      ? 'bg-[#007450] text-white shadow-xs font-semibold'
                       : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
                   }`}
                 >
@@ -257,7 +245,7 @@ export const VideoGallerySection: React.FC = () => {
             {filteredVideos.map((video) => (
               <div
                 key={video.id}
-                className="bg-white rounded-xl sm:rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-lg hover:border-blue-400/60 transition-all duration-300 flex flex-col overflow-hidden group"
+                className="bg-white rounded-xl sm:rounded-2xl border border-slate-200/90 shadow-xs hover:shadow-lg hover:border-emerald-400/60 transition-all duration-300 flex flex-col overflow-hidden group"
               >
                 {/* YouTube Video Thumbnail with Play Button */}
                 <div 
@@ -276,7 +264,7 @@ export const VideoGallerySection: React.FC = () => {
 
                   {/* Play Button */}
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-[#1D63ED]/90 group-hover:bg-[#1D63ED] text-white flex items-center justify-center shadow-lg pl-0.5 group-hover:scale-110 transition-all">
+                    <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-full bg-[#007450]/90 group-hover:bg-[#007450] text-white flex items-center justify-center shadow-lg pl-0.5 group-hover:scale-110 transition-all">
                       <Play className="w-4 h-4 sm:w-5 sm:h-5 fill-white" />
                     </div>
                   </div>
@@ -298,7 +286,7 @@ export const VideoGallerySection: React.FC = () => {
                 <div className="p-3 xs:p-3.5 sm:p-5 flex-1 flex flex-col justify-between space-y-2.5 sm:space-y-3">
                   <div className="space-y-1 sm:space-y-1.5">
                     {/* Clean unboxed metadata separator */}
-                    <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] text-[#1D63ED] font-semibold tracking-wide uppercase">
+                    <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] text-[#007450] font-semibold tracking-wide uppercase">
                       <span className="truncate">{video.categoryLabel}</span>
                       <span aria-hidden="true">·</span>
                       <span className="text-slate-500 font-normal shrink-0">{video.date}</span>
@@ -306,7 +294,7 @@ export const VideoGallerySection: React.FC = () => {
 
                     <h3 
                       onClick={() => handleOpenVideo(video)}
-                      className="text-xs xs:text-sm sm:text-base font-bold text-[#0F172A] line-clamp-2 group-hover:text-[#1D63ED] transition-colors cursor-pointer leading-snug"
+                      className="text-xs xs:text-sm sm:text-base font-bold text-[#12372c] line-clamp-2 group-hover:text-[#007450] transition-colors cursor-pointer leading-snug"
                     >
                       {video.title}
                     </h3>
@@ -316,8 +304,8 @@ export const VideoGallerySection: React.FC = () => {
                     </div>
 
                     {video.scriptureRef && (
-                      <div className="text-[10px] xs:text-[11px] sm:text-xs text-[#1D63ED] font-medium flex items-center gap-1 truncate">
-                        <BookOpen className="w-3 h-3 text-[#1D63ED] shrink-0" />
+                      <div className="text-[10px] xs:text-[11px] sm:text-xs text-[#007450] font-medium flex items-center gap-1 truncate">
+                        <BookOpen className="w-3 h-3 text-[#007450] shrink-0" />
                         <span className="truncate">{video.scriptureRef}</span>
                       </div>
                     )}
@@ -331,10 +319,10 @@ export const VideoGallerySection: React.FC = () => {
                   <div className="pt-2.5 sm:pt-3 border-t border-slate-100 flex items-center justify-between gap-1 text-[11px] sm:text-xs">
                     <button
                       onClick={() => handleOpenVideo(video)}
-                      className="font-semibold text-[#1D63ED] hover:text-[#1551CA] flex items-center gap-1 transition-colors cursor-pointer"
+                      className="font-semibold text-[#007450] hover:text-[#005c40] flex items-center gap-1 transition-colors cursor-pointer"
                     >
                       <span>Watch</span>
-                      <Play className="w-3 h-3 fill-[#1D63ED]" />
+                      <Play className="w-3 h-3 fill-[#007450]" />
                     </button>
 
                     <a

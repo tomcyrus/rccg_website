@@ -124,7 +124,7 @@ export const PlanVisitModal: React.FC<PlanVisitModalProps> = ({ isOpen, onClose 
                   Service Schedule
                 </span>
                 <span className="text-base font-bold text-[#0A192F]">
-                  Sundays: 10:00 AM – 12:00 PM EST
+                  Sundays: 9:00 AM – 11:30 AM
                 </span>
               </div>
               <div className="flex items-center gap-2">
@@ -188,7 +188,7 @@ export const PlanVisitModal: React.FC<PlanVisitModalProps> = ({ isOpen, onClose 
         <div className="bg-stone-50 px-6 py-4 border-t border-stone-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-2 text-stone-600">
             <Phone className="w-3.5 h-3.5 text-emerald-700" />
-            <span>Questions? Call us at <strong>(862) 520-7004</strong></span>
+            <span>Questions? Call us at <strong>(862) 205-5958</strong></span>
           </div>
 
           <button

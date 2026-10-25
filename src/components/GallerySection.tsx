@@ -7,6 +7,7 @@ import familyImg from '../assets/images/gallery_family_fellowship_1791982293989.
 import prayerImg from '../assets/images/gallery_prayer_communion_1791982293295.jpg';
 import sanctuaryImg from '../assets/images/hero_church_sanctuary_1791981782802.jpg';
 import fellowshipImg from '../assets/images/fellowship_community_1791981784483.jpg';
+import { PageHero } from './PageHero';
 
 export interface GalleryItem {
   id: string;
@@ -28,7 +29,7 @@ const GALLERY_ITEMS: GalleryItem[] = [
     imageSrc: worshipImg,
     caption: 'Lifting holy hands in genuine adoration as one family before the throne of grace.',
     scripture: 'Psalm 100:2 — "Worship the Lord with gladness; come before Him with joyful songs."',
-    dateOrMoment: 'SUNDAY 10:00 AM',
+    dateOrMoment: 'SUNDAY 9:00 AM',
   },
   {
     id: 'outreach-1',
@@ -115,22 +116,14 @@ export const GallerySection: React.FC = () => {
   };
 
   return (
-    <section id="gallery-section" className="py-16 sm:py-24 bg-white border-b border-stone-200/80">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="max-w-3xl mx-auto text-center space-y-3 mb-10 sm:mb-14">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-900 text-xs font-semibold tracking-wider uppercase">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
-            <span>Church Life &amp; Fellowship</span>
-          </div>
+    <section id="gallery-section" className="border-b border-[#ded6c5] bg-[#fbf8f0]">
+      <PageHero
+        eyebrow="Church Life & Fellowship"
+        title="Moments in the Father’s House"
+        description="See the warmth of Sunday worship, community outreach, prayer, and joyful Christian fellowship at Kingdom First Assembly."
+      />
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#0A192F] tracking-tight">
-            Moments in the Father's House
-          </h2>
-          <p className="text-sm sm:text-base text-stone-600 font-sans leading-relaxed max-w-2xl mx-auto">
-            Witness the warmth of our Sunday worship, the heartbeat of community outreach, and the beauty of genuine Christian fellowship in Roselle, NJ.
-          </p>
-        </div>
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
 
         {/* Category Filter Tabs */}
         <div className="flex flex-wrap items-center justify-center gap-2 mb-10 sm:mb-12">
@@ -161,7 +154,7 @@ export const GallerySection: React.FC = () => {
             <div
               key={item.id}
               onClick={() => handleOpenLightbox(idx)}
-              className="group bg-white rounded-xl sm:rounded-2xl border border-slate-200/90 overflow-hidden shadow-xs hover:border-blue-400/60 hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col justify-between"
+              className="group bg-white rounded-xl sm:rounded-2xl border border-slate-200/90 overflow-hidden shadow-xs hover:border-emerald-400/60 hover:shadow-lg transition-all duration-300 cursor-pointer flex flex-col justify-between"
             >
               <div className="relative aspect-[4/3] bg-slate-100 overflow-hidden">
                 <img
@@ -174,13 +167,13 @@ export const GallerySection: React.FC = () => {
                 {/* Hover Action Overlay */}
                 <div className="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                   <div className="px-3 py-1.5 bg-white/95 rounded-full text-slate-900 font-semibold text-xs flex items-center gap-1.5 shadow-lg backdrop-blur-xs">
-                    <Maximize2 className="w-3.5 h-3.5 text-[#1D63ED]" />
+                    <Maximize2 className="w-3.5 h-3.5 text-[#007450]" />
                     <span className="hidden xs:inline">View Photo</span>
                   </div>
                 </div>
 
                 {/* Top Corner Moment Badge */}
-                <div className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-[#0F172A]/85 text-blue-200 text-[8px] xs:text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 sm:py-1 rounded-full backdrop-blur-xs truncate max-w-[85%]">
+                <div className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-[#12372c]/85 text-emerald-200 text-[8px] xs:text-[9px] sm:text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 sm:py-1 rounded-full backdrop-blur-xs truncate max-w-[85%]">
                   {item.categoryLabel}
                 </div>
               </div>
@@ -188,10 +181,10 @@ export const GallerySection: React.FC = () => {
               {/* Card Meta & Caption */}
               <div className="p-2.5 xs:p-3 sm:p-6 space-y-1.5 sm:space-y-3 flex-1 flex flex-col justify-between">
                 <div>
-                  <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-[#1D63ED] truncate">
+                  <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-[#007450] truncate">
                     {item.dateOrMoment}
                   </div>
-                  <h3 className="text-xs xs:text-sm sm:text-lg font-bold text-[#0F172A] group-hover:text-[#1D63ED] transition-colors mt-0.5 line-clamp-1 xs:line-clamp-2">
+                  <h3 className="text-xs xs:text-sm sm:text-lg font-bold text-[#12372c] group-hover:text-[#007450] transition-colors mt-0.5 line-clamp-1 xs:line-clamp-2">
                     {item.title}
                   </h3>
                   <p className="text-[10px] xs:text-[11px] sm:text-xs text-slate-600 leading-relaxed font-sans mt-0.5 line-clamp-2">
@@ -199,7 +192,7 @@ export const GallerySection: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="pt-2 sm:pt-3 border-t border-slate-100 text-[9px] xs:text-[10px] sm:text-xs italic text-[#1D63ED] truncate">
+                <div className="pt-2 sm:pt-3 border-t border-slate-100 text-[9px] xs:text-[10px] sm:text-xs italic text-[#007450] truncate">
                   {item.scripture}
                 </div>
               </div>
@@ -208,13 +201,13 @@ export const GallerySection: React.FC = () => {
         </div>
 
         {/* Invitation Strip below gallery */}
-        <div className="mt-12 sm:mt-16 rounded-3xl bg-gradient-to-r from-[#0A192F] via-[#102A43] to-[#0A192F] text-white p-6 sm:p-10 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl border border-white/10">
+        <div className="mt-12 sm:mt-16 rounded-3xl bg-gradient-to-r from-[#12372c] via-[#07513f] to-[#12372c] text-white p-6 sm:p-10 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl border border-white/10">
           <div className="space-y-1 text-center sm:text-left">
             <h4 className="text-xl sm:text-2xl font-serif font-bold text-white">
               Come Experience It in Person
             </h4>
             <p className="text-xs sm:text-sm text-slate-300 font-sans">
-              Join us this Sunday at 10:00 AM at 121 E 2nd Ave, Roselle, NJ. There is always a seat reserved for you.
+              Join us this Sunday at 9:00 AM at 121 E 2nd Ave, Roselle, NJ. There is always a seat reserved for you.
             </p>
           </div>
 
@@ -261,7 +254,7 @@ export const GallerySection: React.FC = () => {
 
           <div
             onClick={(e) => e.stopPropagation()}
-            className="max-w-4xl max-h-[90vh] bg-[#0A192F] rounded-2xl overflow-hidden shadow-2xl border border-white/20 flex flex-col"
+            className="max-w-4xl max-h-[90vh] bg-[#12372c] rounded-2xl overflow-hidden shadow-2xl border border-white/20 flex flex-col"
           >
             <div className="relative aspect-[16/10] sm:aspect-[16/9] bg-black">
               <img

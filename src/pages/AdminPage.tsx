@@ -52,7 +52,7 @@ type AdminTab = 'events' | 'videos' | 'ebooks' | 'prayers' | 'inquiries' | 'anno
 export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTab }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [checkingSession, setCheckingSession] = useState(true);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState('rccgkfa@gmail.com');
   const [passcode, setPasscode] = useState('');
   const [authError, setAuthError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -133,7 +133,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
   };
   const reload = async () => {
     setBusy(true);
-    try { await loadData(); triggerToast('Data refreshed from Supabase.'); }
+    try { await loadData(); triggerToast('Church records refreshed.'); }
     catch (err) { handleFailure(err); }
     finally { setBusy(false); }
   };
@@ -155,7 +155,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
         });
       }
       setter(await api<T[]>(`/admin/${kind}`));
-      contentChanged(); triggerToast('Changes saved to Supabase.'); return true;
+      contentChanged(); triggerToast('Changes saved.'); return true;
     } catch (err) { handleFailure(err); return false; }
     finally { setBusy(false); }
   };
@@ -287,7 +287,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
 
           <form onSubmit={handleLogin} className="space-y-4">
             <label className="block text-xs text-amber-300">Admin email
-              <input type="email" autoComplete="username" required value={email} onChange={e => setEmail(e.target.value)} className="mt-2 w-full rounded-xl bg-black/40 border border-white/20 p-3 text-white" />
+              <input type="email" autoComplete="username" placeholder="rccgkfa@gmail.com" required value={email} onChange={e => setEmail(e.target.value)} className="mt-2 w-full rounded-xl bg-black/40 border border-white/20 p-3 text-white" />
             </label>
             <div className="space-y-1.5">
               <label className="block text-xs font-semibold text-amber-300 uppercase tracking-wider">
@@ -1064,7 +1064,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <label className="text-xs">Link to page<select aria-label="Announcement target page" className="block w-full border rounded-lg p-2" value={announcement.targetTab || 'home'} onChange={e => setAnnouncement({ ...announcement, targetTab: e.target.value as PageTab })}>{['home', 'about', 'videos', 'ebooks', 'gallery', 'connect'].map(tab => <option key={tab} value={tab}>{tab}</option>)}</select></label>
+                <label className="text-xs">Link to page<select aria-label="Announcement target page" className="block w-full border rounded-lg p-2" value={announcement.targetTab || 'home'} onChange={e => setAnnouncement({ ...announcement, targetTab: e.target.value as PageTab })}>{['home', 'about', 'videos', 'events', 'ebooks', 'gallery', 'connect', 'contact'].map(tab => <option key={tab} value={tab}>{tab}</option>)}</select></label>
                 <label className="text-xs">External link (optional, overrides page)<input type="url" placeholder="https://…" className="block w-full border rounded-lg p-2" value={announcement.actionUrl || ''} onChange={e => setAnnouncement({ ...announcement, actionUrl: e.target.value })} /></label>
               </div>
               {/* Live Preview of Banner */}
@@ -1110,7 +1110,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
                 Data Management &amp; System Backup
               </h2>
               <p className="text-xs text-stone-500">
-                Church records are stored in Supabase. Export current server records anytime. Backups contain confidential pastoral information; store them securely.
+                Export current church records anytime. Backups contain confidential pastoral information; store them securely.
               </p>
             </div>
 
@@ -1145,7 +1145,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
                 </button>
               </div>
 
-              <p className="text-xs text-stone-600">Administrator access is managed in Supabase. Ask the project owner to add or remove approved accounts. Use Reload data to retrieve the latest changes.</p>
+              <p className="text-xs text-stone-600">Ask the project owner to add or remove approved administrator accounts. Use Reload data to retrieve the latest changes.</p>
             </div>
           </div>
         )}

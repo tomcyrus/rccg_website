@@ -1,9 +1,10 @@
 import { errorMessage } from '../utils/api';
 import React, { useState } from 'react';
 import { InquiryFormData } from '../types';
-import { Mail, Phone, MapPin, Tv, Clock, Send, CheckCircle2, UserCheck, HeartHandshake, BookOpen, Users, ExternalLink, Copy, Check, Calendar, Sparkles, Heart } from 'lucide-react';
+import { Mail, Phone, MapPin, Tv, Clock, Send, CheckCircle2, UserCheck, HeartHandshake, BookOpen, Users, ExternalLink, Copy, Check, Calendar, Sparkles } from 'lucide-react';
 import { downloadServiceIcs, getGoogleCalendarUrl } from '../utils/calendar';
 import { addLiveVisitorInquiry } from '../utils/adminStore';
+import { PageHero } from '../components/PageHero';
 
 interface GetConnectedPageProps {
   onOpenPlanVisit: () => void;
@@ -101,7 +102,7 @@ export const GetConnectedPage: React.FC<GetConnectedPageProps> = ({
         const el = document.getElementById('contact-form-section');
         if (el) el.scrollIntoView({ behavior: 'smooth' });
       },
-      color: 'bg-blue-50 text-blue-800 border-blue-200',
+      color: 'bg-emerald-50 text-emerald-800 border-emerald-200',
     },
     {
       id: 'serve',
@@ -124,28 +125,25 @@ export const GetConnectedPage: React.FC<GetConnectedPageProps> = ({
   ];
 
   return (
-    <div className="bg-white">
-      {/* Header */}
-      <section className="bg-gradient-to-r from-[#070D1F] via-[#0B132B] to-[#070D1F] text-white py-16 sm:py-24 border-b border-white/10 relative overflow-hidden">
-        <div className="max-w-4xl mx-auto px-4 sm:px-8 text-center space-y-4 relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/15 border border-blue-400/30 text-blue-300 text-xs font-semibold tracking-wider uppercase">
-            <Heart className="w-3.5 h-3.5 fill-blue-400 text-blue-400" />
-            <span>Welcome to RCCG Kingdom First Assembly</span>
-          </div>
-
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight">
-            We Would Love to Meet You!
-          </h1>
-
-          <p className="text-base sm:text-lg text-slate-200 font-sans max-w-2xl mx-auto leading-relaxed">
-            Whether you are newly moving to Roselle, searching for a spirit-filled church family, or exploring faith in Jesus Christ, you have a seat at our table.
-          </p>
-
-          <p className="text-sm font-sans italic text-blue-300">
-            "At Kingdom First Assembly, we are growing together in faith and love, and there is always room for you."
-          </p>
-        </div>
-      </section>
+    <div className="bg-[#fbf8f0]">
+      <PageHero
+        eyebrow="Welcome to RCCG Kingdom First Assembly"
+        title="Visit, Worship & Grow With Us"
+        description="Whether you are new to Roselle, searching for a church family, or exploring faith in Jesus Christ, there is a place for you here."
+      >
+        <button
+          onClick={onOpenPlanVisit}
+          className="rounded-full bg-[#ed1234] px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-[#cf0d2a]"
+        >
+          Plan Your Visit
+        </button>
+        <button
+          onClick={onOpenPrayerModal}
+          className="rounded-full border-2 border-white px-6 py-3 text-sm font-bold text-white transition hover:bg-white hover:text-[#007450]"
+        >
+          Prayer Request
+        </button>
+      </PageHero>
 
       {/* 4 Connection Pillars */}
       <section className="py-16 sm:py-20 border-b border-stone-200/80 bg-white">
@@ -155,7 +153,7 @@ export const GetConnectedPage: React.FC<GetConnectedPageProps> = ({
               <Sparkles className="w-3.5 h-3.5 text-emerald-700" />
               <span>Next Steps</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#0A192F] tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#12372c] tracking-tight">
               Paths of Connection
             </h2>
             <p className="text-stone-600 text-sm sm:text-base font-sans">
@@ -170,18 +168,18 @@ export const GetConnectedPage: React.FC<GetConnectedPageProps> = ({
               return (
                 <div
                   key={pillar.id}
-                  className="bg-white rounded-xl sm:rounded-2xl border border-slate-200/90 p-3 xs:p-4 sm:p-7 flex flex-col justify-between hover:border-blue-400/60 shadow-xs hover:shadow-lg transition-all duration-300 group"
+                  className="bg-white rounded-xl sm:rounded-2xl border border-slate-200/90 p-3 xs:p-4 sm:p-7 flex flex-col justify-between hover:border-emerald-400/60 shadow-xs hover:shadow-lg transition-all duration-300 group"
                 >
                   <div className="space-y-2 sm:space-y-3.5">
                     <div className={`w-9 h-9 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center border ${pillar.color} group-hover:scale-110 transition-transform`}>
                       <Icon className="w-4 h-4 sm:w-6 sm:h-6" />
                     </div>
 
-                    <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-[#1D63ED] truncate">
+                    <div className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-[#007450] truncate">
                       {pillar.category}
                     </div>
 
-                    <h3 className="text-xs xs:text-sm sm:text-xl font-bold text-[#0F172A] group-hover:text-[#1D63ED] transition-colors leading-snug">
+                    <h3 className="text-xs xs:text-sm sm:text-xl font-bold text-[#12372c] group-hover:text-[#007450] transition-colors leading-snug">
                       {pillar.title}
                     </h3>
 
@@ -193,7 +191,7 @@ export const GetConnectedPage: React.FC<GetConnectedPageProps> = ({
                   <div className="pt-3 sm:pt-6">
                     <button
                       onClick={pillar.onClick}
-                      className="w-full py-2 sm:py-2.5 px-2 sm:px-4 rounded-full bg-[#1D63ED] hover:bg-[#1551CA] text-white font-semibold text-[10px] xs:text-xs tracking-wide transition-all cursor-pointer text-center shadow-xs"
+                      className="w-full py-2 sm:py-2.5 px-2 sm:px-4 rounded-full bg-[#007450] hover:bg-[#005c40] text-white font-semibold text-[10px] xs:text-xs tracking-wide transition-all cursor-pointer text-center shadow-xs"
                     >
                       {pillar.actionLabel}
                     </button>
@@ -216,7 +214,7 @@ export const GetConnectedPage: React.FC<GetConnectedPageProps> = ({
                   <div className="text-xs font-bold uppercase tracking-wider text-amber-700">
                     VISITOR GUIDE
                   </div>
-                  <h3 className="text-2xl font-serif font-bold text-[#0A192F] mt-1">
+                  <h3 className="text-2xl font-serif font-bold text-[#12372c] mt-1">
                     Sunday &amp; Midweek Gatherings
                   </h3>
                   <p className="text-xs text-stone-500 mt-1">
@@ -230,8 +228,8 @@ export const GetConnectedPage: React.FC<GetConnectedPageProps> = ({
                     <span className="text-amber-800 uppercase tracking-wider block text-[10px] font-bold">
                       SUNDAY WORSHIP CELEBRATION
                     </span>
-                    <div className="text-base font-bold text-[#0A192F] mt-0.5">
-                      Every Sunday: 10:00 AM – 12:00 PM EST
+                    <div className="text-base font-bold text-[#12372c] mt-0.5">
+                      Every Sunday: 9:00 AM – 11:30 AM
                     </div>
                     <div className="flex items-center gap-2 mt-1.5">
                       <button
@@ -256,17 +254,17 @@ export const GetConnectedPage: React.FC<GetConnectedPageProps> = ({
                     <span className="text-emerald-800 uppercase tracking-wider block text-[10px] font-bold">
                       MIDWEEK DIGGING DEEP &amp; FAITH CLINIC
                     </span>
-                    <div className="text-base font-bold text-[#0A192F] mt-0.5">
+                    <div className="text-base font-bold text-[#12372c] mt-0.5">
                       Every Wednesday, 7:00 PM – 8:30 PM
                     </div>
                     <p className="text-stone-500 text-[11px] mt-0.5">In-depth Bible study and personal prayer</p>
                   </div>
 
                   <div className="pt-3 border-t border-stone-100">
-                    <span className="text-blue-800 uppercase tracking-wider block text-[10px] font-bold">
+                    <span className="text-emerald-800 uppercase tracking-wider block text-[10px] font-bold">
                       WORSHIP SANCTUARY LOCATION
                     </span>
-                    <div className="text-sm font-semibold text-[#0A192F] mt-0.5">
+                    <div className="text-sm font-semibold text-[#12372c] mt-0.5">
                       121 E 2nd Ave, Roselle, NJ 07203
                     </div>
                     <div className="flex items-center gap-2 pt-2.5">
@@ -292,7 +290,7 @@ export const GetConnectedPage: React.FC<GetConnectedPageProps> = ({
               </div>
 
               {/* Direct Reach Card */}
-              <div className="rounded-3xl bg-gradient-to-br from-[#0A192F] via-[#102A43] to-[#0A192F] text-white p-7 space-y-4 shadow-xl border border-white/10">
+              <div className="rounded-3xl bg-gradient-to-br from-[#12372c] via-[#07513f] to-[#12372c] text-white p-7 space-y-4 shadow-xl border border-white/10">
                 <div className="text-xs font-bold uppercase tracking-wider text-amber-400">
                   Contact Us Directly
                 </div>
@@ -310,11 +308,11 @@ export const GetConnectedPage: React.FC<GetConnectedPageProps> = ({
                   </a>
 
                   <a
-                    href="tel:8625207004"
+                    href="tel:8622055958"
                     className="flex items-center gap-3 text-slate-200 hover:text-amber-300 font-medium transition-colors"
                   >
                     <Phone className="w-4 h-4 text-amber-400 shrink-0" />
-                    <span>(862) 520-7004</span>
+                    <span>(862) 205-5958</span>
                   </a>
 
                   <a
@@ -338,7 +336,7 @@ export const GetConnectedPage: React.FC<GetConnectedPageProps> = ({
                     <div className="w-16 h-16 bg-emerald-100 text-emerald-800 rounded-full flex items-center justify-center mx-auto border border-emerald-300">
                       <CheckCircle2 className="w-9 h-9" />
                     </div>
-                    <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#0A192F]">
+                    <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#12372c]">
                       Message Received With Joy!
                     </h3>
                     <p className="text-sm text-stone-600 max-w-md mx-auto leading-relaxed">
@@ -361,7 +359,7 @@ export const GetConnectedPage: React.FC<GetConnectedPageProps> = ({
                       <div className="text-xs font-bold uppercase tracking-wider text-amber-700">
                         Get in Touch
                       </div>
-                      <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#0A192F] mt-0.5">
+                      <h3 className="text-2xl sm:text-3xl font-serif font-bold text-[#12372c] mt-0.5">
                         Send Our Ministry a Message
                       </h3>
                       <p className="text-xs text-stone-500 mt-1">

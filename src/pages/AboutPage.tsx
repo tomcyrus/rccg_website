@@ -1,8 +1,8 @@
 import React from 'react';
 import { PageTab } from '../types';
-import { BookOpen, Compass, Target, Heart, Cross, Sparkles, Shield, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { BookOpen, Compass, Target, Sparkles, Shield, ArrowRight, CheckCircle2 } from 'lucide-react';
 import scriptureImg from '../assets/images/bible_study_scripture_1791981783961.jpg';
-import sanctuaryImg from '../assets/images/hero_church_sanctuary_1791981782802.jpg';
+import { PageHero } from '../components/PageHero';
 
 interface AboutPageProps {
   onSelectTab: (tab: PageTab) => void;
@@ -49,28 +49,20 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onSelectTab, onOpenPlanVis
   ];
 
   return (
-    <div className="bg-white">
-      {/* Hero Header */}
-      <section className="bg-gradient-to-r from-[#070D1F] via-[#0B132B] to-[#070D1F] text-white py-16 sm:py-24 border-b border-white/10 relative overflow-hidden">
-        <div className="max-w-4xl mx-auto px-4 sm:px-8 text-center space-y-4 relative z-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/15 border border-blue-400/30 text-blue-300 text-xs font-semibold tracking-wider uppercase">
-            <Cross className="w-3.5 h-3.5 text-blue-400" />
-            <span>The Redeemed Christian Church of God</span>
-          </div>
-
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-white tracking-tight">
-            About Kingdom First Assembly
-          </h1>
-
-          <p className="text-lg sm:text-xl text-slate-200 max-w-2xl mx-auto font-normal italic">
-            "Seeking His Kingdom First. Sharing His Love With All."
-          </p>
-
-          <p className="text-xs text-blue-300 font-semibold tracking-widest uppercase">
-            Roselle, New Jersey &middot; Union County &middot; Matthew 6:33
-          </p>
-        </div>
-      </section>
+    <div className="bg-[#fbf8f0]">
+      <PageHero
+        eyebrow="The Redeemed Christian Church of God · Roselle, New Jersey"
+        title="About Kingdom First Assembly"
+        description="Seeking His Kingdom First. Sharing His Love With All. Discover the faith, vision, and calling that shape our church family."
+      >
+        <button
+          onClick={onOpenPlanVisit}
+          className="inline-flex items-center gap-2 rounded-full bg-[#ed1234] px-6 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-[#cf0d2a]"
+        >
+          Plan Your Visit
+          <ArrowRight className="h-4 w-4" />
+        </button>
+      </PageHero>
 
       {/* Our Genesis & Anchor */}
       <section className="py-16 sm:py-24 bg-white border-b border-stone-200/80">
@@ -83,13 +75,13 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onSelectTab, onOpenPlanVis
                 <span>Our Genesis &amp; Conviction</span>
               </div>
 
-              <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#0A192F] tracking-tight leading-tight">
+              <h2 className="text-3xl sm:text-4xl font-serif font-bold text-[#12372c] tracking-tight leading-tight">
                 A New Beginning, An Eternal Heavenly Purpose
               </h2>
 
               <div className="text-stone-600 text-base sm:text-lg leading-relaxed font-sans space-y-4">
                 <p>
-                  <strong className="text-[#0A192F] font-semibold">RCCG Kingdom First Assembly</strong> is a parish of The Redeemed Christian Church of God, planted in the heart of Roselle, New Jersey.
+                  <strong className="text-[#12372c] font-semibold">RCCG Kingdom First Assembly</strong> is a parish of The Redeemed Christian Church of God, planted in the heart of Roselle, New Jersey.
                 </p>
 
                 <p>
@@ -98,7 +90,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onSelectTab, onOpenPlanVis
 
                 {/* Scripture Callout */}
                 <div className="bg-amber-50/70 border-l-4 border-amber-400 p-5 rounded-r-2xl my-6">
-                  <p className="text-lg font-serif italic text-[#0A192F]">
+                  <p className="text-lg font-serif italic text-[#12372c]">
                     "And I tell you that you are Peter, and on this rock I will build my church, and the gates of Hades will not overcome it."
                   </p>
                   <span className="text-xs font-semibold uppercase tracking-wider text-amber-800 block mt-2">
@@ -139,13 +131,13 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onSelectTab, onOpenPlanVis
             {/* Vision Card */}
             <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-10 border border-slate-200/90 shadow-xs hover:shadow-lg transition-all flex flex-col justify-between space-y-4 sm:space-y-6 relative overflow-hidden group">
               <div className="space-y-3 sm:space-y-4">
-                <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-blue-50 text-[#1D63ED] border border-blue-200 flex items-center justify-center">
+                <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-emerald-50 text-[#007450] border border-emerald-200 flex items-center justify-center">
                   <Compass className="w-5 h-5 sm:w-7 sm:h-7" />
                 </div>
-                <div className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#1D63ED]">
+                <div className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#007450]">
                   OUR HORIZON
                 </div>
-                <h3 className="text-xl sm:text-3xl font-bold text-[#0F172A]">
+                <h3 className="text-xl sm:text-3xl font-bold text-[#12372c]">
                   Our Vision
                 </h3>
                 <p className="text-sm sm:text-lg text-slate-700 leading-relaxed italic">
@@ -160,13 +152,13 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onSelectTab, onOpenPlanVis
             {/* Mission Card */}
             <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-10 border border-slate-200/90 shadow-xs hover:shadow-lg transition-all flex flex-col justify-between space-y-4 sm:space-y-6 relative overflow-hidden group">
               <div className="space-y-3 sm:space-y-4">
-                <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-blue-50 text-[#1D63ED] border border-blue-200 flex items-center justify-center">
+                <div className="w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-emerald-50 text-[#007450] border border-emerald-200 flex items-center justify-center">
                   <Target className="w-5 h-5 sm:w-7 sm:h-7" />
                 </div>
-                <div className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#1D63ED]">
+                <div className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#007450]">
                   OUR CALLING
                 </div>
-                <h3 className="text-xl sm:text-3xl font-bold text-[#0F172A]">
+                <h3 className="text-xl sm:text-3xl font-bold text-[#12372c]">
                   Our Mission
                 </h3>
                 <p className="text-sm sm:text-lg text-slate-700 leading-relaxed italic">
@@ -185,11 +177,11 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onSelectTab, onOpenPlanVis
       <section className="py-16 sm:py-24 bg-white border-b border-stone-200/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-8">
           <div className="max-w-3xl mx-auto text-center space-y-3 mb-10 sm:mb-16">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#1D63ED] text-xs font-semibold tracking-wider uppercase">
-              <Shield className="w-3.5 h-3.5 text-[#1D63ED]" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-[#007450] text-xs font-semibold tracking-wider uppercase">
+              <Shield className="w-3.5 h-3.5 text-[#007450]" />
               <span>Guiding Convictions</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0F172A] tracking-tight">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#12372c] tracking-tight">
               Our 5 Core Values
             </h2>
             <p className="text-slate-600 text-sm sm:text-base max-w-xl mx-auto font-sans leading-relaxed">
@@ -201,15 +193,15 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onSelectTab, onOpenPlanVis
             {coreValues.map((val) => (
               <div
                 key={val.num}
-                className="bg-slate-50 rounded-xl sm:rounded-2xl border border-slate-200/80 p-4 sm:p-7 hover:border-blue-400/60 shadow-xs hover:shadow-md transition-all flex flex-col sm:flex-row items-start gap-3 sm:gap-5"
+                className="bg-slate-50 rounded-xl sm:rounded-2xl border border-slate-200/80 p-4 sm:p-7 hover:border-emerald-400/60 shadow-xs hover:shadow-md transition-all flex flex-col sm:flex-row items-start gap-3 sm:gap-5"
               >
-                <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-blue-100 text-[#1D63ED] font-bold text-base sm:text-xl flex items-center justify-center shrink-0">
+                <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-emerald-100 text-[#007450] font-bold text-base sm:text-xl flex items-center justify-center shrink-0">
                   {val.num}
                 </div>
 
                 <div className="space-y-1.5 flex-1">
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <h3 className="text-xl font-serif font-bold text-[#0A192F]">
+                    <h3 className="text-xl font-serif font-bold text-[#12372c]">
                       {val.title}
                     </h3>
                     <span className="text-xs font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
@@ -234,13 +226,13 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onSelectTab, onOpenPlanVis
               <BookOpen className="w-3.5 h-3.5 text-emerald-700" />
               <span>Biblical Foundations</span>
             </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#0A192F] tracking-tight">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-[#12372c] tracking-tight">
               What We Believe
             </h2>
           </div>
 
           <div className="bg-white rounded-3xl border border-stone-200/90 p-8 sm:p-12 space-y-6 text-stone-700 leading-relaxed font-sans shadow-sm">
-            <p className="text-base font-medium text-[#0A192F]">
+            <p className="text-base font-medium text-[#12372c]">
               As a parish of <strong>The Redeemed Christian Church of God (RCCG)</strong>, our faith is firmly established upon the uncompromised Word of God:
             </p>
 
@@ -248,35 +240,35 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onSelectTab, onOpenPlanVis
               <div className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
                 <p className="text-sm">
-                  <strong className="text-[#0A192F]">The Holy Scriptures:</strong> We believe the entire Bible is the verbally inspired, infallible Word of God and the supreme authority for faith and practice.
+                  <strong className="text-[#12372c]">The Holy Scriptures:</strong> We believe the entire Bible is the verbally inspired, infallible Word of God and the supreme authority for faith and practice.
                 </p>
               </div>
 
               <div className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
                 <p className="text-sm">
-                  <strong className="text-[#0A192F]">The One True God:</strong> We believe in one eternal God manifested in three persons: the Father, the Son Jesus Christ, and the Holy Spirit.
+                  <strong className="text-[#12372c]">The One True God:</strong> We believe in one eternal God manifested in three persons: the Father, the Son Jesus Christ, and the Holy Spirit.
                 </p>
               </div>
 
               <div className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
                 <p className="text-sm">
-                  <strong className="text-[#0A192F]">Salvation by Grace:</strong> Salvation is a free gift received through repentance and faith in the shed blood and finished work of Jesus Christ on the cross.
+                  <strong className="text-[#12372c]">Salvation by Grace:</strong> Salvation is a free gift received through repentance and faith in the shed blood and finished work of Jesus Christ on the cross.
                 </p>
               </div>
 
               <div className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
                 <p className="text-sm">
-                  <strong className="text-[#0A192F]">The Holy Spirit &amp; Sanctification:</strong> We believe in the baptism, gifts, and fruit of the Holy Spirit, enabling believers to live holy and victorious lives.
+                  <strong className="text-[#12372c]">The Holy Spirit &amp; Sanctification:</strong> We believe in the baptism, gifts, and fruit of the Holy Spirit, enabling believers to live holy and victorious lives.
                 </p>
               </div>
 
               <div className="flex items-start gap-3">
                 <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0 mt-0.5" />
                 <p className="text-sm">
-                  <strong className="text-[#0A192F]">The Blessed Hope:</strong> We believe in the imminent bodily resurrection of believers, the second coming of Jesus Christ, and eternal life with God.
+                  <strong className="text-[#12372c]">The Blessed Hope:</strong> We believe in the imminent bodily resurrection of believers, the second coming of Jesus Christ, and eternal life with God.
                 </p>
               </div>
             </div>
@@ -289,7 +281,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onSelectTab, onOpenPlanVis
 
           {/* Invitation Card */}
           <div className="pt-4 text-center space-y-4">
-            <h3 className="text-2xl font-serif font-bold text-[#0A192F]">
+            <h3 className="text-2xl font-serif font-bold text-[#12372c]">
               Come Experience His Kingdom With Us
             </h3>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
