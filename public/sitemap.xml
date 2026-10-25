@@ -24,6 +24,13 @@
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
+  <!-- Contact the church ministry team -->
+  <url>
+    <loc>https://rccgkingdomfirst.org/contact</loc>
+    <lastmod>2026-10-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
   <!-- Church Life & Photo Gallery -->
   <url>
     <loc>https://rccgkingdomfirst.org/gallery</loc>
@@ -35,6 +42,13 @@
   <url>
     <loc>https://rccgkingdomfirst.org/sermons</loc>
     <lastmod>2026-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <!-- Church Events & Calendar -->
+  <url>
+    <loc>https://rccgkingdomfirst.org/events</loc>
+    <lastmod>2026-10-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>

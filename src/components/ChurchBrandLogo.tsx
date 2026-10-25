@@ -1,5 +1,6 @@
 import React from 'react';
 import rccgLogoImg from '../assets/images/rccg_official_logo_1791985600387.jpg';
+import referenceHeaderBrand from '../assets/images/reference/reference_header_brand.jpg';
 
 interface ChurchBrandLogoProps {
   variant?: 'light' | 'dark';
@@ -13,6 +14,22 @@ export const ChurchBrandLogo: React.FC<ChurchBrandLogoProps> = ({
   size = 'md',
 }) => {
   const isDark = variant === 'dark';
+
+  if (isDark) {
+    const sizeClass = {
+      sm: 'h-9 sm:h-10',
+      md: 'h-10 xs:h-11 sm:h-12 lg:h-14',
+      lg: 'h-12 sm:h-14',
+    }[size];
+
+    return (
+      <img
+        src={referenceHeaderBrand}
+        alt="The Redeemed Christian Church of God — Kingdom First Assembly, Roselle, NJ"
+        className={`${sizeClass} w-auto max-w-full object-contain object-left ${className}`}
+      />
+    );
+  }
 
   return (
     <div className={`flex items-center gap-2 xs:gap-2.5 sm:gap-3 select-none min-w-0 max-w-full ${className}`}>

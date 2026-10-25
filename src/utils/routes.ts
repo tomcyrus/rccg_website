@@ -4,9 +4,11 @@ export const PAGE_PATHS: Record<PageTab, string> = {
   home: '/',
   about: '/about',
   videos: '/sermons',
+  events: '/events',
   ebooks: '/ebooks',
   gallery: '/gallery',
   connect: '/connect',
+  contact: '/contact',
   admin: '/admin',
 };
 
@@ -16,9 +18,11 @@ const PATH_TABS: Record<string, PageTab> = {
   '/about': 'about',
   '/sermons': 'videos',
   '/videos': 'videos',
+  '/events': 'events',
   '/ebooks': 'ebooks',
   '/gallery': 'gallery',
   '/connect': 'connect',
+  '/contact': 'contact',
   '/admin': 'admin',
 };
 

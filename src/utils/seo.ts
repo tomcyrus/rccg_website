@@ -30,6 +30,13 @@ export const SEO_PAGE_CONFIGS: Record<PageTab, PageSeoConfig> = {
     canonicalPath: '/sermons',
     breadcrumbName: 'Video Gallery',
   },
+  events: {
+    title: 'Church Events & Calendar | RCCG Kingdom First Assembly',
+    description: 'View worship services, Bible studies, community outreach, and special gatherings at RCCG Kingdom First Assembly in Roselle, New Jersey.',
+    keywords: 'RCCG Events Roselle NJ, Church Calendar, Bible Study Roselle, Sunday Worship, Community Outreach Roselle',
+    canonicalPath: '/events',
+    breadcrumbName: 'Events & Calendar',
+  },
   ebooks: {
     title: 'E-Books & Spiritual Library | RCCG Kingdom First Assembly',
     description: 'Access curated Christian e-books, Open Heavens daily devotionals, prayer warfare guides, and discipleship study manuals from RCCG Kingdom First Assembly.',
@@ -45,11 +52,18 @@ export const SEO_PAGE_CONFIGS: Record<PageTab, PageSeoConfig> = {
     breadcrumbName: 'Church Life & Gallery',
   },
   connect: {
-    title: 'Plan a Visit & Contact | RCCG Kingdom First Assembly Roselle NJ',
-    description: 'Plan your visit to RCCG Kingdom First Assembly at 121 E 2nd Ave, Roselle, NJ. Sunday worship at 9:00 AM, Midweek Bible study at 7:00 PM. Get in touch with us.',
-    keywords: 'Plan a Visit RCCG, Church Address Roselle NJ, 121 E 2nd Ave Roselle, Service Times Roselle, Prayer Request RCCG, Contact Church Roselle NJ',
+    title: 'Visit & Connect | RCCG Kingdom First Assembly Roselle NJ',
+    description: 'Plan your visit to RCCG Kingdom First Assembly and explore prayer, Bible study, fellowship, and serving opportunities in Roselle, New Jersey.',
+    keywords: 'Plan a Visit RCCG, Church Address Roselle NJ, Service Times Roselle, Prayer Request RCCG, Church Fellowship Roselle NJ',
     canonicalPath: '/connect',
-    breadcrumbName: 'Plan a Visit & Contact',
+    breadcrumbName: 'Visit & Connect',
+  },
+  contact: {
+    title: 'Contact Us | RCCG Kingdom First Assembly Roselle NJ',
+    description: 'Contact RCCG Kingdom First Assembly in Roselle, New Jersey. Send the church ministry team a message, call, email, or get directions.',
+    keywords: 'Contact RCCG Roselle NJ, Kingdom First Assembly Phone, RCCG KFA Email, Church Address Roselle NJ',
+    canonicalPath: '/contact',
+    breadcrumbName: 'Contact',
   },
   admin: {
     title: 'Church Administration Console | RCCG Kingdom First Assembly',

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { EbookItem, EbookCategory } from '../types';
 import { usePublicContent } from '../hooks/usePublicContent';
 import { ContentStatus } from './ContentStatus';
+import { PageHero } from './PageHero';
 
 import { EbookReaderModal } from './EbookReaderModal';
 import { 
@@ -94,50 +95,37 @@ export const EbooksSection: React.FC<EbooksSectionProps> = ({ onOpenPlanVisit })
   const coverThemeGradients: Record<EbookItem['coverTheme'], string> = {
     'royal-amber': 'from-[#92400E] via-[#B45309] to-[#78350F]',
     'emerald-gold': 'from-[#064E3B] via-[#047857] to-[#022C22]',
-    'navy-gold': 'from-[#0F172A] via-[#1E293B] to-[#0A192F]',
+    'navy-gold': 'from-[#12372c] via-[#1E293B] to-[#12372c]',
     'burgundy-gold': 'from-[#831843] via-[#9D174D] to-[#500724]',
     'slate-gold': 'from-[#334155] via-[#475569] to-[#1E293B]',
   };
 
   return (
-    <div className="bg-white min-h-screen py-10 sm:py-16 font-sans">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-        <ContentStatus loading={loading} error={error} />
-      {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-6 border-b border-slate-200">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-[#1D63ED] text-xs font-semibold tracking-wider uppercase">
-              <Library className="w-3.5 h-3.5 text-[#1D63ED]" />
-              <span>Spiritual Library &amp; E-Books</span>
-            </div>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#0F172A] tracking-tight">
-              Equip Your Spirit With Timeless Truth
-            </h1>
-            <p className="text-sm sm:text-base text-slate-600 font-sans leading-relaxed">
-              Explore curated daily devotionals, discipleship manuals, prayer warfare guides, and biblical family resources. 
-              Read sample chapters online or download comprehensive study guides.
-            </p>
-          </div>
+    <div className="min-h-screen bg-[#fbf8f0] font-sans">
+      <PageHero
+        eyebrow="Spiritual Library & E-Books"
+        title="Grow Deeper in God’s Word"
+        description="Explore devotionals, discipleship resources, prayer guides, and biblical family materials prepared to strengthen your daily walk with Christ."
+      >
+        <button
+          onClick={() => setShowSavedOnly(!showSavedOnly)}
+          className={`inline-flex items-center gap-2 rounded-full border-2 px-6 py-3 text-sm font-bold shadow-lg transition ${
+            showSavedOnly
+              ? 'border-[#f4c54b] bg-[#f4c54b] text-[#12372c]'
+              : 'border-white bg-white text-[#007450] hover:bg-[#f8f1dd]'
+          }`}
+        >
+          <Bookmark className={`h-4 w-4 ${showSavedOnly ? 'fill-current' : ''}`} />
+          My Bookshelf ({savedBookIds.length})
+        </button>
+      </PageHero>
 
-          {/* Quick Bookshelf Toggle */}
-          <div className="flex items-center gap-3 shrink-0">
-            <button
-              onClick={() => setShowSavedOnly(!showSavedOnly)}
-              className={`px-5 py-2.5 rounded-full font-semibold text-xs tracking-wide transition-all shadow-xs flex items-center gap-2 cursor-pointer border ${
-                showSavedOnly
-                  ? 'bg-[#1D63ED] text-white border-[#1D63ED] font-bold'
-                  : 'bg-white text-slate-700 hover:bg-slate-50 border-slate-300'
-              }`}
-            >
-              <Bookmark className={`w-4 h-4 ${showSavedOnly ? 'fill-white text-white' : 'text-[#1D63ED]'}`} />
-              <span>My Bookshelf ({savedBookIds.length})</span>
-            </button>
-          </div>
-        </div>
+      <div className="mx-auto max-w-7xl space-y-12 px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+        <ContentStatus loading={loading} error={error} />
 
         {/* Featured Book Showcase Hero */}
         {featuredBook && !searchQuery && selectedCategory === 'all' && !showSavedOnly && (
-          <div className="rounded-3xl bg-gradient-to-br from-[#0A192F] via-[#102A43] to-[#0A192F] text-white p-6 sm:p-10 border border-amber-500/30 shadow-2xl overflow-hidden relative">
+          <div className="rounded-3xl bg-gradient-to-br from-[#12372c] via-[#07513f] to-[#12372c] text-white p-6 sm:p-10 border border-amber-500/30 shadow-2xl overflow-hidden relative">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
               {/* Left Column: Book Description & Actions */}
               <div className="lg:col-span-8 space-y-5">
@@ -295,7 +283,7 @@ export const EbooksSection: React.FC<EbooksSectionProps> = ({ onOpenPlanVisit })
                   }}
                   className={`px-4 py-2 rounded-full text-xs font-medium whitespace-nowrap transition-all cursor-pointer ${
                     active
-                      ? 'bg-[#1D63ED] text-white shadow-xs font-semibold'
+                      ? 'bg-[#007450] text-white shadow-xs font-semibold'
                       : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
                   }`}
                 >
@@ -335,7 +323,7 @@ export const EbooksSection: React.FC<EbooksSectionProps> = ({ onOpenPlanVisit })
                           handleToggleSave(book.id);
                         }}
                         className={`p-1 sm:p-1.5 rounded-full transition-colors cursor-pointer ${
-                          isSaved ? 'bg-[#1D63ED] text-white' : 'bg-black/30 hover:bg-black/50 text-white'
+                          isSaved ? 'bg-[#007450] text-white' : 'bg-black/30 hover:bg-black/50 text-white'
                         }`}
                         title={isSaved ? 'Remove from bookshelf' : 'Save to bookshelf'}
                       >
@@ -367,7 +355,7 @@ export const EbooksSection: React.FC<EbooksSectionProps> = ({ onOpenPlanVisit })
 
                     {/* Hover Prompt */}
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <div className="px-3 py-1.5 rounded-full bg-[#1D63ED] text-white font-bold text-xs shadow-lg flex items-center gap-1.5">
+                      <div className="px-3 py-1.5 rounded-full bg-[#007450] text-white font-bold text-xs shadow-lg flex items-center gap-1.5">
                         <BookOpen className="w-3.5 h-3.5" />
                         <span>Read</span>
                       </div>
@@ -378,7 +366,7 @@ export const EbooksSection: React.FC<EbooksSectionProps> = ({ onOpenPlanVisit })
                   <div className="p-3 sm:p-5 flex-1 flex flex-col justify-between space-y-2.5 sm:space-y-4">
                     <div className="space-y-1 sm:space-y-2">
                       {/* Quiet Unboxed Metadata */}
-                      <div className="flex items-center gap-1 text-[9px] sm:text-[11px] text-[#1D63ED] font-semibold tracking-wide uppercase truncate">
+                      <div className="flex items-center gap-1 text-[9px] sm:text-[11px] text-[#007450] font-semibold tracking-wide uppercase truncate">
                         <span className="truncate">{book.categoryLabel}</span>
                         <span aria-hidden="true">&middot;</span>
                         <span className="text-slate-500 font-normal shrink-0">{book.publicationYear}</span>
@@ -386,7 +374,7 @@ export const EbooksSection: React.FC<EbooksSectionProps> = ({ onOpenPlanVisit })
 
                       <h4 
                         onClick={() => handleOpenReader(book)}
-                        className="text-xs sm:text-base font-bold text-[#0F172A] line-clamp-2 group-hover:text-[#1D63ED] transition-colors cursor-pointer leading-tight sm:leading-snug"
+                        className="text-xs sm:text-base font-bold text-[#12372c] line-clamp-2 group-hover:text-[#007450] transition-colors cursor-pointer leading-tight sm:leading-snug"
                       >
                         {book.title}
                       </h4>
@@ -406,7 +394,7 @@ export const EbooksSection: React.FC<EbooksSectionProps> = ({ onOpenPlanVisit })
                     <div className="pt-2 sm:pt-3 border-t border-slate-100 flex items-center justify-between gap-1 text-xs">
                       <button
                         onClick={() => handleOpenReader(book)}
-                        className="text-[10px] sm:text-xs font-semibold text-[#1D63ED] hover:text-[#1551CA] flex items-center gap-0.5 transition-colors cursor-pointer"
+                        className="text-[10px] sm:text-xs font-semibold text-[#007450] hover:text-[#005c40] flex items-center gap-0.5 transition-colors cursor-pointer"
                       >
                         <span>Preview</span>
                         <ChevronRight className="w-3 h-3" />
@@ -458,7 +446,7 @@ export const EbooksSection: React.FC<EbooksSectionProps> = ({ onOpenPlanVisit })
               <Library className="w-6 h-6" />
             </div>
             <div className="space-y-1 text-xs sm:text-sm">
-              <div className="font-serif font-bold text-[#0A192F] text-base">
+              <div className="font-serif font-bold text-[#12372c] text-base">
                 Looking for Hardcover &amp; Printed Editions?
               </div>
               <p className="text-stone-600">
