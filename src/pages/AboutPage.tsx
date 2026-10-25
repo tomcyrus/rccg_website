@@ -53,7 +53,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onSelectTab, onOpenPlanVis
       <PageHero
         eyebrow="The Redeemed Christian Church of God · Roselle, New Jersey"
         title="About Kingdom First Assembly"
-        description="Seeking His Kingdom First. Sharing His Love With All. Discover the faith, vision, and calling that shape our church family."
+        description="Putting God's Kingdom First. Becoming Like Christ Everywhere. Discover the faith, vision, and calling that shape our church family."
       >
         <button
           onClick={onOpenPlanVisit}
@@ -85,16 +85,16 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onSelectTab, onOpenPlanVis
                 </p>
 
                 <p>
-                  Our journey was birthed out of a clear apostolic conviction: that in a busy, distracted generation, God is raising a vibrant community of believers devoted to seeking His Kingdom first and becoming a shining beacon of truth, love, and healing.
+                  Our journey was birthed out of a clear apostolic conviction: that in a busy, distracted generation, God is raising a vibrant community of believers devoted to putting God&apos;s Kingdom first and becoming like Christ everywhere.
                 </p>
 
                 {/* Scripture Callout */}
                 <div className="bg-amber-50/70 border-l-4 border-amber-400 p-5 rounded-r-2xl my-6">
                   <p className="text-lg font-serif italic text-[#12372c]">
-                    "And I tell you that you are Peter, and on this rock I will build my church, and the gates of Hades will not overcome it."
+                    "But seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you."
                   </p>
                   <span className="text-xs font-semibold uppercase tracking-wider text-amber-800 block mt-2">
-                    — Matthew 16:18
+                    — Matthew 6:33
                   </span>
                 </div>
 

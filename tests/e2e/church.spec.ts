@@ -163,3 +163,35 @@ test('homepage uses a real YouTube player for the featured message', async ({ pa
   await expect(player).toHaveAttribute('src', /youtube-nocookie\.com\/embed\/FUAhAuUbDz4/);
   await expect(player).toHaveAttribute('allowfullscreen', '');
 });
+
+test('Sunday service topic and YouTube player come from admin-managed video data', async ({ page }) => {
+  const { records } = await mockApi(page);
+  records.videos.push({
+    id: 'admin-sunday-service',
+    youtubeId: 'dQw4w9WgXcQ',
+    youtubeUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    title: 'Sunday Service',
+    speaker: 'Resident Pastor',
+    category: 'sunday-service',
+    categoryLabel: 'SUNDAY SERVICE',
+    date: 'October 25, 2026',
+    duration: '1 hr 30 min',
+    scriptureRef: 'Matthew 6:33',
+    description: 'The current Sunday message configured by the church administrator.',
+    isFeatured: true,
+    revision: 1,
+  });
+
+  await page.goto('/sermons', { waitUntil: 'domcontentloaded' });
+  await expect(page.getByRole('heading', { name: 'Sunday Service', exact: true }).first()).toBeVisible();
+  await expect(page.getByRole('link', { name: /Open in YouTube/i }).first()).toHaveAttribute(
+    'href',
+    'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+  );
+
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('#latest-sermon-section iframe')).toHaveAttribute(
+    'src',
+    /youtube-nocookie\.com\/embed\/dQw4w9WgXcQ/,
+  );
+});

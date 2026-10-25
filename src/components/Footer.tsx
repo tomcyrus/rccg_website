@@ -76,7 +76,7 @@ export const Footer: React.FC<FooterProps> = ({ onSelectTab }) => {
           </span>{' '}
           {new Date().getFullYear()} RCCG Kingdom First Assembly. All Rights Reserved.
           <span className="mx-3">|</span>
-          Seeking His Kingdom First. Sharing His Love With All.
+          Putting God&apos;s Kingdom First. Becoming Like Christ Everywhere.
         </div>
       </div>
     </footer>

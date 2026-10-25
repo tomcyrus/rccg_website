@@ -87,25 +87,23 @@ export const SEED_CHURCH_EVENTS: ChurchEvent[] = [
   },
   {
     id: 'community-food-drive',
-    title: 'Roselle Hope Food Pantry & Care Package Distribution',
+    title: 'Evangelism / Community Outreach',
     category: 'outreach',
-    categoryLabel: 'Outreach & Missions',
+    categoryLabel: 'Evangelism / Community Outreach',
     dateBadge: {
-      month: 'SAT',
+      month: 'SUN',
       day: '24',
       subtext: 'BI-WEEKLY'
     },
-    dayOfWeek: '2nd & 4th Saturdays',
+    dayOfWeek: '2nd & 4th Sundays',
     time: '11:00 AM – 2:00 PM EST',
-    frequency: 'Bi-Weekly Saturday Morning',
+    frequency: '2nd & 4th Sundays',
     location: 'Fellowship Hall & 2nd Ave Entrance',
     isOnlineAvailable: false,
     scriptureRef: 'Matthew 25:35-40 · Galatians 6:10',
-    description: 'Providing fresh groceries, dry pantry staples, and personal hygiene packages to families in Roselle and neighboring Union County towns.',
+    description: 'Coming soon.',
     highlights: [
-      'No income verification required',
-      'Drive-through and walk-up pickup lines',
-      'Optional prayer and spiritual encouragement tent'
+      'More details will be announced soon.'
     ],
     coordinator: 'Welfare & Community Benevolence Ministry',
     audience: 'Open to all community neighbors',
