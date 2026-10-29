@@ -16,15 +16,19 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import ValidationError
 
 from .config import settings
-from .models import PasswordChange, Login, PrayerSubmission, InquirySubmission, MODELS, PUBLIC_KINDS
+from .email_delivery import EmailDeliveryError, EmailSender
+from .email_templates import render_admin_notification, render_campaign
+from .models import EmailCampaignRequest, PasswordChange, Login, PrayerSubmission, InquirySubmission, MODELS, PUBLIC_KINDS
 from .supabase import Supabase
 
 
 @asynccontextmanager
 async def lifespan(app):
     app.state.db = Supabase()
+    app.state.email_sender = EmailSender()
     yield
     await app.state.db.close()
+    await app.state.email_sender.close()
 
 
 app = FastAPI(title='RCCG Kingdom First Assembly API', version='1.0.0', lifespan=lifespan)
@@ -76,6 +80,10 @@ def db(request: Request):
     return request.app.state.db
 
 
+def email_delivery(request: Request):
+    return request.app.state.email_sender
+
+
 attempts = OrderedDict()
 
 
@@ -114,7 +122,11 @@ def set_session(response, session):
 
 @app.get('/api/health')
 def health():
-    return {'status': 'ok', 'service_configured': settings.configured}
+    return {
+        'status': 'ok',
+        'service_configured': settings.configured,
+        'email_delivery_configured': settings.email_configured,
+    }
 
 
 @app.post('/api/auth/login')
@@ -209,17 +221,86 @@ async def public_list(kind: str, database=Depends(db)):
 
 
 @app.post('/api/public/prayers', status_code=201)
-async def submit_prayer(payload: PrayerSubmission, request: Request, database=Depends(db)):
+async def submit_prayer(payload: PrayerSubmission, request: Request, database=Depends(db), sender=Depends(email_delivery)):
     rate_limit(request, 'submissions', 10)
-    await database.insert('prayers', {**payload.model_dump(), 'id': str(uuid4()), 'status': 'new', 'submittedAt': datetime.now(timezone.utc).isoformat()})
+    data = payload.model_dump(mode='json')
+    await database.insert('prayers', {**data, 'id': str(uuid4()), 'status': 'new', 'submittedAt': datetime.now(timezone.utc).isoformat()})
+    if sender.configured:
+        subject, html, text = render_admin_notification('prayer', data, settings.public_site_url.rstrip('/') + '/admin')
+        try:
+            await sender.send_one(settings.admin_notification_email, subject, html, text, data.get('email', ''))
+        except EmailDeliveryError:
+            # The pastoral record is the source of truth; a temporary email
+            # failure must never discard or duplicate a prayer submission.
+            pass
     return {'ok': True}
 
 
 @app.post('/api/public/inquiries', status_code=201)
-async def submit_inquiry(payload: InquirySubmission, request: Request, database=Depends(db)):
+async def submit_inquiry(payload: InquirySubmission, request: Request, database=Depends(db), sender=Depends(email_delivery)):
     rate_limit(request, 'submissions', 10)
-    await database.insert('inquiries', {**payload.model_dump(), 'id': str(uuid4()), 'status': 'new', 'submittedAt': datetime.now(timezone.utc).isoformat()})
+    data = payload.model_dump(mode='json')
+    await database.insert('inquiries', {**data, 'id': str(uuid4()), 'status': 'new', 'submittedAt': datetime.now(timezone.utc).isoformat()})
+    if sender.configured:
+        subject, html, text = render_admin_notification('inquiry', data, settings.public_site_url.rstrip('/') + '/admin')
+        try:
+            await sender.send_one(settings.admin_notification_email, subject, html, text, data['email'])
+        except EmailDeliveryError:
+            pass
     return {'ok': True}
+
+
+@app.get('/api/admin/email/status', dependencies=[Depends(require_admin)])
+async def email_status(sender=Depends(email_delivery)):
+    return {
+        'configured': sender.configured,
+        'fromAddress': settings.email_from_address,
+        'adminAddress': settings.admin_notification_email,
+    }
+
+
+@app.post('/api/admin/email/send', status_code=201)
+async def send_member_email(
+    payload: EmailCampaignRequest,
+    request: Request,
+    user=Depends(require_admin),
+    database=Depends(db),
+    sender=Depends(email_delivery),
+):
+    rate_limit(request, 'email-campaigns', 20)
+    if not sender.configured:
+        raise HTTPException(503, 'Church email delivery is not configured yet.')
+
+    members = await database.all_rows('members')
+    eligible = [
+        member for member in members
+        if member.get('membershipStatus') == 'active' and member.get('emailOptIn') is True
+    ]
+    if payload.recipientMode == 'individual':
+        eligible = [member for member in eligible if member['id'] == payload.memberId]
+        if not eligible:
+            raise HTTPException(422, 'Select an active member who has agreed to receive church email.')
+
+    recipients = list(dict.fromkeys(str(member['email']).lower() for member in eligible))
+    if not recipients:
+        raise HTTPException(422, 'There are no active opted-in members to email.')
+    if len(recipients) > 500:
+        raise HTTPException(422, 'A single campaign can include at most 500 recipients.')
+
+    html, text = render_campaign(payload)
+    sent, failed = await sender.send_many(recipients, payload.subject, html, text)
+    status = 'sent' if failed == 0 else ('failed' if sent == 0 else 'partial')
+    campaign = {
+        **payload.model_dump(mode='json'),
+        'id': str(uuid4()),
+        'recipientCount': len(recipients),
+        'sentCount': sent,
+        'failedCount': failed,
+        'status': status,
+        'sentAt': datetime.now(timezone.utc).isoformat(),
+        'sentBy': user['email'],
+    }
+    return await database.insert('email_campaigns', campaign)
 
 
 @app.get('/api/admin/backup', dependencies=[Depends(require_admin)])
@@ -237,15 +318,22 @@ async def admin_list(kind: str, database=Depends(db)):
 @app.post('/api/admin/{kind}', status_code=201, dependencies=[Depends(require_admin)])
 async def create_record(kind: str, payload: dict = Body(...), database=Depends(db)):
     check_kind(kind)
-    if kind not in PUBLIC_KINDS:
+    if kind not in PUBLIC_KINDS | {'members'}:
         raise HTTPException(405, 'Use the public submission endpoint to create requests.')
-    return await database.insert(kind, validate(kind, payload))
+    data = validate(kind, payload)
+    if kind == 'members':
+        members = await database.all_rows('members')
+        if any(member['email'].lower() == data['email'].lower() for member in members):
+            raise HTTPException(409, 'A member with this email address already exists.')
+    return await database.insert(kind, data)
 
 
 @app.put('/api/admin/{kind}/{record_id}', dependencies=[Depends(require_admin)])
 async def update_record(kind: str, record_id: str, payload: dict = Body(...), if_match: int = Header(..., ge=1), database=Depends(db)):
     check_kind(kind)
     check_id(record_id)
+    if kind == 'email_campaigns':
+        raise HTTPException(405, 'Campaign history cannot be edited.')
     data = validate(kind, payload)
     if data['id'] != record_id:
         raise HTTPException(422, 'Record ID does not match the URL.')
@@ -257,6 +345,10 @@ async def update_record(kind: str, record_id: str, payload: dict = Body(...), if
         original = database.unpack(current[0])
         fields = ('status', 'pastoralNotes', 'assignedTo') if kind == 'inquiries' else ('status', 'pastoralNotes')
         data = {**original, **{key: data[key] for key in fields}}
+    elif kind == 'members':
+        members = await database.all_rows('members')
+        if any(member['id'] != record_id and member['email'].lower() == data['email'].lower() for member in members):
+            raise HTTPException(409, 'A member with this email address already exists.')
     return await database.update(kind, record_id, data, if_match)
 
 
@@ -264,6 +356,8 @@ async def update_record(kind: str, record_id: str, payload: dict = Body(...), if
 async def delete_record(kind: str, record_id: str, if_match: int = Header(..., ge=1), database=Depends(db)):
     check_kind(kind)
     check_id(record_id)
+    if kind == 'email_campaigns':
+        raise HTTPException(405, 'Campaign history cannot be deleted.')
     await database.delete(kind, record_id, if_match)
     return Response(status_code=204)
 

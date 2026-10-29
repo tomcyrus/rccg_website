@@ -161,5 +161,54 @@ class Inquiry(InquirySubmission, Record):
     pastoralNotes: Text = ''
 
 
-MODELS = {'events': Event, 'videos': Video, 'ebooks': Ebook, 'announcements': Announcement, 'prayers': Prayer, 'inquiries': Inquiry}
+class Member(Record):
+    fullName: Required
+    email: EmailStr
+    phone: Short = ''
+    ministry: Short = ''
+    membershipStatus: Literal['active', 'inactive'] = 'active'
+    emailOptIn: bool = True
+    joinedAt: Short = ''
+    notes: Text = ''
+    createdAt: Short
+
+
+class EmailCampaignRequest(Model):
+    templateType: Literal['sermon', 'event', 'service', 'general']
+    recipientMode: Literal['all', 'individual']
+    memberId: Short = ''
+    subject: Annotated[str, Field(min_length=1, max_length=200)]
+    preheader: Short = ''
+    heading: Required
+    message: Annotated[str, Field(min_length=1, max_length=10000)]
+    actionLabel: Short = ''
+    actionUrl: Short = ''
+
+    @field_validator('actionUrl')
+    @classmethod
+    def safe_action_url(cls, value):
+        if value and not value.startswith('https://'):
+            raise ValueError('Action URL must use HTTPS')
+        return value
+
+
+class EmailCampaign(EmailCampaignRequest, Record):
+    recipientCount: int = Field(ge=1, le=500)
+    sentCount: int = Field(ge=0, le=500)
+    failedCount: int = Field(ge=0, le=500)
+    status: Literal['sent', 'partial', 'failed']
+    sentAt: Short
+    sentBy: EmailStr
+
+
+MODELS = {
+    'events': Event,
+    'videos': Video,
+    'ebooks': Ebook,
+    'announcements': Announcement,
+    'prayers': Prayer,
+    'inquiries': Inquiry,
+    'members': Member,
+    'email_campaigns': EmailCampaign,
+}
 PUBLIC_KINDS = {'events', 'videos', 'ebooks', 'announcements'}
