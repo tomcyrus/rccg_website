@@ -80,6 +80,51 @@ export interface VisitorInquiryRecord {
   pastoralNotes?: string;
 }
 
+export interface ChurchMemberRecord {
+  revision?: number;
+  id: string;
+  fullName: string;
+  email: string;
+  phone?: string;
+  ministry?: string;
+  membershipStatus: 'active' | 'inactive';
+  emailOptIn: boolean;
+  joinedAt?: string;
+  notes?: string;
+  createdAt: string;
+}
+
+export type MemberEmailTemplate = 'sermon' | 'event' | 'service' | 'general';
+
+export interface MemberEmailRequest {
+  templateType: MemberEmailTemplate;
+  recipientMode: 'all' | 'individual';
+  memberId: string;
+  subject: string;
+  preheader: string;
+  heading: string;
+  message: string;
+  actionLabel: string;
+  actionUrl: string;
+}
+
+export interface EmailCampaignRecord extends MemberEmailRequest {
+  revision?: number;
+  id: string;
+  recipientCount: number;
+  sentCount: number;
+  failedCount: number;
+  status: 'sent' | 'partial' | 'failed';
+  sentAt: string;
+  sentBy: string;
+}
+
+export interface EmailDeliveryStatus {
+  configured: boolean;
+  fromAddress: string;
+  adminAddress: string;
+}
+
 export interface AnnouncementBanner {
   revision?: number;
   id: string;
