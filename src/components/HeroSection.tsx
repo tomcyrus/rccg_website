@@ -43,20 +43,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
   return (
     <div className="relative bg-[#f6f3e9] pb-16 sm:pb-20">
-      <section className="relative min-h-[610px] overflow-hidden bg-[#00563f] text-white sm:min-h-[620px] lg:min-h-[520px]">
-        <div className="absolute inset-0 lg:left-[43%]">
+      <section className="relative min-h-[610px] overflow-hidden bg-[#00563f] text-white sm:min-h-[620px] lg:min-h-[560px]">
+        <div className="absolute inset-0 overflow-hidden lg:bottom-10">
           <img
             src={heroImg}
             alt="Joyful worshippers praising together at Kingdom First Assembly"
-            className="h-full w-full object-cover object-center"
+            className="h-full w-full object-cover object-[34%_center] saturate-[0.98] lg:ml-auto lg:w-auto lg:max-w-none lg:object-contain lg:object-right lg:[-webkit-mask-image:linear-gradient(to_right,transparent_0%,black_14%,black_100%)] lg:[mask-image:linear-gradient(to_right,transparent_0%,black_14%,black_100%)]"
           />
+          <div className="absolute inset-0 bg-[#006047]/10 mix-blend-color" />
         </div>
 
-        <div className="absolute inset-0 bg-[#004c38]/78 lg:hidden" />
-        <div className="absolute inset-y-0 left-0 hidden w-[72%] bg-gradient-to-r from-[#004c38] via-[#004c38]/95 to-transparent lg:block" />
+        <div className="absolute inset-0 bg-[#004c38]/70 lg:hidden" />
+        <div className="absolute inset-0 hidden bg-[linear-gradient(90deg,#004c38_0%,#004c38_36%,rgba(0,76,56,.96)_43%,rgba(0,76,56,.70)_49%,rgba(0,76,56,.28)_55%,transparent_62%)] lg:block" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#003c2e]/30 via-transparent to-black/5" />
 
-        <div className="relative z-10 mx-auto flex min-h-[610px] max-w-7xl items-center px-5 pb-28 pt-16 sm:min-h-[620px] sm:px-8 sm:pt-20 lg:min-h-[520px] lg:px-10 lg:pb-24 lg:pt-16">
+        <div className="relative z-10 mx-auto flex min-h-[610px] max-w-7xl items-center px-5 pb-28 pt-16 sm:min-h-[620px] sm:px-8 sm:pt-20 lg:min-h-[560px] lg:px-10 lg:pb-24 lg:pt-16">
           <div className="max-w-[620px]">
             <p className="mb-2 text-sm font-semibold uppercase tracking-[0.42em] text-white sm:text-base">
               Welcome to
@@ -74,8 +75,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="my-4 h-1 w-12 rounded-full bg-[#f3bf35]" />
 
             <p className="max-w-md text-xl font-semibold italic leading-tight text-white sm:text-[22px]">
-              Seeking His Kingdom First.<br />
-              Sharing His Love With All.
+              Putting God&apos;s Kingdom First.<br />
+              Becoming Like Christ Everywhere.
             </p>
 
             <p className="mt-3 max-w-lg text-sm leading-relaxed text-white/95 sm:text-[15px]">
@@ -106,7 +107,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         </div>
       </section>
 
-      <div className="relative z-20 mx-auto -mt-12 max-w-7xl px-4 sm:px-8 lg:px-10">
+      <div className="relative z-20 mx-auto -mt-6 max-w-7xl px-4 sm:px-8 lg:px-10">
         <div className="grid overflow-hidden rounded-2xl border border-[#e8dfc9] bg-[#fffdf8] shadow-[0_16px_45px_rgba(36,52,42,0.18)] md:grid-cols-3 md:divide-x md:divide-[#d8caaa]">
           <button
             onClick={handleScheduleClick}

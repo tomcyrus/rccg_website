@@ -10,25 +10,18 @@ interface FeaturedSermonSectionProps {
 }
 
 const OFFICIAL_LATEST_VIDEO_ID = 'FUAhAuUbDz4';
-const LEGACY_PLACEHOLDER_VIDEO_IDS = new Set([
-  'wL13UqY8YkU',
-  'k1BneeJTDcU',
-  'hZqJ9Pq0vHw',
-  '_6t3rC-xGqg',
-  's7j3zFq3Nl4',
-  '0qU2-Fh3-Y0',
-]);
 
 export const FeaturedSermonSection: React.FC<FeaturedSermonSectionProps> = ({
   onNavigateVideos,
 }) => {
   const { items: videos } = usePublicContent<YouTubeVideoItem>('videos');
-  const featuredVideo = videos.find(video => video.isFeatured) ?? videos[0];
-  const hasPublishedVideo = featuredVideo?.youtubeId && !LEGACY_PLACEHOLDER_VIDEO_IDS.has(featuredVideo.youtubeId);
-  const youtubeId = hasPublishedVideo ? featuredVideo.youtubeId : OFFICIAL_LATEST_VIDEO_ID;
-  const playerTitle = hasPublishedVideo
-    ? featuredVideo.title
-    : 'RCCG Kingdom First Assembly inauguration service';
+  const featuredVideo =
+    videos.find(video => video.isFeatured && video.category === 'sunday-service')
+    ?? videos.find(video => video.category === 'sunday-service')
+    ?? videos.find(video => video.isFeatured)
+    ?? videos[0];
+  const youtubeId = featuredVideo?.youtubeId || OFFICIAL_LATEST_VIDEO_ID;
+  const playerTitle = featuredVideo?.title || 'RCCG Kingdom First Assembly Sunday Service';
 
   return (
     <section id="latest-sermon-section" className="border-b border-[#e7dfcf] bg-white py-10 sm:py-14">
