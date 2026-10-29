@@ -3,14 +3,14 @@ import { YouTubeVideoItem } from '../types';
 export const INITIAL_YOUTUBE_VIDEOS: YouTubeVideoItem[] = [
   {
     id: 'vid-1',
-    youtubeId: 'wL13UqY8YkU',
-    youtubeUrl: 'https://www.youtube.com/watch?v=wL13UqY8YkU',
-    title: 'Seeking His Kingdom First: The Blueprint for All-Round Victory',
+    youtubeId: 'FUAhAuUbDz4',
+    youtubeUrl: 'https://www.youtube.com/watch?v=FUAhAuUbDz4',
+    title: 'Sunday Service',
     seriesTitle: 'Kingdom Dominion Series',
     speaker: 'Resident Pastor & RCCG Ministers',
     speakerRole: 'Kingdom First Assembly Pulpit',
     category: 'sunday-service',
-    categoryLabel: 'SUNDAY CELEBRATION',
+    categoryLabel: 'SUNDAY SERVICE',
     date: 'October 11, 2026',
     duration: '1 hr 22 min',
     scriptureRef: 'Matthew 6:33 & Romans 8:31-37',
@@ -47,7 +47,7 @@ export const INITIAL_YOUTUBE_VIDEOS: YouTubeVideoItem[] = [
     id: 'vid-3',
     youtubeId: 'hZqJ9Pq0vHw',
     youtubeUrl: 'https://www.youtube.com/watch?v=hZqJ9Pq0vHw',
-    title: 'Open Heavens & Holy Ghost Service: Divine Acceleration',
+    title: 'Holy Ghost Service',
     seriesTitle: 'Monthly Miracle & Deliverance Night',
     speaker: 'Pastor E. A. Adeboye',
     speakerRole: 'General Overseer, RCCG Worldwide',
@@ -62,7 +62,7 @@ export const INITIAL_YOUTUBE_VIDEOS: YouTubeVideoItem[] = [
       'Waiting on the Lord renews strength and mounts wings as eagles.',
       'Prophetic praise unlocks doors that hard labor could never budge.'
     ],
-    isFeatured: true,
+    isFeatured: false,
   },
   {
     id: 'vid-4',

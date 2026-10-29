@@ -169,13 +169,13 @@ export const ChurchCalendarSection: React.FC<ChurchCalendarSectionProps> = ({
             </div>
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-emerald-700">
-                COMMUNITY OUTREACH
+                EVANGELISM / COMMUNITY OUTREACH
               </div>
               <div className="text-base font-bold text-[#12372c] mt-0.5">
-                2nd &amp; 4th Saturdays Monthly
+                2nd &amp; 4th Sundays Monthly
               </div>
               <p className="text-xs text-stone-500 mt-1 leading-relaxed">
-                Food pantry, coat drives, and practical benevolence in Roselle.
+                Coming soon.
               </p>
             </div>
           </div>
@@ -216,7 +216,7 @@ export const ChurchCalendarSection: React.FC<ChurchCalendarSectionProps> = ({
                   : 'bg-transparent text-stone-600 hover:bg-stone-100 hover:text-stone-900'
               }`}
             >
-              Community Outreach ({categoryCounts.outreach})
+              Evangelism / Community Outreach ({categoryCounts.outreach})
             </button>
 
             <button

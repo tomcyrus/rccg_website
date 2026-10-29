@@ -53,8 +53,13 @@ export const VideoGallerySection: React.FC = () => {
     return matchesCategory && matchesSearch;
   });
 
-  // Featured hero video: the first video that is marked featured or the first in list
-  const featuredVideo = videos.find((v) => v.isFeatured) || videos[0];
+  // Keep the main message focused on Sunday worship. Both its topic and
+  // YouTube link come directly from the record maintained in Admin.
+  const featuredVideo =
+    videos.find((video) => video.isFeatured && video.category === 'sunday-service')
+    ?? videos.find((video) => video.category === 'sunday-service')
+    ?? videos.find((video) => video.isFeatured)
+    ?? videos[0];
 
   const categories: { key: VideoCategory; label: string }[] = [
     { key: 'all', label: 'All Videos' },

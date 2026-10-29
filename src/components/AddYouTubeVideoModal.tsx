@@ -168,7 +168,7 @@ export const AddYouTubeVideoModal: React.FC<AddYouTubeVideoModalProps> = ({
             <input
               type="text"
               required
-              placeholder="e.g. Seeking His Kingdom First in Every Season"
+              placeholder="e.g. Sunday Service: Putting God's Kingdom First"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               className="w-full px-4 py-2.5 rounded-xl border border-stone-300 text-stone-900 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500"
