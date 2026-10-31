@@ -3,7 +3,7 @@ import { test, expect, Page } from '@playwright/test';
 async function mockApi(page: Page) {
   await page.route('**/*', route => new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort());
   let signedIn = false;
-  const records: Record<string, any[]> = { events: [], videos: [], ebooks: [], prayers: [], inquiries: [], announcements: [] };
+  const records: Record<string, any[]> = { events: [], videos: [], ebooks: [], prayers: [], inquiries: [], announcements: [], members: [], email_campaigns: [] };
   let failSubmission = false;
   await page.route('**/api/**', async route => {
     const req = route.request();
@@ -17,6 +17,16 @@ async function mockApi(page: Page) {
     }
     if (path === '/auth/logout') { signedIn = false; return respond({ ok: true }); }
     if (path.startsWith('/auth/')) return signedIn ? respond({ id: 'admin', email: 'admin@example.com' }) : respond({ detail: 'Please sign in to continue.' }, 401);
+    if (path === '/admin/email/status') return signedIn
+      ? respond({ configured: true, fromAddress: 'RCCG KFA <updates@example.com>', adminAddress: 'rccgkfa@gmail.com' })
+      : respond({ detail: 'Please sign in.' }, 401);
+    if (path === '/admin/email/send' && method === 'POST') {
+      const eligible = records.members.filter(member => member.membershipStatus === 'active' && member.emailOptIn && (payload.recipientMode === 'all' || member.id === payload.memberId));
+      if (!eligible.length) return respond({ detail: 'There are no active opted-in members to email.' }, 422);
+      const item = { ...payload, id: crypto.randomUUID(), recipientCount: eligible.length, sentCount: eligible.length, failedCount: 0, status: 'sent', sentAt: new Date().toISOString(), sentBy: 'admin@example.com', revision: 1 };
+      records.email_campaigns.unshift(item);
+      return respond(item, 201);
+    }
     const [, scope, kind, id] = path.split('/');
     if (scope === 'admin' && !signedIn) return respond({ detail: 'Please sign in.' }, 401);
     if (path === '/admin/backup') return respond(records);
@@ -127,6 +137,30 @@ test('mobile admin login fits viewport and no console runtime errors', async ({ 
   await expect(page.getByRole('button', { name: 'Reload data' })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBeTruthy();
   expect(errors).toEqual([]);
+});
+
+test('admin registers a member and sends an individual sermon email', async ({ page }) => {
+  const { records } = await mockApi(page);
+  await signIn(page);
+  await page.getByRole('button', { name: /Members & Email/ }).click();
+  await expect(page.getByText('Church email delivery is active')).toBeVisible();
+  await page.getByRole('button', { name: 'Register Member' }).click();
+  await page.getByLabel('Member full name').fill('Jane Member');
+  await page.getByLabel('Member email', { exact: true }).fill('jane@example.com');
+  await page.getByLabel('Member phone').fill('862-555-0100');
+  await page.getByLabel('Member ministry').fill('Choir');
+  await page.getByRole('button', { name: 'Save Member' }).click();
+  await expect(page.getByText('Jane Member', { exact: true })).toBeVisible();
+  expect(records.members).toHaveLength(1);
+
+  await page.getByRole('button', { name: 'Email', exact: true }).click();
+  await expect(page.getByLabel('Email recipients')).toHaveValue('individual');
+  await expect(page.getByLabel('Email member')).toHaveValue(records.members[0].id);
+  page.once('dialog', dialog => dialog.accept());
+  await page.getByRole('button', { name: 'Send to 1 member' }).click();
+  await expect(page.getByText('Email sent to 1 member.')).toBeVisible();
+  expect(records.email_campaigns).toHaveLength(1);
+  expect(records.email_campaigns[0].templateType).toBe('sermon');
 });
 
 test('clean routes support direct loads and browser history without hashes', async ({ page }) => {

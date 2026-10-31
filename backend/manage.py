@@ -19,13 +19,14 @@ def migrate():
         with conn.cursor() as cur:
             cur.execute("select to_regclass('public.admin_users'), to_regclass('public.church_records')")
             tables = cur.fetchone()
-            if all(tables):
-                print('Church tables already exist; migration skipped.')
-                return
             if any(tables):
-                raise RuntimeError('Partial schema exists. Inspect it before applying the migration.')
-            cur.execute((ROOT.parent / 'supabase/migrations/001_church_backend.sql').read_text())
-            print('Church schema applied successfully.')
+                if not all(tables):
+                    raise RuntimeError('Partial schema exists. Inspect it before applying the migration.')
+            else:
+                cur.execute((ROOT.parent / 'supabase/migrations/001_church_backend.sql').read_text())
+                print('Base church schema applied successfully.')
+            cur.execute((ROOT.parent / 'supabase/migrations/002_member_communications.sql').read_text())
+            print('Member communications schema applied successfully.')
 
 
 async def admin(email):

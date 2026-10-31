@@ -6,11 +6,16 @@ import {
   AnnouncementBanner, 
   YouTubeVideoItem, 
   EbookItem,
+  ChurchMemberRecord,
+  EmailCampaignRecord,
+  EmailDeliveryStatus,
+  MemberEmailRequest,
   PageTab,
   EventStatus
 } from '../types';
 import { api, ApiError, errorMessage, contentChanged } from '../utils/api';
 import { EbookEditor, newEbook } from '../components/EbookEditor';
+import { AdminCommunications } from '../components/AdminCommunications';
 import { extractYouTubeId, getYouTubeThumbnailUrl } from '../utils/youtube';
 import { 
   ShieldCheck, 
@@ -39,7 +44,8 @@ import {
   MapPin,
   X,
   Eye,
-  Star
+  Star,
+  Users
 } from 'lucide-react';
 
 interface AdminPageProps {
@@ -47,7 +53,7 @@ interface AdminPageProps {
   onSelectTab: (tab: PageTab) => void;
 }
 
-type AdminTab = 'events' | 'videos' | 'ebooks' | 'prayers' | 'inquiries' | 'announcements' | 'backup';
+type AdminTab = 'events' | 'videos' | 'ebooks' | 'prayers' | 'inquiries' | 'communications' | 'announcements' | 'backup';
 
 export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTab }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -66,15 +72,21 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
   const [announcement, setAnnouncement] = useState<AnnouncementBanner>({ id: 'main', isActive: false, message: '', type: 'notice', targetTab: 'home' });
   const [videos, setVideos] = useState<YouTubeVideoItem[]>([]);
   const [ebooks, setEbooks] = useState<EbookItem[]>([]);
+  const [members, setMembers] = useState<ChurchMemberRecord[]>([]);
+  const [campaigns, setCampaigns] = useState<EmailCampaignRecord[]>([]);
+  const [emailStatus, setEmailStatus] = useState<EmailDeliveryStatus>({ configured: false, fromAddress: '', adminAddress: 'rccgkfa@gmail.com' });
 
-  const clearPrivateData = () => { setPrayers([]); setInquiries([]); };
+  const clearPrivateData = () => { setPrayers([]); setInquiries([]); setMembers([]); setCampaigns([]); };
   const loadData = async () => {
-    const [ev, pr, iq, an, vi, eb] = await Promise.all([
+    const [ev, pr, iq, an, vi, eb, mb, ca, es] = await Promise.all([
       api<ChurchEvent[]>('/admin/events'), api<PrayerRequestRecord[]>('/admin/prayers'),
       api<VisitorInquiryRecord[]>('/admin/inquiries'), api<AnnouncementBanner[]>('/admin/announcements'),
       api<YouTubeVideoItem[]>('/admin/videos'), api<EbookItem[]>('/admin/ebooks'),
+      api<ChurchMemberRecord[]>('/admin/members'), api<EmailCampaignRecord[]>('/admin/email_campaigns'),
+      api<EmailDeliveryStatus>('/admin/email/status'),
     ]);
     setEvents(ev); setPrayers(pr); setInquiries(iq); setVideos(vi); setEbooks(eb);
+    setMembers(mb); setCampaigns(ca); setEmailStatus(es);
     setAnnouncement(an[0] || { id: 'main', isActive: false, message: '', type: 'notice', targetTab: 'home' });
     setDataError('');
   };
@@ -165,6 +177,19 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
   const handleSaveInquiries = (updated: VisitorInquiryRecord[]) => saveCollection('inquiries', inquiries, updated, setInquiries);
   const handleSaveVideos = (updated: YouTubeVideoItem[]) => saveCollection('videos', videos, updated, setVideos);
   const handleSaveEbooks = (updated: EbookItem[]) => saveCollection('ebooks', ebooks, updated, setEbooks);
+  const handleSaveMembers = (updated: ChurchMemberRecord[]) => saveCollection('members', members, updated, setMembers);
+  const handleSendMemberEmail = async (payload: MemberEmailRequest) => {
+    if (busy) return null;
+    setBusy(true); setDataError('');
+    try {
+      const result = await api<EmailCampaignRecord>('/admin/email/send', { method: 'POST', body: JSON.stringify(payload) });
+      setCampaigns(await api<EmailCampaignRecord[]>('/admin/email_campaigns'));
+      if (result.status === 'sent') triggerToast(`Email sent to ${result.sentCount} ${result.sentCount === 1 ? 'member' : 'members'}.`);
+      else setDataError(`Delivery ${result.status}: ${result.sentCount} sent and ${result.failedCount} failed.`);
+      return result;
+    } catch (err) { handleFailure(err); return null; }
+    finally { setBusy(false); }
+  };
   const handleSaveAnnouncement = async (updated: AnnouncementBanner) => {
     setBusy(true); setDataError('');
     try {
@@ -281,7 +306,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
                 Church Administration Portal
               </h1>
               <p className="text-xs text-slate-400 mt-1">
-                Manage services, calendar, YouTube streams, e-books, prayers, and visitor desks.
+                Manage services, media, prayers, visitors, members, and church communications.
               </p>
             </div>
           </div>
@@ -398,6 +423,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
             { key: 'ebooks', label: 'E-Books & Manuals', count: ebooks.length, icon: BookOpen },
             { key: 'prayers', label: 'Prayer Pipeline', count: prayers.filter(p => p.status === 'new').length, icon: HeartHandshake, badgeNew: true },
             { key: 'inquiries', label: 'Guest Desks & Visits', count: inquiries.filter(i => i.status === 'new').length, icon: UserCheck, badgeNew: true },
+            { key: 'communications', label: 'Members & Email', count: members.length, icon: Users },
             { key: 'announcements', label: 'Live Banner Alert', active: announcement.isActive, icon: Bell },
             { key: 'backup', label: 'Backup & Settings', icon: Download },
           ].map((tab) => {
@@ -436,12 +462,12 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
         {busy && <span role="status">Saving / loading…</span>}
         {dataError && <p role="alert" className="text-red-700">{dataError}</p>}
       </div>
-      {['events', 'videos', 'ebooks', 'prayers', 'inquiries'].includes(activeTab) && <div className="max-w-7xl mx-auto px-4 pt-3"><input aria-label="Search records" placeholder="Search records…" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="w-full max-w-md border border-stone-300 rounded-xl px-4 py-2" /></div>}
+      {['events', 'videos', 'ebooks', 'prayers', 'inquiries', 'communications'].includes(activeTab) && <div className="max-w-7xl mx-auto px-4 pt-3"><input aria-label="Search records" placeholder="Search records…" value={searchTerm} onChange={e => setSearchTerm(e.target.value)} className="w-full max-w-md border border-stone-300 rounded-xl px-4 py-2" /></div>}
       <fieldset disabled={busy} className="disabled:opacity-70">
       {/* Main Content Area */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
         {/* KPI Summary Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3 sm:gap-4">
           <div className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-xs">
             <div className="text-[10px] font-bold uppercase tracking-wider text-stone-500">Scheduled Events</div>
             <div className="text-2xl font-serif font-bold text-emerald-900 mt-1">{events.length}</div>
@@ -466,6 +492,11 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
             <div className="text-[10px] font-bold uppercase tracking-wider text-stone-500">Guest Inquiries</div>
             <div className="text-2xl font-serif font-bold text-purple-900 mt-1">{inquiries.length}</div>
             <div className="text-[10px] text-emerald-600 font-semibold">{inquiries.filter(i => i.status === 'new').length} new visits planned</div>
+          </div>
+          <div className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-xs">
+            <div className="text-[10px] font-bold uppercase tracking-wider text-stone-500">Church Members</div>
+            <div className="text-2xl font-serif font-bold text-emerald-900 mt-1">{members.length}</div>
+            <div className="text-[10px] text-stone-400">{members.filter(member => member.membershipStatus === 'active' && member.emailOptIn).length} email recipients</div>
           </div>
           <div className="bg-white p-4 rounded-2xl border border-stone-200/90 shadow-xs">
             <div className="text-[10px] font-bold uppercase tracking-wider text-stone-500">Alert Banner</div>
@@ -984,7 +1015,20 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
           </div>
         )}
 
-        {/* ----------------- TAB 6: LIVE ANNOUNCEMENT BANNER ----------------- */}
+        {/* ----------------- TAB 6: MEMBERS & EMAIL ----------------- */}
+        {activeTab === 'communications' && (
+          <AdminCommunications
+            members={members}
+            campaigns={campaigns}
+            emailStatus={emailStatus}
+            busy={busy}
+            searchTerm={searchTerm}
+            onSaveMembers={handleSaveMembers}
+            onSend={handleSendMemberEmail}
+          />
+        )}
+
+        {/* ----------------- TAB 7: LIVE ANNOUNCEMENT BANNER ----------------- */}
         {activeTab === 'announcements' && (
           <div className="bg-white rounded-3xl border border-stone-200 p-6 sm:p-8 space-y-6 shadow-sm max-w-3xl">
             <div>
@@ -1103,7 +1147,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
           </div>
         )}
 
-        {/* ----------------- TAB 7: BACKUP & SYSTEM ----------------- */}
+        {/* ----------------- TAB 8: BACKUP & SYSTEM ----------------- */}
         {activeTab === 'backup' && (
           <div className="bg-white rounded-3xl border border-stone-200 p-6 sm:p-8 space-y-6 shadow-sm max-w-2xl">
             <div>
@@ -1135,7 +1179,7 @@ export const AdminPage: React.FC<AdminPageProps> = ({ onNavigateHome, onSelectTa
                   <span>Export Full Church Data Backup (JSON)</span>
                 </div>
                 <p className="text-xs text-stone-600">
-                  Downloads a complete snapshot of all calendar events, prayer petitions, guest records, and video archives.
+                  Downloads a complete snapshot of calendar events, prayer petitions, guest records, member contacts, email campaign history, and media archives.
                 </p>
                 <button
                   onClick={handleExportBackup}
