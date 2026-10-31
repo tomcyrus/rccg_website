@@ -76,7 +76,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
             <p className="max-w-md text-xl font-semibold italic leading-tight text-white sm:text-[22px]">
               Putting God&apos;s Kingdom First.<br />
-              Becoming Like Christ Everywhere.
+              Becoming Like Christ.
             </p>
 
             <p className="mt-3 max-w-lg text-sm leading-relaxed text-white/95 sm:text-[15px]">

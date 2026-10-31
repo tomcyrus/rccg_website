@@ -2,7 +2,7 @@ from copy import deepcopy
 import pytest
 from fastapi import HTTPException
 from fastapi.testclient import TestClient
-from backend.app.main import app, db, attempts
+from backend.app.main import app, db, email_delivery, attempts
 from backend.app.supabase import Supabase
 
 HEADERS = {'X-Requested-With': 'rccg-web', 'Origin': 'http://localhost:3000'}
@@ -14,7 +14,7 @@ class FakeDatabase:
     unpack = staticmethod(Supabase.unpack)
 
     def __init__(self):
-        self.data = {kind: {} for kind in ('events', 'videos', 'ebooks', 'announcements', 'prayers', 'inquiries')}
+        self.data = {kind: {} for kind in ('events', 'videos', 'ebooks', 'announcements', 'prayers', 'inquiries', 'members', 'email_campaigns')}
         self.admin = True
         self.fail = False
         self.revoked = False
@@ -69,13 +69,34 @@ class FakeDatabase:
         del self.data[kind][record_id]
 
 
+class FakeEmailSender:
+    def __init__(self):
+        self.configured = True
+        self.admin_messages = []
+        self.campaigns = []
+
+    async def send_one(self, recipient, subject, html, text, reply_to=''):
+        self.admin_messages.append({
+            'recipient': recipient, 'subject': subject, 'html': html, 'text': text, 'reply_to': reply_to,
+        })
+
+    async def send_many(self, recipients, subject, html, text):
+        self.campaigns.append({
+            'recipients': recipients, 'subject': subject, 'html': html, 'text': text,
+        })
+        return len(recipients), 0
+
+
 @pytest.fixture
 def client():
     database = FakeDatabase()
+    sender = FakeEmailSender()
     app.dependency_overrides[db] = lambda: database
+    app.dependency_overrides[email_delivery] = lambda: sender
     attempts.clear()
     with TestClient(app, headers=HEADERS) as c:
         c.database = database
+        c.email_sender = sender
         yield c
     app.dependency_overrides.clear()
 
@@ -86,7 +107,7 @@ def login(client):
 
 def test_health_and_no_private_public_routes(client):
     assert client.get('/api/health').status_code == 200
-    for kind in ('prayers', 'inquiries', 'admin_users'):
+    for kind in ('prayers', 'inquiries', 'members', 'email_campaigns', 'admin_users'):
         assert client.get('/api/public/' + kind).status_code == 404
 
 
@@ -145,6 +166,8 @@ def test_private_submission_and_status_update(client):
     result = client.post('/api/public/prayers', json=PRAYER)
     assert result.status_code == 201 and result.json() == {'ok': True}
     assert 'requestText' not in result.text
+    assert client.email_sender.admin_messages[0]['subject'] == 'New prayer request from Test Guest'
+    assert 'Please pray with us.' in client.email_sender.admin_messages[0]['text']
     login(client)
     records = client.get('/api/admin/prayers').json()
     assert len(records) == 1 and records[0]['status'] == 'new'
@@ -167,6 +190,7 @@ def test_submission_rejects_privileged_fields_and_invalid_data(client):
 def test_inquiry_and_rsvp(client):
     data = {'fullName': 'Guest', 'email': 'guest@example.com', 'inquiryType': 'Event RSVP', 'message': 'RSVP for Sunday, 2 guests'}
     assert client.post('/api/public/inquiries', json=data).status_code == 201
+    assert client.email_sender.admin_messages[0]['subject'] == 'New contact message from Guest'
     login(client)
     record = client.get('/api/admin/inquiries').json()[0]
     result = client.put('/api/admin/inquiries/' + record['id'], headers={'If-Match': '1'}, json={**record, 'status': 'contacted', 'assignedTo': 'Welcome team', 'pastoralNotes': 'Confirmed'})
@@ -227,3 +251,56 @@ def test_newsletter_signup_is_saved_as_a_private_inquiry(client):
     payload = {'fullName': 'Newsletter subscriber', 'email': 'guest@example.com', 'inquiryType': 'Newsletter Subscription', 'message': 'Please send church updates.'}
     assert client.post('/api/public/inquiries', json=payload).status_code == 201
     assert client.get('/api/public/inquiries').status_code == 404
+
+
+def test_member_directory_and_individual_or_all_member_email(client):
+    login(client)
+    member = {
+        'id': 'member-jane',
+        'fullName': 'Jane Member',
+        'email': 'jane@example.com',
+        'phone': '555-0100',
+        'ministry': 'Choir',
+        'membershipStatus': 'active',
+        'emailOptIn': True,
+        'joinedAt': '2026-01-04',
+        'notes': '',
+        'createdAt': '2026-10-29T08:00:00+00:00',
+    }
+    created = client.post('/api/admin/members', json=member)
+    assert created.status_code == 201
+    assert client.post('/api/admin/members', json={**member, 'id': 'member-duplicate'}).status_code == 409
+    assert client.get('/api/admin/email/status').json()['configured'] is True
+
+    campaign = {
+        'templateType': 'sermon',
+        'recipientMode': 'individual',
+        'memberId': 'member-jane',
+        'subject': 'Sunday message',
+        'preheader': 'Watch this week',
+        'heading': 'A new sermon is ready',
+        'message': 'Join us for the latest message.',
+        'actionLabel': 'Watch now',
+        'actionUrl': 'https://www.rccgkfa.org/sermons',
+    }
+    result = client.post('/api/admin/email/send', json=campaign)
+    assert result.status_code == 201
+    assert result.json()['status'] == 'sent'
+    assert result.json()['recipientCount'] == 1
+    assert client.email_sender.campaigns[0]['recipients'] == ['jane@example.com']
+    assert client.get('/api/admin/email_campaigns').json()[0]['subject'] == 'Sunday message'
+
+    updated = {**created.json(), 'emailOptIn': False}
+    assert client.put('/api/admin/members/member-jane', headers={'If-Match': '1'}, json=updated).status_code == 200
+    assert client.post('/api/admin/email/send', json=campaign).status_code == 422
+
+
+def test_member_campaign_requires_email_configuration(client):
+    login(client)
+    client.email_sender.configured = False
+    payload = {
+        'templateType': 'general', 'recipientMode': 'all', 'memberId': '',
+        'subject': 'Update', 'preheader': '', 'heading': 'Church update',
+        'message': 'Hello church family.', 'actionLabel': '', 'actionUrl': '',
+    }
+    assert client.post('/api/admin/email/send', json=payload).status_code == 503
