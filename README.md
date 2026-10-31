@@ -8,6 +8,7 @@ React/Vite church website with a FastAPI backend, Supabase Postgres persistence,
 - Create, edit, delete, and feature public events, YouTube videos, and e-books; publish/mute the announcement banner.
 - Public calendar, homepage sermons, video gallery, and e-book previews load persisted content.
 - Prayer requests, visitor inquiries, event RSVPs, and newsletter signup requests are saved before success is shown. Private records are visible only to approved admins, including requests marked non-confidential.
+- Private member directory with communication consent, individual/all-member email campaigns, branded sermon/event/service templates, and automatic admin email notifications for Contact and Prayer submissions.
 - Pastoral status/notes and visitor assignment/follow-up; private JSON export from current server records.
 - Per-record revision checks reject stale edits/deletes with HTTP 409. Reload data before retrying a conflicting edit.
 - Failed saves preserve editor/form values. No browser PINs, fake login, local pastoral storage, or destructive factory-reset button.
@@ -28,7 +29,7 @@ The backend reads `backend/.env` regardless of the working directory. All `.env`
 ## Create and configure Supabase
 
 1. Create a project at https://supabase.com/dashboard. Save its database password securely.
-2. In the project's SQL Editor, run `supabase/migrations/001_church_backend.sql` **once** against the new project. It creates `admin_users` and `church_records`, enables RLS, and denies direct browser access to both tables. FastAPI is the data gateway.
+2. In the project's SQL Editor, run `supabase/migrations/001_church_backend.sql` **once** against the new project, followed by `supabase/migrations/002_member_communications.sql`. They create the private records gateway and enable member/email campaign record types.
 3. Copy the Project URL and API keys from the project settings into `backend/.env`:
 
    ```dotenv
@@ -97,6 +98,10 @@ SUPABASE_URL=https://YOUR_PROJECT.supabase.co
 SUPABASE_PUBLISHABLE_KEY=your-publishable-key
 SUPABASE_SECRET_KEY=your-secret-key
 COOKIE_SECURE=true
+RESEND_API_KEY=your-server-side-email-key
+EMAIL_FROM_ADDRESS=RCCG Kingdom First Assembly <updates@your-verified-domain.org>
+ADMIN_NOTIFICATION_EMAIL=rccgkfa@gmail.com
+PUBLIC_SITE_URL=https://www.rccgkfa.org
 ```
 
 Leave `VITE_API_BASE_URL` unset so the browser calls the same-origin `/api`. Vercel supplies HTTPS and sets `VERCEL`, which also enables secure cookies automatically; `COOKIE_SECURE=true` makes the intent explicit. Dynamic preview domains are accepted only when the request `Origin` matches its `Host`. Add `ALLOWED_ORIGINS` only for a separate trusted browser origin.
@@ -111,7 +116,7 @@ npm run build
 
 FastAPI serves `dist/` plus `/api` in that setup. Put it behind an HTTPS reverse proxy, set `COOKIE_SECURE=true`, and set `ALLOWED_ORIGINS` to any additional exact browser origin (for example `["https://church.example.org"]`). Never use wildcard origins with credentials. Cookies use `HttpOnly`, `SameSite=Lax`, and `/api` scope. Mutating browser requests require the custom request header and either the same origin or an explicitly allowed Origin. Sign-out clears local cookies and revokes the Supabase refresh session; already-issued access tokens follow Supabase's expiry behavior.
 
-The included rate limiter is per-process (10 public submissions and 10 login attempts per IP per 10 minutes). It bounds memory and is suitable for local/small single-process use. For multiple workers/instances, use shared Redis or an ingress rate limiter. Configure trusted proxy IP forwarding at deployment; do not trust arbitrary client-supplied forwarding headers. Public forms do not send email notifications or newsletter campaigns; staff review the admin inbox, including newsletter signup requests.
+The included rate limiter is per-process (10 public submissions, 10 login attempts, and 20 email campaigns per IP per 10 minutes). It bounds memory and is suitable for local/small single-process use. For multiple workers/instances, use shared Redis or an ingress rate limiter. Configure trusted proxy IP forwarding at deployment; do not trust arbitrary client-supplied forwarding headers. Contact and Prayer submissions are always saved first; when email delivery is configured, the church admin address is notified without making a temporary email failure lose the submitted record.
 
 E-books store structured text and generate text study-guide downloads, as in the original site. There is no PDF/media upload or payment processing. Gallery and general church information remain static assets/content. JSON export contains personal pastoral data and should be handled privately; database-level backups/restores are managed in Supabase.
 

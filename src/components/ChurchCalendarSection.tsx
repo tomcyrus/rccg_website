@@ -31,6 +31,14 @@ interface ChurchCalendarSectionProps {
   onOpenPlanVisit: () => void;
 }
 
+const EVENT_DISPLAY_ORDER = [
+  'midweek-bible-study',
+  'sunday-worship',
+  'evangelism-outreach-second-sunday',
+  'evangelism-outreach-fourth-sunday',
+  'cross-over-service-2026',
+];
+
 export const ChurchCalendarSection: React.FC<ChurchCalendarSectionProps> = ({
   onOpenPlanVisit
 }) => {
@@ -51,19 +59,26 @@ export const ChurchCalendarSection: React.FC<ChurchCalendarSectionProps> = ({
 
   // Filter events based on category and search text
   const filteredEvents = useMemo(() => {
-    return eventsList.filter((evt) => {
-      const matchesCategory = activeCategory === 'all' || evt.category === activeCategory;
-      const q = searchQuery.toLowerCase().trim();
-      const matchesSearch =
-        !q ||
-        evt.title.toLowerCase().includes(q) ||
-        evt.description.toLowerCase().includes(q) ||
-        evt.location.toLowerCase().includes(q) ||
-        evt.categoryLabel.toLowerCase().includes(q) ||
-        (evt.scriptureRef && evt.scriptureRef.toLowerCase().includes(q));
+    return eventsList
+      .filter((evt) => {
+        const matchesCategory = activeCategory === 'all' || evt.category === activeCategory;
+        const q = searchQuery.toLowerCase().trim();
+        const matchesSearch =
+          !q ||
+          evt.title.toLowerCase().includes(q) ||
+          evt.description.toLowerCase().includes(q) ||
+          evt.location.toLowerCase().includes(q) ||
+          evt.categoryLabel.toLowerCase().includes(q) ||
+          (evt.scriptureRef && evt.scriptureRef.toLowerCase().includes(q));
 
-      return matchesCategory && matchesSearch;
-    });
+        return matchesCategory && matchesSearch;
+      })
+      .sort((left, right) => {
+        const leftRank = EVENT_DISPLAY_ORDER.indexOf(left.id);
+        const rightRank = EVENT_DISPLAY_ORDER.indexOf(right.id);
+        return (leftRank < 0 ? Number.MAX_SAFE_INTEGER : leftRank) -
+          (rightRank < 0 ? Number.MAX_SAFE_INTEGER : rightRank);
+      });
   }, [eventsList, activeCategory, searchQuery]);
 
   const categoryCounts = useMemo(() => {
@@ -152,10 +167,10 @@ export const ChurchCalendarSection: React.FC<ChurchCalendarSectionProps> = ({
             </div>
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-emerald-800">
-                MIDWEEK BIBLE STUDY
+                DIGGING DEEP
               </div>
               <div className="text-base font-bold text-[#12372c] mt-0.5">
-                Wednesdays · 7:00 PM EST
+                Wednesdays · 7:00 PM – 8:30 PM
               </div>
               <p className="text-xs text-stone-500 mt-1 leading-relaxed">
                 Verse-by-verse digging deep into Scripture, faith clinic, and prayer.
@@ -169,13 +184,13 @@ export const ChurchCalendarSection: React.FC<ChurchCalendarSectionProps> = ({
             </div>
             <div>
               <div className="text-xs font-bold uppercase tracking-wider text-emerald-700">
-                EVANGELISM / COMMUNITY OUTREACH
+                EVANGELISM OUTREACH
               </div>
               <div className="text-base font-bold text-[#12372c] mt-0.5">
                 2nd &amp; 4th Sundays Monthly
               </div>
               <p className="text-xs text-stone-500 mt-1 leading-relaxed">
-                Coming soon.
+                Sharing the Gospel and Christ&apos;s love throughout Roselle.
               </p>
             </div>
           </div>
